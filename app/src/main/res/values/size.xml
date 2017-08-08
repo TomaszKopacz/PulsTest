@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- margins -->
+    <dimen name="margin">5dp</dimen>
+    <dimen name="largemargin">50dp</dimen>
+
+    <!-- font -->
+    <dimen name="normalfont">16sp</dimen>
+    <dimen name="littlefont">12sp</dimen>
+    <dimen name="largefont">20sp</dimen>
+</resources>
