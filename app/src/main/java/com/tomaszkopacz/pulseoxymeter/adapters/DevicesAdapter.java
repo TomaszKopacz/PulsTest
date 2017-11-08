@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.listeners.RecyclerViewListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.DeviceItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +19,9 @@ import java.util.List;
 public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
 
     private List<BluetoothDevice> devices = new ArrayList<>();
-    private static RecyclerViewListener listener;
+    private DeviceItemListener listener;
 
-    public DevicesAdapter(List<BluetoothDevice> devices, RecyclerViewListener listener){
+    public DevicesAdapter(List<BluetoothDevice> devices, DeviceItemListener listener){
         this.devices = devices;
         this.listener = listener;
     }
@@ -36,8 +36,8 @@ public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
 
     @Override
     public void onBindViewHolder(DeviceViewHolder holder, int position) {
-        holder.deviceName.setText(devices.get(position).getName());
-        holder.deviceAddress.setText(devices.get(position).getAddress());
+        holder.deviceNameTxtView.setText(devices.get(position).getName());
+        holder.deviceAddressTxtView.setText(devices.get(position).getAddress());
     }
 
     @Override

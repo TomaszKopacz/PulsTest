@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.listeners.RecyclerViewListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.DeviceItemListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,11 +18,11 @@ import butterknife.ButterKnife;
 
 public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    @BindView(R.id.devnameTxtView) TextView deviceName;
-    @BindView(R.id.devaddressTxtView) TextView deviceAddress;
-    private RecyclerViewListener listener;
+    @BindView(R.id.devnameTxtView) TextView deviceNameTxtView;
+    @BindView(R.id.devaddressTxtView) TextView deviceAddressTxtView;
+    private DeviceItemListener listener;
 
-    public DeviceViewHolder(View itemView, RecyclerViewListener listener) {
+    public DeviceViewHolder(View itemView, DeviceItemListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
@@ -32,6 +32,6 @@ public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View view) {
-        listener.itemClicked(view, getAdapterPosition());
+        listener.itemClicked(getAdapterPosition(), deviceNameTxtView, deviceAddressTxtView);
     }
 }

@@ -2,40 +2,13 @@
 <items version="2" >
 
     <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/200b98d05c3875bce384417c893e3d55581e6812/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_a015712be0a065a27657ece6a7e1481a08c2b756.jar" />
-    </item>
-    <item
         is-multidex="true"
         jar="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="26.0.0"
-        sha1="3ae0d39564aa0be86dae128402a0c7923e002076">
+        sha1="e82fc6f626f4562edf52cb6826a4427e8ea7ecb9">
         <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_39a1e71b0c5e75e41b557474d9f32a0766cfb16f/classes.dex" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/5f37d0b7e3cdbaeccaf531162244fae9bfca3bd5/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_0e236975a2848348fe63e4627ceb211c9d05a407.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/7e0a59f39be6290ed07cf24eb0d7e6fc7e4ab2f6/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_18b05c0455d89a3a38e6c3f4fbda53064e3da685.jar" />
     </item>
     <item
         is-multidex="true"
@@ -45,114 +18,6 @@
         revision="26.0.0"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
         <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_6d1726604ae79e9bd997ab973b0b1c822a9f2cbe/classes.dex" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/5a62deb25b52de21308378389e22773040a4f2ba/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_8ef3af517f56592589d5dc463e751be2ef33d09a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/2908d9b99b5e3965375eb813d35c92c8c322287f/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="9935891f23923f39d002087085d9696568a9f657">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_4442eccfdc44310b6c7a7a67cc49236388d72814.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/Programy/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_172cd66600c05baccd4d6b41159666e354feac68.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/1432bb0767de8f6bf36cb20c84586f371df02312/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_917a21dd731ffbf42b783ee45d5a8cd81f90eb54.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/Programy/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/26.0.0-alpha1/support-annotations-26.0.0-alpha1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="023ee503b631f69511e335a061ea008f8da60f40">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/support-annotations-26.0.0-alpha1_965a8452197d7a22e39a1cffd040895946823652.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/b447d7592ab2ed45de7aa13a59fd7a1f04e76361/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_5bfc25ac32ab4ac64ab787d24f726cd51093a3f1.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/tomaszkopacz/.android/build-cache/22c149cb1ff295e3b54249f5ad8c04c1cd5775cf/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="0b7d39c161cecdb6c2b52a1cdc71faf0ffd4626e">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_88da474d6f9cdc41b53fd81ed09bcd18ac04d65c/classes.dex" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/a066193a111928c9aae477d92e8321379a6e7eb5/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_fdc3d8caca5d705d592f2524f1bcb91833308cb7.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/tomaszkopacz/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife-annotations/8.7.0/2637055420a2da406e3ea9920c2ff4aafd38c970/butterknife-annotations-8.7.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="2637055420a2da406e3ea9920c2ff4aafd38c970">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.7.0_5512373695af65c8f770c0dc46ec79792cc74f5e/classes.dex" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/c6f8d4e24732ffd0a79023a14748abafdc84c433/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_ee13cc43b80ab417586d8fe9df9ba8f178a3a474.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/tomaszkopacz/.android/build-cache/09b4c8b42cd72eacbc9103ae65316d5a7dfa9f60/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.0"
-        sha1="952944218ecedea1554a513dec0c14d570642843">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/pre-dexed/debug/classes_14047879b0770fd9ba0b73267fa40caa8dc5bae2.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/tomaszkopacz/.android/build-cache/9de24edde54282f003bf0015c1a1fe072db3b348/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
-        <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_af4f1713f7e6e4be05d91ae8c3d0719241099770/classes.dex" />
     </item>
 
 </items>

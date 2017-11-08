@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">Pulsoksymetr</string>
 
-    <!-- start activity -->
-    <string name="bt">"Bluetooth: "</string>
-    <string name="start">"Rozpocznij"</string>
-    <string name="btstatemsg">"Bluetooth jest wyłączone"</string>
-    
     <!-- devices list activity -->
-    <string name="listheader">"DOSTĘPNE URZĄDZENIA"</string>
+    <string name="bt">"Bluetooth"</string>
+    <string name="paireddevices">"Sparowane urządzenia"</string>
+    <string name="discovereddevices">"Dostępne urządzenia"</string>
+    <string name="start_scan">"Skanuj"</string>
+
+    <!-- device row -->
+    <string name="pairing">"Parowanie..."</string>
+
+    <!-- messages -->
+    <string name="bt_off_msg">"Bluetooth jest wyłączone"</string>
 
 </resources>
