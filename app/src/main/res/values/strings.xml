@@ -9,6 +9,9 @@
 
     <!-- device row -->
     <string name="pairing">"Parowanie..."</string>
+    <string name="connecting">"Łączenie..."</string>
+    <string name="connected">"Połączono"</string>
+    <string name="disconnected">"Brak połączenia"</string>
 
     <!-- messages -->
     <string name="bt_off_msg">"Bluetooth jest wyłączone"</string>

@@ -2,6 +2,7 @@ package com.tomaszkopacz.pulseoxymeter.activities;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.ParcelUuid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,9 +25,14 @@ import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.adapters.DevicesAdapter;
 import com.tomaszkopacz.pulseoxymeter.listeners.DeviceItemListener;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,11 +63,16 @@ public class DevicesListActivity extends AppCompatActivity{
     @BindView(R.id.scanBtn)
     CircularProgressButton scanBtn;
 
+    //device item view - based on device_row.xml
+    private TextView devNameTxtView;
+    private TextView devInfoTxtView;
+
     //filter for bluetooth state changes
     private IntentFilter mIntentFilter;
 
     //bluetooth settings
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothSocket mBluetoothSocket;
 
     //bluetooth devices
     private List<BluetoothDevice> pairedDevices = new ArrayList<>();
@@ -148,6 +160,33 @@ public class DevicesListActivity extends AppCompatActivity{
             Toast.makeText(this, R.string.bt_off_msg, Toast.LENGTH_SHORT).show();
     }
 
+
+    private DeviceItemListener discoveredDeviceListener = new DeviceItemListener() {
+        @Override
+        public void itemClicked(int position, TextView deviceNameTextView, TextView deviceAddressTextView) {
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            scanBtn.setProgress(BUTTON_LAZY);
+
+            BluetoothDevice bd = discoveredDevices.get(position);
+            setItemView(deviceNameTextView, deviceAddressTextView);
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2)
+                bd.createBond();
+        }
+    };
+
+    private DeviceItemListener pairedDeviceListener = new DeviceItemListener() {
+        @Override
+        public void itemClicked(int position, TextView deviceNameTextView, TextView deviceAddressTextView) {
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            scanBtn.setProgress(BUTTON_LAZY);
+
+            BluetoothDevice device = pairedDevices.get(position);
+            setItemView(deviceNameTextView, deviceAddressTextView);
+
+            connectToDevice(device);
+        }
+    };
     /*==============================================================================================
                                         BLUETOOTH SETTINGS
     ==============================================================================================*/
@@ -163,6 +202,17 @@ public class DevicesListActivity extends AppCompatActivity{
 
         } else
             return true;
+    }
+
+    /**
+     * Determines bluetooth actions to be serviced by receiver.
+     */
+    private void initIntentFilter(){
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        mIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        mIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
     }
 
     /**
@@ -204,13 +254,17 @@ public class DevicesListActivity extends AppCompatActivity{
             else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
                 BluetoothDevice bd = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-                if (bd.getBondState() == BluetoothDevice.BOND_NONE)
-                    Log.d("BroadcastReceiver", "BOND NONE");
+                if (bd.getBondState() == BluetoothDevice.BOND_NONE) {
+                    devNameTxtView.setTextColor(Color.BLACK);
+                    devInfoTxtView.setTextColor(Color.BLACK);
+                    devInfoTxtView.setText(bd.getAddress());
 
-                else if (bd.getBondState() == BluetoothDevice.BOND_BONDING)
-                    Log.d("BroadcastReceiver", "BOND BONDING");
+                } else if (bd.getBondState() == BluetoothDevice.BOND_BONDING) {
+                    devNameTxtView.setTextColor(Color.GRAY);
+                    devInfoTxtView.setTextColor(Color.GRAY);
+                    devInfoTxtView.setText(R.string.pairing);
 
-                else if (bd.getBondState() == BluetoothDevice.BOND_BONDED) {
+                }else if (bd.getBondState() == BluetoothDevice.BOND_BONDED) {
 
                     //remove from discovered, add to paired devices list
                     removeDiscoveredDevice(bd);
@@ -221,14 +275,28 @@ public class DevicesListActivity extends AppCompatActivity{
     };
 
     /**
-     * Determines bluetooth actions to be serviced by receiver.
+     * Connects to a device.
+     * @param device bluetooth device to connect
      */
-    private void initIntentFilter(){
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        mIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        mIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        mIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+    private void connectToDevice(BluetoothDevice device){
+
+        //close connection if opened
+        if (mBluetoothSocket != null)
+            try {
+                mBluetoothSocket.close();
+            } catch (Exception e) {}
+
+        //open socket
+        try {
+            UUID mUuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+            mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(mUuid);
+            mBluetoothSocket.connect();
+
+            devInfoTxtView.setText(R.string.connected);
+
+        } catch (Exception e) {
+            devInfoTxtView.setText(R.string.disconnected);
+        }
     }
 
     /*==============================================================================================
@@ -285,7 +353,7 @@ public class DevicesListActivity extends AppCompatActivity{
      * @param device
      */
     private void insertDiscoveredDevice(BluetoothDevice device){
-        if (!discoveredDevices.contains(device)) {
+        if (!discoveredDevices.contains(device) && !pairedDevices.contains(device)) {
             discoveredDevices.add(device);
             int position = discoveredDevices.indexOf(device);
             discoveredDevicesAdapter.notifyItemInserted(position);
@@ -302,35 +370,13 @@ public class DevicesListActivity extends AppCompatActivity{
         discoveredDevicesAdapter.notifyItemRemoved(position);
     }
 
-    /*==============================================================================================
-                                    LISTENERS FOR LISTED DEVICES
-    ==============================================================================================*/
-
-    private DeviceItemListener discoveredDeviceListener = new DeviceItemListener() {
-
-        @Override
-        public void itemClicked(int position, TextView deviceNameTextView, TextView deviceAddressTextView) {
-            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-            scanBtn.setProgress(BUTTON_LAZY);
-
-            BluetoothDevice bd = discoveredDevices.get(position);
-
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2){
-
-                deviceNameTextView.setTextColor(Color.GRAY);
-                deviceAddressTextView.setTextColor(Color.GRAY);
-                deviceAddressTextView.setText(R.string.pairing);
-
-                bd.createBond();
-            }
-        }
-    };
-
-    private DeviceItemListener pairedDeviceListener = new DeviceItemListener() {
-        @Override
-        public void itemClicked(int position, TextView deviceNameTextView, TextView deviceAddressTextView) {
-
-        }
-    };
-
+    /**
+     * Sets device item views.
+     * @param name
+     * @param info
+     */
+    private void setItemView(TextView name, TextView info){
+        this.devNameTxtView = name;
+        this.devInfoTxtView = info;
+    }
 }
