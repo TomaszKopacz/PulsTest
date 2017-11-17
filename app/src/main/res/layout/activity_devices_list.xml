@@ -117,5 +117,12 @@
             app:cpb_colorProgress="@color/colorPrimaryLight"
             app:cpb_colorIndicator="@color/colorAccent"
             app:cpb_selectorIdle="@color/colorAccent"/>
+
+        <Button
+            android:id="@+id/startBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </LinearLayout>

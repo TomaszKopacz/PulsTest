@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import com.dd.CircularProgressButton;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.adapters.DevicesAdapter;
+import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothReader;
+import com.tomaszkopacz.pulseoxymeter.btservice.DeviceConnector;
 import com.tomaszkopacz.pulseoxymeter.listeners.DeviceItemListener;
 
 import org.w3c.dom.Text;
@@ -63,6 +66,9 @@ public class DevicesListActivity extends AppCompatActivity{
     @BindView(R.id.scanBtn)
     CircularProgressButton scanBtn;
 
+    @BindView(R.id.startBtn)
+    Button startBtn;
+
     //device item view - based on device_row.xml
     private TextView devNameTxtView;
     private TextView devInfoTxtView;
@@ -72,7 +78,8 @@ public class DevicesListActivity extends AppCompatActivity{
 
     //bluetooth settings
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothSocket mBluetoothSocket;
+    private DeviceConnector mDeviceConnector;
+    private BluetoothReader mBluetoothReader;
 
     //bluetooth devices
     private List<BluetoothDevice> pairedDevices = new ArrayList<>();
@@ -126,6 +133,8 @@ public class DevicesListActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mDeviceConnector != null)
+            mDeviceConnector.closeConnection();
         unregisterReceiver(mBroadcastReceiver);
     }
 
@@ -137,8 +146,12 @@ public class DevicesListActivity extends AppCompatActivity{
     public void onBtSwitchStateChanged(boolean checked){
         if (checked)
             mBluetoothAdapter.enable();
-        else
+        else {
+            if (mDeviceConnector != null)
+                mDeviceConnector.closeConnection();
+
             mBluetoothAdapter.disable();
+        }
     }
 
     @OnClick(R.id.scanBtn)
@@ -160,6 +173,15 @@ public class DevicesListActivity extends AppCompatActivity{
             Toast.makeText(this, R.string.bt_off_msg, Toast.LENGTH_SHORT).show();
     }
 
+    @OnClick(R.id.startBtn)
+    public void startData(){
+        try {
+            mBluetoothReader.read();
+        } catch (Exception e) {
+            Log.d("TomaszKopacz", "DUPA");
+        }
+    }
+
 
     private DeviceItemListener discoveredDeviceListener = new DeviceItemListener() {
         @Override
@@ -178,13 +200,22 @@ public class DevicesListActivity extends AppCompatActivity{
     private DeviceItemListener pairedDeviceListener = new DeviceItemListener() {
         @Override
         public void itemClicked(int position, TextView deviceNameTextView, TextView deviceAddressTextView) {
+            //stop discovery
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             scanBtn.setProgress(BUTTON_LAZY);
 
+            //get device clicked
             BluetoothDevice device = pairedDevices.get(position);
             setItemView(deviceNameTextView, deviceAddressTextView);
 
-            connectToDevice(device);
+            //connect
+            mDeviceConnector = new DeviceConnector(device);
+            if (mDeviceConnector.connectToDevice()) {
+                devInfoTxtView.setText(R.string.connected);
+                mBluetoothReader = new BluetoothReader(mDeviceConnector.getSocket());
+
+            } else
+                devInfoTxtView.setText(R.string.disconnected);
         }
     };
     /*==============================================================================================
@@ -273,31 +304,6 @@ public class DevicesListActivity extends AppCompatActivity{
             }
         }
     };
-
-    /**
-     * Connects to a device.
-     * @param device bluetooth device to connect
-     */
-    private void connectToDevice(BluetoothDevice device){
-
-        //close connection if opened
-        if (mBluetoothSocket != null)
-            try {
-                mBluetoothSocket.close();
-            } catch (Exception e) {}
-
-        //open socket
-        try {
-            UUID mUuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-            mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(mUuid);
-            mBluetoothSocket.connect();
-
-            devInfoTxtView.setText(R.string.connected);
-
-        } catch (Exception e) {
-            devInfoTxtView.setText(R.string.disconnected);
-        }
-    }
 
     /*==============================================================================================
                                     PREPARING DEVICES LISTS
