@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.DevicesListActivity">
+        <activity android:name=".controller.DevicesListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
