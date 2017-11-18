@@ -6,8 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 
 import com.tomaszkopacz.pulseoxymeter.controller.BluetoothListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tomaszkopacz on 17.11.17.
@@ -66,7 +71,53 @@ public class BluetoothDetector {
      * @return boolean
      */
     public static boolean isBtAdapterEnabled(){
-        return deviceBtAdapter.isEnabled() ? true : false;
+        if (isDeviceBtCompatible())
+            return deviceBtAdapter.isEnabled() ? true : false;
+
+        return false;
+    }
+
+    /**
+     * Returns list of paired devices.
+     * @return devices list
+     */
+    public static List<BluetoothDevice> getPairedDevices(){
+
+        List<BluetoothDevice> devices = new ArrayList<>();
+
+        if (isDeviceBtCompatible()) {
+            Set<BluetoothDevice> devicesSet = deviceBtAdapter.getBondedDevices();
+            for (BluetoothDevice bd : devicesSet)
+                devices.add(bd);
+        }
+
+        return devices;
+    }
+
+    /**
+     * Starts bluetooth devices discovery.
+     */
+    public static void startScanning(){
+        if (isDeviceBtCompatible())
+            deviceBtAdapter.startDiscovery();
+    }
+
+    /**
+     * Stops bluetooth devices discovery.
+     */
+    public static void stopScanning(){
+        if (isDeviceBtCompatible())
+            deviceBtAdapter.cancelDiscovery();
+    }
+
+    /**
+     * Tries to pair with a given bluetooth device.
+     * @param device
+     */
+    public static void pair(BluetoothDevice device){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            device.createBond();
+        }
     }
 
     //bluetooth state changes listening

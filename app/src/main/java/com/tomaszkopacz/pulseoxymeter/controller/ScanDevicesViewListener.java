@@ -13,7 +13,12 @@ public interface ScanDevicesViewListener {
     void btStateChanged(boolean state);
 
     /**
-     * Runs, when scan button is clicked.
+     * Runs, when scan is started.
      */
     void startScan();
+
+    /**
+     * Runs, when scan is stopped.
+     */
+    void stopScan();
 }

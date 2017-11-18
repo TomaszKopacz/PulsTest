@@ -1,21 +1,25 @@
 package com.tomaszkopacz.pulseoxymeter.design;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 import com.tomaszkopacz.pulseoxymeter.R;
+import com.tomaszkopacz.pulseoxymeter.controller.DeviceItemListener;
 import com.tomaszkopacz.pulseoxymeter.controller.ScanDevicesViewListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +66,18 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     private Typeface fontRegular;
     private Typeface fontBold;
 
+    //lists
+    private DevicesAdapter pairedDevicesAdapter;
+    private DevicesAdapter discoveredDevicesAdapter;
+
+    //item view
+    private TextView deviceNameTextView;
+    private TextView deviceInfoTextView;
+
+    //scan button
+    private final int BUTTON_LAZY = 0;
+    private final int BUTTON_IN_PROGRESS = 10;
+
     /*==============================================================================================
                                         INITIALIZING
     ==============================================================================================*/
@@ -80,6 +96,9 @@ public class ScanDevicesViewMember implements ScanDevicesView {
         fontRegular = Typeface.createFromAsset(resources.getAssets(), FONT_REGULAR);
         fontBold = Typeface.createFromAsset(resources.getAssets(), FONT_BOLD);
         setFonts();
+
+        //scan button
+        scanBtn.setIndeterminateProgressMode(true);
     }
 
     /**
@@ -91,7 +110,7 @@ public class ScanDevicesViewMember implements ScanDevicesView {
         discoveredDevicesTextView.setTypeface(fontRegular);
     }
     /*==============================================================================================
-                                        EVENTS NOTIFYING
+                                            CONTROLS
     ==============================================================================================*/
 
     @OnCheckedChanged(R.id.enableBTSwitch)
@@ -103,15 +122,28 @@ public class ScanDevicesViewMember implements ScanDevicesView {
 
     @OnClick(R.id.scanBtn)
     public void onScanBtnPressed(){
-        if (listener != null)
-            listener.startScan();
+
+        switch (scanBtn.getProgress()) {
+
+            case BUTTON_LAZY:
+                if (listener != null)
+                    listener.startScan();
+                break;
+
+            case BUTTON_IN_PROGRESS:
+                if (listener != null)
+                    listener.stopScan();
+                break;
+        }
     }
 
     @OnClick(R.id.startBtn)
     public void onStartBtnPressed(){
-        if (listener != null)
-            listener.startScan();
     }
+
+    /*==============================================================================================
+
+    ==============================================================================================*/
 
     @Override
     public void setListener(final ScanDevicesViewListener listener) {
@@ -124,13 +156,64 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     }
 
     @Override
-    public void startScan() {
+    public void createPairedDevicesList(List<BluetoothDevice> devices, DeviceItemListener listener) {
 
+        //create settings
+        pairedDevicesAdapter = new DevicesAdapter(devices, listener);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(rootView.getContext());
+
+        //set recycler view
+        pairedDevicesRecView.setAdapter(pairedDevicesAdapter);
+        pairedDevicesRecView.setLayoutManager(layout);
+    }
+
+    @Override
+    public void createDiscoveredDevicesList(List<BluetoothDevice> devices, DeviceItemListener listener) {
+
+        //create settings
+        discoveredDevicesAdapter = new DevicesAdapter(devices, listener);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(rootView.getContext());
+
+        //set recycler view
+        discoveredDevicesRecView.setAdapter(discoveredDevicesAdapter);
+        discoveredDevicesRecView.setLayoutManager(layout);
+    }
+
+    @Override
+    public void insertToPairedDevicesList(int position) {
+        pairedDevicesAdapter.notifyItemInserted(position);
+    }
+
+    @Override
+    public void insertToDiscoveredDevicesList(int position) {
+        discoveredDevicesAdapter.notifyItemInserted(position);
+    }
+
+    @Override
+    public void removeFromDiscoveredDevicesList(int position) {
+        discoveredDevicesAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void setItemView(TextView deviceNameTextView, TextView deviceInfoTextView) {
+        this.deviceNameTextView = deviceNameTextView;
+        this.deviceInfoTextView = deviceInfoTextView;
+    }
+
+    @Override
+    public void setInfoText(String info) {
+        if (deviceInfoTextView != null)
+            deviceInfoTextView.setText(info);
+    }
+
+    @Override
+    public void startScan() {
+        scanBtn.setProgress(BUTTON_IN_PROGRESS);
     }
 
     @Override
     public void stopScan() {
-
+        scanBtn.setProgress(BUTTON_LAZY);
     }
 
     @Override

@@ -8,5 +8,5 @@ import android.content.Intent;
 
 public interface BluetoothListener {
 
-    void onBtEventAppears(Intent intent, int state);
+    void onBtEventAppears(Intent intent, int event);
 }
