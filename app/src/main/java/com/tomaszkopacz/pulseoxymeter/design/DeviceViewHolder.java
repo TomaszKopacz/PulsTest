@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.controller.DeviceItemListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,9 +24,9 @@ public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.On
     @BindView(R.id.devaddressTxtView)
     TextView deviceAddressTxtView;
 
-    private DeviceItemListener listener;
+    private ListItemListener listener;
 
-    public DeviceViewHolder(View itemView, DeviceItemListener listener) {
+    public DeviceViewHolder(View itemView, ListItemListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 

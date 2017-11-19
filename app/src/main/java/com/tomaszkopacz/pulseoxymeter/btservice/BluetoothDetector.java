@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
-import com.tomaszkopacz.pulseoxymeter.controller.BluetoothListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +78,22 @@ public class BluetoothDetector {
     }
 
     /**
+     * Starts bluetooth devices discovery.
+     */
+    public static void startScanning(){
+        if (isDeviceBtCompatible())
+            deviceBtAdapter.startDiscovery();
+    }
+
+    /**
+     * Stops bluetooth devices discovery.
+     */
+    public static void stopScanning(){
+        if (isDeviceBtCompatible())
+            deviceBtAdapter.cancelDiscovery();
+    }
+
+    /**
      * Returns list of paired devices.
      * @return devices list
      */
@@ -95,22 +111,6 @@ public class BluetoothDetector {
     }
 
     /**
-     * Starts bluetooth devices discovery.
-     */
-    public static void startScanning(){
-        if (isDeviceBtCompatible())
-            deviceBtAdapter.startDiscovery();
-    }
-
-    /**
-     * Stops bluetooth devices discovery.
-     */
-    public static void stopScanning(){
-        if (isDeviceBtCompatible())
-            deviceBtAdapter.cancelDiscovery();
-    }
-
-    /**
      * Tries to pair with a given bluetooth device.
      * @param device
      */
@@ -118,6 +118,28 @@ public class BluetoothDetector {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             device.createBond();
         }
+    }
+
+    private IntentFilter filter;
+    private BluetoothListener listener;
+
+    /**
+     * Registers broadcast receiver for bluetooth changes.
+     * When new event appears sends state and intent to a given listener.
+     * Possible states are: BT_ON, BT_OFF, DEVICE_DISCOVERED, NOT_PAIRED, PAIRING, PAIRED.
+     * @param context
+     * @param listener
+     */
+    public void registerBtReceiver(Context context, BluetoothListener listener){
+
+        filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+
+        this.listener = listener;
+
+        context.registerReceiver(btReceiver, filter);
     }
 
     //bluetooth state changes listening
@@ -142,7 +164,7 @@ public class BluetoothDetector {
             else if (BluetoothDevice.ACTION_FOUND.equals(action))
                 listener.onBtEventAppears(intent, DEVICE_DISCOVERED);
 
-            //when sta\te of bonding is changed (bond turned off, pairing, paired)
+                //when sta\te of bonding is changed (bond turned off, pairing, paired)
             else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
                 BluetoothDevice bd = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
@@ -158,30 +180,8 @@ public class BluetoothDetector {
         }
     };
 
-    private IntentFilter filter;
-    private BluetoothListener listener;
-
     /**
-     * Registers broadcast receiver for bluetooth changes.
-     * When new event appears sends state and intent to a given listener.
-     * Possible states are: BT_ON, BT_OFF, DEVICE_DISCOVERED, NOT_PAIRED, PAIRING, PAIRED.
-     * @param context
-     * @param listener
-     */
-    public void registerBtReceiver(Context context, BluetoothListener listener){
-
-        filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-
-        this.listener = listener;
-
-        context.registerReceiver(btReceiver, filter);
-    }
-
-    /**
-     *
+     * Unregisters bluetooth broadcast receiver.
      * @param context
      */
     public void unregisterBtReceiver(Context context){

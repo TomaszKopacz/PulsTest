@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,10 @@ import android.widget.TextView;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothConnector;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
+import com.tomaszkopacz.pulseoxymeter.design.DeviceItemViewMember;
 import com.tomaszkopacz.pulseoxymeter.design.ScanDevicesViewMember;
+import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,18 +24,19 @@ import java.util.List;
  * Created by tomaszkopacz on 17.11.17.
  */
 
-public class DevicesListFragment extends Fragment implements ScanDevicesViewListener, BluetoothListener{
+public class DevicesListFragment extends Fragment implements BluetoothListener {
 
     //view
     private ScanDevicesViewMember mScanDevicesViewMember;
+    private DeviceItemViewMember mDeviceItemViewMember;
 
     //bluetooth settings
     private BluetoothDetector mBluetoothDetector;
     private BluetoothConnector mBluetoothConnector;
 
     //devices
-    List<BluetoothDevice> pairedDevices = new ArrayList<>();
-    List<BluetoothDevice> discoveredDevices = new ArrayList<>();
+    private List<BluetoothDevice> pairedDevices = new ArrayList<>();
+    private List<BluetoothDevice> discoveredDevices = new ArrayList<>();
 
 
     /*==============================================================================================
@@ -46,7 +49,9 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
         //prepare view
         mScanDevicesViewMember = new ScanDevicesViewMember(inflater, container);
         mScanDevicesViewMember.setListener(this);
-        mScanDevicesViewMember.customizeLayout(getActivity().getResources());
+        mScanDevicesViewMember.customizeLayout();
+
+        mDeviceItemViewMember = new DeviceItemViewMember(getContext());
 
         //bluetooth
         if (BluetoothDetector.isDeviceBtCompatible()) {
@@ -55,7 +60,7 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
             mBluetoothDetector.registerBtReceiver(getContext(), this);
 
             if (BluetoothDetector.isBtAdapterEnabled())
-                mScanDevicesViewMember.setBtSwitchChecked(true);
+                mScanDevicesViewMember.btStateChanged(true);
 
             //get devices
             createDevicesList();
@@ -63,7 +68,6 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
 
         return mScanDevicesViewMember.getView();
     }
-
 
     /*==============================================================================================
                                    BLUETOOTH EVENTS SERVICE
@@ -86,14 +90,14 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
         switch (event){
 
             case BluetoothDetector.BT_ON:
-                mScanDevicesViewMember.setBtSwitchChecked(true);
+                mScanDevicesViewMember.btStateChanged(true);
                 createDevicesList();
                 break;
 
             case BluetoothDetector.BT_OFF:
                 stopScan();
                 mScanDevicesViewMember.stopScan();
-                mScanDevicesViewMember.setBtSwitchChecked(false);
+                mScanDevicesViewMember.btStateChanged(false);
                 break;
 
             case BluetoothDetector.DEVICE_DISCOVERED:
@@ -109,7 +113,7 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
                 break;
 
             case BluetoothDetector.PAIRING:
-                mScanDevicesViewMember.setInfoText(getResources().getString(R.string.pairing));
+                mDeviceItemViewMember.getInfoTextView().setText(R.string.pairing);
                 break;
 
             case BluetoothDetector.PAIRED:
@@ -117,7 +121,6 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 removeDiscoveredDevice(pairedDevice);
                 insertPairedDevice(pairedDevice);
-                mScanDevicesViewMember.setInfoText(pairedDevice.getAddress());
                 break;
         }
     }
@@ -155,7 +158,7 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
                 .createDiscoveredDevicesList(discoveredDevices, discoveredDevicesListener);
     }
 
-    private DeviceItemListener pairedDevicesListener = new DeviceItemListener() {
+    private ListItemListener pairedDevicesListener = new ListItemListener() {
         @Override
         public void itemClicked(int position,
                                 TextView deviceNameTextView,
@@ -164,12 +167,11 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
         }
     };
 
-    private DeviceItemListener discoveredDevicesListener = new DeviceItemListener() {
+    private ListItemListener discoveredDevicesListener = new ListItemListener() {
         @Override
         public void itemClicked(int position,
                                 TextView deviceNameTextView,
                                 TextView deviceInfoTextView) {
-
 
             //stop scanning
             BluetoothDetector.stopScanning();
@@ -179,11 +181,11 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
             BluetoothDevice device = discoveredDevices.get(position);
 
             //create item view
-            mScanDevicesViewMember.setItemView(deviceNameTextView, deviceInfoTextView);
+            mDeviceItemViewMember.setNameTextView(deviceNameTextView);
+            mDeviceItemViewMember.setInfoTextView(deviceInfoTextView);
 
             //try to pair
             BluetoothDetector.pair(device);
-
         }
     };
 
@@ -191,20 +193,20 @@ public class DevicesListFragment extends Fragment implements ScanDevicesViewList
     private void insertPairedDevice(BluetoothDevice device){
         int position = 0;
         pairedDevices.add(position, device);
-        mScanDevicesViewMember.insertToPairedDevicesList(position);
+        mScanDevicesViewMember.notifyInsertToPairedDevices(position);
     }
 
     //insert new device to discovered devices list
     private void insertDiscoveredDevice(BluetoothDevice device){
         int position = 0;
         discoveredDevices.add(position, device);
-        mScanDevicesViewMember.insertToDiscoveredDevicesList(position);
+        mScanDevicesViewMember.notifyInsertToDiscoveredDevices(position);
     }
 
     //remove device from discovered devices list
     private void removeDiscoveredDevice(BluetoothDevice device){
         int position = discoveredDevices.indexOf(device);
         discoveredDevices.remove(position);
-        mScanDevicesViewMember.removeFromDiscoveredDevicesList(position);
+        mScanDevicesViewMember.notifyRemoveFromDiscoveredDevices(position);
     }
 }

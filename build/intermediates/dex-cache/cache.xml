@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="26.0.0"
-        sha1="2a97b83aa8a01269c792e64c9c99f8c95c9fda45">
+        sha1="46aba43f875b6371d7ae6a0e464f27fc56fb048d">
         <dex dex="/home/tomaszkopacz/Workspace/AndroidStudio/PulseOxymeter/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_39a1e71b0c5e75e41b557474d9f32a0766cfb16f/classes.dex" />
     </item>
     <item

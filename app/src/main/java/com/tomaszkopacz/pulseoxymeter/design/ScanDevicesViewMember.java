@@ -1,11 +1,8 @@
 package com.tomaszkopacz.pulseoxymeter.design;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +12,10 @@ import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.controller.DeviceItemListener;
-import com.tomaszkopacz.pulseoxymeter.controller.ScanDevicesViewListener;
+import com.tomaszkopacz.pulseoxymeter.controller.MainActivity;
+import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,7 +31,7 @@ public class ScanDevicesViewMember implements ScanDevicesView {
 
     //general
     private View rootView;
-    private ScanDevicesViewListener listener;
+    private BluetoothListener listener;
 
     //components
     @BindView(R.id.btTxtView)
@@ -61,18 +58,9 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     @BindView(R.id.startBtn)
     Button startBtn;
 
-    //fonts
-    private Typeface fontThin;
-    private Typeface fontRegular;
-    private Typeface fontBold;
-
     //lists
     private DevicesAdapter pairedDevicesAdapter;
     private DevicesAdapter discoveredDevicesAdapter;
-
-    //item view
-    private TextView deviceNameTextView;
-    private TextView deviceInfoTextView;
 
     //scan button
     private final int BUTTON_LAZY = 0;
@@ -82,33 +70,28 @@ public class ScanDevicesViewMember implements ScanDevicesView {
                                         INITIALIZING
     ==============================================================================================*/
 
-    //Constructor - inflates view from xml file and parses componenets.
+    //Constructor - inflates view from xml file and parses components.
     public ScanDevicesViewMember(LayoutInflater inflater, ViewGroup views){
         rootView = inflater.inflate(R.layout.fragment_devices_lists, views, false);
         ButterKnife.bind(this, rootView);
     }
 
     @Override
-    public void customizeLayout(Resources resources) {
-
-        //create fonts
-        fontThin = Typeface.createFromAsset(resources.getAssets(), FONT_THIN);
-        fontRegular = Typeface.createFromAsset(resources.getAssets(), FONT_REGULAR);
-        fontBold = Typeface.createFromAsset(resources.getAssets(), FONT_BOLD);
+    public void customizeLayout() {
         setFonts();
-
-        //scan button
         scanBtn.setIndeterminateProgressMode(true);
     }
 
     /**
-     * Changes text of text views of root view with prepared fonts.
+     * Changes text of text views with prepared fonts.
      */
     private void setFonts(){
-        btTextView.setTypeface(fontBold);
-        pairedDevicesTextView.setTypeface(fontRegular);
-        discoveredDevicesTextView.setTypeface(fontRegular);
+        btTextView.setTypeface(MainActivity.FONT_BOLD);
+        pairedDevicesTextView.setTypeface(MainActivity.FONT_NORMAL);
+        discoveredDevicesTextView.setTypeface(MainActivity.FONT_NORMAL);
     }
+
+
     /*==============================================================================================
                                             CONTROLS
     ==============================================================================================*/
@@ -122,7 +105,6 @@ public class ScanDevicesViewMember implements ScanDevicesView {
 
     @OnClick(R.id.scanBtn)
     public void onScanBtnPressed(){
-
         switch (scanBtn.getProgress()) {
 
             case BUTTON_LAZY:
@@ -146,17 +128,17 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     ==============================================================================================*/
 
     @Override
-    public void setListener(final ScanDevicesViewListener listener) {
+    public void setListener(final BluetoothListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void setBtSwitchChecked(boolean b) {
+    public void btStateChanged(boolean b) {
         btSwitch.setChecked(b);
     }
 
     @Override
-    public void createPairedDevicesList(List<BluetoothDevice> devices, DeviceItemListener listener) {
+    public void createPairedDevicesList(List<BluetoothDevice> devices, ListItemListener listener) {
 
         //create settings
         pairedDevicesAdapter = new DevicesAdapter(devices, listener);
@@ -168,7 +150,7 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     }
 
     @Override
-    public void createDiscoveredDevicesList(List<BluetoothDevice> devices, DeviceItemListener listener) {
+    public void createDiscoveredDevicesList(List<BluetoothDevice> devices, ListItemListener listener) {
 
         //create settings
         discoveredDevicesAdapter = new DevicesAdapter(devices, listener);
@@ -180,30 +162,18 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     }
 
     @Override
-    public void insertToPairedDevicesList(int position) {
+    public void notifyInsertToPairedDevices(int position) {
         pairedDevicesAdapter.notifyItemInserted(position);
     }
 
     @Override
-    public void insertToDiscoveredDevicesList(int position) {
+    public void notifyInsertToDiscoveredDevices(int position) {
         discoveredDevicesAdapter.notifyItemInserted(position);
     }
 
     @Override
-    public void removeFromDiscoveredDevicesList(int position) {
+    public void notifyRemoveFromDiscoveredDevices(int position) {
         discoveredDevicesAdapter.notifyItemRemoved(position);
-    }
-
-    @Override
-    public void setItemView(TextView deviceNameTextView, TextView deviceInfoTextView) {
-        this.deviceNameTextView = deviceNameTextView;
-        this.deviceInfoTextView = deviceInfoTextView;
-    }
-
-    @Override
-    public void setInfoText(String info) {
-        if (deviceInfoTextView != null)
-            deviceInfoTextView.setText(info);
     }
 
     @Override

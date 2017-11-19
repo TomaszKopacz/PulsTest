@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.controller.DeviceItemListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ import java.util.List;
 public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
 
     private List<BluetoothDevice> devices = new ArrayList<>();
-    private DeviceItemListener listener;
+    private ListItemListener listener;
 
-    public DevicesAdapter(List<BluetoothDevice> devices, DeviceItemListener listener){
+    public DevicesAdapter(List<BluetoothDevice> devices, ListItemListener listener){
         this.devices = devices;
         this.listener = listener;
     }
@@ -31,6 +31,8 @@ public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.device_row, parent, false);
+
+
 
         return new DeviceViewHolder(view, listener);
     }

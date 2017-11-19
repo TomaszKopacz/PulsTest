@@ -11,11 +11,6 @@ import android.view.View;
 
 public interface GeneralView {
 
-    //fonts in assets
-    String FONT_THIN = "Comfortaa_Thin.ttf";
-    String FONT_REGULAR = "Comfortaa_Regular.ttf";
-    String FONT_BOLD = "Comfortaa_Bold.ttf";
-
     /**
      * Returns view.
      * @return View
@@ -24,7 +19,6 @@ public interface GeneralView {
 
     /**
      * Customises layout of a view.
-     * @param resources
      */
-    void customizeLayout(Resources resources);
+    void customizeLayout();
 }
