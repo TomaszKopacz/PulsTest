@@ -3,11 +3,13 @@ package com.tomaszkopacz.pulseoxymeter.controller;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothConnector;
@@ -38,6 +40,12 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
     private List<BluetoothDevice> pairedDevices = new ArrayList<>();
     private List<BluetoothDevice> discoveredDevices = new ArrayList<>();
 
+    //connecting state
+    private int state;
+
+    //maximum connecting time 5 seconds
+    private static final int CONNECT_PERIOD = 5000;
+
 
     /*==============================================================================================
                                        LIFE CYCLE
@@ -51,7 +59,7 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
         mScanDevicesViewMember.setListener(this);
         mScanDevicesViewMember.customizeLayout();
 
-        mDeviceItemViewMember = new DeviceItemViewMember(getContext());
+        mDeviceItemViewMember = new DeviceItemViewMember(inflater, container);
 
         //bluetooth
         if (BluetoothDetector.isDeviceBtCompatible()) {
@@ -67,6 +75,12 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
         }
 
         return mScanDevicesViewMember.getView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBluetoothDetector.unregisterBtReceiver(getContext());
     }
 
     /*==============================================================================================
@@ -113,7 +127,8 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
                 break;
 
             case BluetoothDetector.PAIRING:
-                mDeviceItemViewMember.getInfoTextView().setText(R.string.pairing);
+                if(mDeviceItemViewMember.getInfoTextView() != null)
+                    mDeviceItemViewMember.getInfoTextView().setText(R.string.pairing);
                 break;
 
             case BluetoothDetector.PAIRED:
@@ -130,7 +145,9 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
         if (BluetoothDetector.isBtAdapterEnabled()) {
             mScanDevicesViewMember.startScan();
             BluetoothDetector.startScanning();
-        }
+
+        } else
+            Toast.makeText(getContext(), R.string.bt_off_msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -142,28 +159,30 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
 
 
     /*==============================================================================================
-                                           DEVICES LISTS
+                                           LISTS' LISTENERS
      =============================================================================================*/
-
-    private void createDevicesList(){
-
-        //get devices (discovered devices list is empty by default)
-        pairedDevices = BluetoothDetector.getPairedDevices();
-
-        //set lists
-        mScanDevicesViewMember
-                .createPairedDevicesList(pairedDevices, pairedDevicesListener);
-
-        mScanDevicesViewMember
-                .createDiscoveredDevicesList(discoveredDevices, discoveredDevicesListener);
-    }
 
     private ListItemListener pairedDevicesListener = new ListItemListener() {
         @Override
         public void itemClicked(int position,
                                 TextView deviceNameTextView,
-                                TextView deviceAddressTextView) {
+                                TextView deviceInfoTextView) {
 
+            //stop scanning
+            BluetoothDetector.stopScanning();
+            mScanDevicesViewMember.stopScan();
+
+            //get device
+            BluetoothDevice device = pairedDevices.get(position);
+
+            //create item view
+            mDeviceItemViewMember.setNameTextView(deviceNameTextView);
+            mDeviceItemViewMember.setInfoTextView(deviceInfoTextView);
+            mDeviceItemViewMember.getInfoTextView().setText(R.string.connecting);
+
+            //connect
+            mBluetoothConnector = new BluetoothConnector(device);
+            connectToDevice(mBluetoothConnector);
         }
     };
 
@@ -188,6 +207,81 @@ public class DevicesListFragment extends Fragment implements BluetoothListener {
             BluetoothDetector.pair(device);
         }
     };
+
+
+    /*==============================================================================================
+                                        PRIVATE UTIL METHODS
+     =============================================================================================*/
+
+    private void createDevicesList(){
+
+        //clear lists if not empty
+        pairedDevices.clear();
+        discoveredDevices.clear();
+
+        //get devices (discovered devices list is empty by default)
+        pairedDevices = BluetoothDetector.getPairedDevices();
+
+        //set lists
+        mScanDevicesViewMember
+                .createPairedDevicesList(pairedDevices, pairedDevicesListener);
+
+        mScanDevicesViewMember
+                .createDiscoveredDevicesList(discoveredDevices, discoveredDevicesListener);
+    }
+
+    //Connects to device. Connecting runs in new thread and lasts maximum 10 seconds.
+    //After all info text view is set up.
+    private void connectToDevice(final BluetoothConnector connector){
+        final Runnable connectionStartRunnable;
+        final Runnable connectionStopRunnable;
+        final Runnable uiLayoutChangeRunnable;
+
+        final Thread connectionThread;
+        final Handler stopThreadHandler;
+
+        //RUNNABLE: change text view - only possible in ui thread
+        uiLayoutChangeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (state == BluetoothConnector.CONNECTED)
+                    mDeviceItemViewMember.getInfoTextView().setText(R.string.connected);
+
+                else
+                    mDeviceItemViewMember.getInfoTextView().setText(R.string.disconnected);
+            }
+        };
+
+        //RUNNABLE: stop connecting after period of time
+        connectionStopRunnable = new Runnable() {
+            @Override
+            public void run() {
+                connector.closeConnection();
+            }
+        };
+
+        //RUNNABLE: start connection
+        connectionStartRunnable = new Runnable() {
+            @Override
+            public void run() {
+                connector.closeConnection();
+                connector.connectToDevice();
+
+                state = connector.getState();
+                while (state == BluetoothConnector.CONNECTING){
+
+                }
+
+                getActivity().runOnUiThread(uiLayoutChangeRunnable);
+            }
+        };
+
+        //start
+        connectionThread = new Thread(connectionStartRunnable);
+        stopThreadHandler = new Handler();
+        stopThreadHandler.postDelayed(connectionStopRunnable, CONNECT_PERIOD);
+        connectionThread.start();
+    }
 
     //insert new device to paired devices list
     private void insertPairedDevice(BluetoothDevice device){

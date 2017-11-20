@@ -22,7 +22,7 @@ public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.On
     TextView deviceNameTxtView;
 
     @BindView(R.id.devaddressTxtView)
-    TextView deviceAddressTxtView;
+    TextView deviceInfoTxtView;
 
     private ListItemListener listener;
 
@@ -36,6 +36,6 @@ public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View view) {
-        listener.itemClicked(getAdapterPosition(), deviceNameTxtView, deviceAddressTxtView);
+        listener.itemClicked(getAdapterPosition(), deviceNameTxtView, deviceInfoTxtView);
     }
 }

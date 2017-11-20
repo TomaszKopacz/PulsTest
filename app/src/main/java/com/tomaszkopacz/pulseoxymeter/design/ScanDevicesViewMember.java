@@ -55,9 +55,6 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     @BindView(R.id.scanBtn)
     CircularProgressButton scanBtn;
 
-    @BindView(R.id.startBtn)
-    Button startBtn;
-
     //lists
     private DevicesAdapter pairedDevicesAdapter;
     private DevicesAdapter discoveredDevicesAdapter;
@@ -77,18 +74,19 @@ public class ScanDevicesViewMember implements ScanDevicesView {
     }
 
     @Override
+    public void setListener(final BluetoothListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
     public void customizeLayout() {
         setFonts();
         scanBtn.setIndeterminateProgressMode(true);
     }
 
-    /**
-     * Changes text of text views with prepared fonts.
-     */
-    private void setFonts(){
-        btTextView.setTypeface(MainActivity.FONT_BOLD);
-        pairedDevicesTextView.setTypeface(MainActivity.FONT_NORMAL);
-        discoveredDevicesTextView.setTypeface(MainActivity.FONT_NORMAL);
+    @Override
+    public View getView() {
+        return rootView;
     }
 
 
@@ -119,23 +117,31 @@ public class ScanDevicesViewMember implements ScanDevicesView {
         }
     }
 
-    @OnClick(R.id.startBtn)
-    public void onStartBtnPressed(){
-    }
 
     /*==============================================================================================
-
+                                        REACTIONS
     ==============================================================================================*/
 
-    @Override
-    public void setListener(final BluetoothListener listener) {
-        this.listener = listener;
-    }
 
     @Override
     public void btStateChanged(boolean b) {
         btSwitch.setChecked(b);
     }
+
+    @Override
+    public void startScan() {
+        scanBtn.setProgress(BUTTON_IN_PROGRESS);
+    }
+
+    @Override
+    public void stopScan() {
+        scanBtn.setProgress(BUTTON_LAZY);
+    }
+
+
+    /*==============================================================================================
+                                        LISTS
+    ==============================================================================================*/
 
     @Override
     public void createPairedDevicesList(List<BluetoothDevice> devices, ListItemListener listener) {
@@ -176,18 +182,17 @@ public class ScanDevicesViewMember implements ScanDevicesView {
         discoveredDevicesAdapter.notifyItemRemoved(position);
     }
 
-    @Override
-    public void startScan() {
-        scanBtn.setProgress(BUTTON_IN_PROGRESS);
-    }
 
-    @Override
-    public void stopScan() {
-        scanBtn.setProgress(BUTTON_LAZY);
-    }
+    /*==============================================================================================
+                                        PRIVATE METHODS
+    ==============================================================================================*/
 
-    @Override
-    public View getView() {
-        return rootView;
+    /**
+     * Changes text of text views with prepared fonts.
+     */
+    private void setFonts(){
+        btTextView.setTypeface(MainActivity.FONT_BOLD);
+        pairedDevicesTextView.setTypeface(MainActivity.FONT_BOLD);
+        discoveredDevicesTextView.setTypeface(MainActivity.FONT_BOLD);
     }
 }

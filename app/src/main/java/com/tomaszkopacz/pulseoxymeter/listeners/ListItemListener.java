@@ -12,7 +12,7 @@ public abstract class ListItemListener {
      * Runs, when clicked item from a list.
      * @param position
      * @param deviceNameTextView
-     * @param deviceAddressTextView
+     * @param deviceInfoTextView
      */
-    public abstract void itemClicked(int position, TextView deviceNameTextView, TextView deviceAddressTextView);
+    public abstract void itemClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);
 }

@@ -1,9 +1,8 @@
 package com.tomaszkopacz.pulseoxymeter.design;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -18,14 +17,9 @@ public class DeviceItemViewMember implements DeviceItemView {
     private TextView nameTextView;
     private TextView infoTextView;
 
-    public DeviceItemViewMember(Context context){
+    public DeviceItemViewMember(LayoutInflater inflater, ViewGroup container){
 
-        LayoutInflater inflater =
-                (LayoutInflater) context
-                .getApplicationContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        this.rootView = inflater.inflate(R.layout.device_row, null);
+        this.rootView = inflater.inflate(R.layout.item, container, false);
     }
 
     @Override
@@ -34,7 +28,7 @@ public class DeviceItemViewMember implements DeviceItemView {
     }
 
     @Override
-    public void customizeLayout(Resources resources) {
+    public void customizeLayout() {
     }
 
     @Override

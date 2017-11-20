@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.tomaszkopacz.pulseoxymeter.R;
+import com.tomaszkopacz.pulseoxymeter.controller.MainActivity;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 
 import java.util.ArrayList;
@@ -30,8 +31,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.device_row, parent, false);
-
+                .inflate(R.layout.item, parent, false);
 
 
         return new DeviceViewHolder(view, listener);
@@ -40,7 +40,10 @@ public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
     @Override
     public void onBindViewHolder(DeviceViewHolder holder, int position) {
         holder.deviceNameTxtView.setText(devices.get(position).getName());
-        holder.deviceAddressTxtView.setText(devices.get(position).getAddress());
+        holder.deviceInfoTxtView.setText(devices.get(position).getAddress());
+
+        holder.deviceNameTxtView.setTypeface(MainActivity.FONT_REGULAR);
+        holder.deviceInfoTxtView.setTypeface(MainActivity.FONT_THIN);
     }
 
     @Override

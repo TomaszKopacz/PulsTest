@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:weightSum="11">
+    android:weightSum="11"
+    android:background="@color/colorPrimaryLight">
 
     <LinearLayout
         android:id="@+id/btLinLayout"
@@ -39,7 +40,7 @@
         android:id="@+id/pairedDevTxtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/paireddevices"
+        android:text="@string/paired_devices"
         android:gravity="center_vertical"
         android:textSize="@dimen/largefont"
         android:layout_weight="1"
@@ -55,7 +56,8 @@
         android:layout_marginBottom="@dimen/margin"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginLeft="@dimen/largemargin"
-        android:layout_marginRight="@dimen/largemargin">
+        android:layout_marginRight="@dimen/largemargin"
+        android:background="@color/textPrimary">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pairedDevicesRecView"
@@ -70,7 +72,7 @@
         android:id="@+id/discovDevTxtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/discovereddevices"
+        android:text="@string/discovered_devices"
         android:textSize="@dimen/largefont"
         android:layout_weight="1"
         android:layout_marginTop="@dimen/margin"
@@ -86,7 +88,8 @@
         android:layout_marginBottom="@dimen/margin"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginLeft="@dimen/largemargin"
-        android:layout_marginRight="@dimen/largemargin">
+        android:layout_marginRight="@dimen/largemargin"
+        android:background="@color/textPrimary">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/discoveredDevicesRecView"
@@ -111,18 +114,12 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             app:cpb_textIdle="@string/start_scan"
-            android:textColor="@color/text"
+            android:textColor="@color/textPrimary"
             android:layout_centerInParent="true"
             app:cpb_cornerRadius="60dp"
             app:cpb_colorProgress="@color/colorPrimaryLight"
             app:cpb_colorIndicator="@color/colorAccent"
             app:cpb_selectorIdle="@color/colorAccent"/>
 
-        <Button
-            android:id="@+id/startBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="START"
-            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </LinearLayout>
