@@ -68,17 +68,20 @@ public class BluetoothConnector {
         public void run() {
 
             try {
+
                 UUID mUuid = UUID.fromString(SOCKET_UUID);
                 mBluetoothSocket = mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(mUuid);
                 mBluetoothSocket.connect();
 
                 state = CONNECTED;
+                activity.runOnUiThread(uiRunnable);
+
 
             } catch (Exception e) {
                 state = DISCONNECTED;
+                activity.runOnUiThread(uiRunnable);
             }
 
-            activity.runOnUiThread(uiRunnable);
         }
     };
 
@@ -91,12 +94,13 @@ public class BluetoothConnector {
 
             try {
                 mBluetoothSocket.close();
+                state = DISCONNECTED;
+                activity.runOnUiThread(uiRunnable);
+
             } catch (IOException e) {
-
+                state = DISCONNECTED;
+                activity.runOnUiThread(uiRunnable);
             }
-
-            state = DISCONNECTED;
-            activity.runOnUiThread(uiRunnable);
         }
     };
 
@@ -112,8 +116,10 @@ public class BluetoothConnector {
      */
     public void closeConnection(){
         try {
-            if (mBluetoothSocket != null && mBluetoothSocket.isConnected())
+            if (mBluetoothSocket != null && mBluetoothSocket.isConnected()){
                 mBluetoothSocket.close();
+                mBluetoothSocket = null;
+            }
 
             state = DISCONNECTED;
 

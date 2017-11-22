@@ -137,6 +137,7 @@
             android:layout_centerInParent="true"
             app:cpb_cornerRadius="60dp"
             app:cpb_colorProgress="@color/colorPrimaryLight"
+            app:cpb_colorIndicatorBackground="@color/colorPrimaryLight"
             app:cpb_colorIndicator="@color/colorAccent"
             app:cpb_selectorIdle="@color/colorAccent"/>
 
