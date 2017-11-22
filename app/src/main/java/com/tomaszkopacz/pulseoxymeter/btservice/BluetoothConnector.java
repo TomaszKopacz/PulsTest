@@ -1,8 +1,13 @@
 package com.tomaszkopacz.pulseoxymeter.btservice;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
+
+import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -13,59 +18,108 @@ import java.util.UUID;
 
 public class BluetoothConnector {
 
-    private BluetoothDevice device;
+    private Activity activity;
+    private BluetoothListener listener;
+
+    private BluetoothDevice mBluetoothDevice;
     private BluetoothSocket mBluetoothSocket;
 
-    public static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
+    private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
+    private static final int CONNECT_PERIOD = 5000;
 
-    public static int state;
-    public static final int NONE = -1;
-    public static final int  DISCONNECTED = -10;
-    public static final int CONNECTING = 0;
-    public static final int CONNECTED = 10;
+    public static final int NONE = -100;
+    public static final int DISCONNECTED = 100;
+    public static final int CONNECTED = 110;
 
+    private int state = NONE;
 
-    public BluetoothConnector(BluetoothDevice device){
-        this.device = device;
-        mBluetoothSocket = null;
-
-        state = NONE;
+    public BluetoothConnector(Activity activity, BluetoothListener listener){
+        this.activity = activity;
+        this.listener = listener;
     }
 
     /**
-     * Opens bluetooth socket and connects to a device.
+     * Tries to connect to bluetooth device.
+     * Connection lasts 5 seconds in maximum.
+     * In this time, if connection is made state CONNECTED is sent.
+     * If connection fails, state DISCONNECTED is sent.
+     * @param device
      */
-    public void connectToDevice(){
+    public void connect(BluetoothDevice device){
 
-        state = CONNECTING;
+        closeConnection();
 
-        try {
-            UUID mUuid = UUID.fromString(SOCKET_UUID);
-            mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(mUuid);
-            mBluetoothSocket.connect();
-            state = CONNECTED;
+        state = NONE;
 
-        } catch (Exception e) {
+        if (device == null)
+            return;
+
+        this.mBluetoothDevice = device;
+
+        Thread connectThread = new Thread(startRunnable);
+        Handler stopHandler = new Handler();
+
+        stopHandler.postDelayed(stopRunnable, CONNECT_PERIOD);
+        connectThread.start();
+    }
+
+    private Runnable startRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            try {
+                UUID mUuid = UUID.fromString(SOCKET_UUID);
+                mBluetoothSocket = mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(mUuid);
+                mBluetoothSocket.connect();
+
+                state = CONNECTED;
+
+            } catch (Exception e) {
+                state = DISCONNECTED;
+            }
+
+            activity.runOnUiThread(uiRunnable);
+        }
+    };
+
+    private Runnable stopRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            if (mBluetoothSocket.isConnected())
+                return;
+
             try {
                 mBluetoothSocket.close();
+            } catch (IOException e) {
 
-            } catch (IOException e1) {}
+            }
 
             state = DISCONNECTED;
+            activity.runOnUiThread(uiRunnable);
         }
-    }
+    };
+
+    private Runnable uiRunnable = new Runnable() {
+        @Override
+        public void run() {
+            listener.btEventAppears(null, state);
+        }
+    };
 
     /**
      * Closes socket connection.
      */
     public void closeConnection(){
         try {
-            if (mBluetoothSocket != null)
+            if (mBluetoothSocket != null && mBluetoothSocket.isConnected())
                 mBluetoothSocket.close();
 
             state = DISCONNECTED;
 
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            state = DISCONNECTED;
+        }
     }
 
     /**
@@ -74,14 +128,6 @@ public class BluetoothConnector {
      */
     public BluetoothSocket getSocket(){
         return this.mBluetoothSocket;
-    }
-
-    public int getState(){
-        return state;
-    }
-
-    public void setState(int state){
-        this.state = state;
     }
 
 }

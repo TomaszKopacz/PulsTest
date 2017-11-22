@@ -16,9 +16,4 @@ public interface GeneralView {
      * @return View
      */
     View getView();
-
-    /**
-     * Customises layout of a view.
-     */
-    void customizeLayout();
 }

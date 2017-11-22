@@ -18,17 +18,12 @@ public class DeviceItemViewMember implements DeviceItemView {
     private TextView infoTextView;
 
     public DeviceItemViewMember(LayoutInflater inflater, ViewGroup container){
-
         this.rootView = inflater.inflate(R.layout.item, container, false);
     }
 
     @Override
     public View getView() {
         return rootView;
-    }
-
-    @Override
-    public void customizeLayout() {
     }
 
     @Override

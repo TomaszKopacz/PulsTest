@@ -2,11 +2,12 @@ package com.tomaszkopacz.pulseoxymeter.controller;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 
 import com.tomaszkopacz.pulseoxymeter.R;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
 
     //fonts
@@ -27,5 +28,9 @@ public class MainActivity extends FragmentActivity {
         FONT_THIN = Typeface.createFromAsset(getAssets(), FONT_THIN_NAME);
         FONT_REGULAR = Typeface.createFromAsset(getAssets(), FONT_REGULAR_NAME);
         FONT_BOLD = Typeface.createFromAsset(getAssets(), FONT_BOLD_NAME);
+    }
+
+    public void setActionBar(String title){
+        getSupportActionBar().setTitle(title);
     }
 }

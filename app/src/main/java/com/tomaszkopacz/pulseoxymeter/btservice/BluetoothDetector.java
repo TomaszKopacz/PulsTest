@@ -55,6 +55,10 @@ public class BluetoothDetector {
      */
     public static final int PAIRED = 60;
 
+    public BluetoothDetector(Context context, BluetoothListener receiver){
+        registerBtReceiver(context, receiver);
+    }
+
     /**
      * Checks, whether device is equipped with bluetooth.
      * @return boolean
@@ -130,7 +134,7 @@ public class BluetoothDetector {
      * @param context
      * @param listener
      */
-    public void registerBtReceiver(Context context, BluetoothListener listener){
+    private void registerBtReceiver(Context context, BluetoothListener listener){
 
         filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -153,29 +157,29 @@ public class BluetoothDetector {
 
                 if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                         == BluetoothAdapter.STATE_ON)
-                    listener.onBtEventAppears(intent, BT_ON);
+                    listener.btEventAppears(intent, BT_ON);
 
                 else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                         == BluetoothAdapter.STATE_OFF)
-                    listener.onBtEventAppears(intent, BT_OFF);
+                    listener.btEventAppears(intent, BT_OFF);
             }
 
             //when new device is discovered
             else if (BluetoothDevice.ACTION_FOUND.equals(action))
-                listener.onBtEventAppears(intent, DEVICE_DISCOVERED);
+                listener.btEventAppears(intent, DEVICE_DISCOVERED);
 
                 //when sta\te of bonding is changed (bond turned off, pairing, paired)
             else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
                 BluetoothDevice bd = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
                 if (bd.getBondState() == BluetoothDevice.BOND_NONE)
-                    listener.onBtEventAppears(intent, NOT_PAIRED);
+                    listener.btEventAppears(intent, NOT_PAIRED);
 
                 else if (bd.getBondState() == BluetoothDevice.BOND_BONDING)
-                    listener.onBtEventAppears(intent, PAIRING);
+                    listener.btEventAppears(intent, PAIRING);
 
                 else if (bd.getBondState() == BluetoothDevice.BOND_BONDED)
-                    listener.onBtEventAppears(intent, PAIRED);
+                    listener.btEventAppears(intent, PAIRED);
             }
         }
     };
