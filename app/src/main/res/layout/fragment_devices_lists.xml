@@ -36,96 +36,87 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="8"
-        android:weightSum="8">
+        android:layout_weight="8">
 
-        <TextView
-            android:id="@+id/pairedDevTxtView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="@string/paired_devices"
-            android:gravity="center_vertical"
-            android:layout_weight="1"
-            android:textSize="@dimen/largefont"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
-            android:layout_marginLeft="@dimen/largemargin"
-            android:layout_marginRight="@dimen/largemargin"
-            android:clickable="true"/>
-
-        <RelativeLayout
-            android:id="@+id/pairedDevRelLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginLeft="@dimen/largemargin"
-            android:layout_marginRight="@dimen/largemargin"
-            android:layout_weight="6"
-            android:visibility="visible">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="8">
 
             <TextView
-                android:id="@+id/noDevicesPairedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/no_devices_msg"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/pairedDevicesRecView"
+                android:id="@+id/pairedDevTxtView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                android:visibility="gone">
+                android:layout_height="0dp"
+                android:text="@string/paired_devices"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:textSize="@dimen/largefont"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginBottom="@dimen/margin"
+                android:layout_marginLeft="@dimen/largemargin"
+                android:layout_marginRight="@dimen/largemargin"
+                android:clickable="true"/>
 
-            </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/pairedDevRelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginLeft="@dimen/largemargin"
+                android:layout_marginRight="@dimen/largemargin"
+                android:layout_weight="6"
+                android:visibility="visible">
 
-        <TextView
-            android:id="@+id/discovDevTxtView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="@string/discovered_devices"
-            android:textSize="@dimen/largefont"
-            android:layout_weight="1"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
-            android:layout_marginLeft="@dimen/largemargin"
-            android:layout_marginRight="@dimen/largemargin"
-            android:gravity="center_vertical"
-            android:clickable="true"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/pairedDevicesRecView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    android:visibility="visible">
 
-        <RelativeLayout
-            android:id="@+id/discovDevRelLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginLeft="@dimen/largemargin"
-            android:layout_marginRight="@dimen/largemargin"
-            android:layout_weight="6"
-            android:visibility="gone">
+                </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/noDevicesDiscoveredTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/no_devices_msg"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/discoveredDevicesRecView"
+                android:id="@+id/discovDevTxtView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical">
+                android:layout_height="0dp"
+                android:text="@string/discovered_devices"
+                android:textSize="@dimen/largefont"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginBottom="@dimen/margin"
+                android:layout_marginLeft="@dimen/largemargin"
+                android:layout_marginRight="@dimen/largemargin"
+                android:gravity="center_vertical"
+                android:clickable="true"/>
 
-            </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
-    </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/discovDevRelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginLeft="@dimen/largemargin"
+                android:layout_marginRight="@dimen/largemargin"
+                android:layout_weight="6"
+                android:visibility="visible">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/discoveredDevicesRecView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical">
+
+                </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -141,6 +132,7 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             app:cpb_textIdle="@string/start_scan"
+            android:textSize="@dimen/normalfont"
             android:textColor="@color/textPrimary"
             android:layout_centerInParent="true"
             app:cpb_cornerRadius="60dp"
