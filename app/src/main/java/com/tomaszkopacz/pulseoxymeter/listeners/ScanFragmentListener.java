@@ -14,6 +14,11 @@ public interface ScanFragmentListener {
     void btStateChanged(boolean state);
 
     /**
+     * Runs, when toolbar options item is clicked.
+     */
+    void optionsItemClicked();
+
+    /**
      * Runs, when scan is started.
      */
     void startScan();

@@ -4,6 +4,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.style.TypefaceSpan;
 
 import com.tomaszkopacz.pulseoxymeter.R;
 
@@ -11,9 +13,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     //fonts
-    private String FONT_THIN_NAME = "Comfortaa_Thin.ttf";
-    private String FONT_REGULAR_NAME = "Comfortaa_Regular.ttf";
-    private String FONT_BOLD_NAME = "Comfortaa_Bold.ttf";
+    public static final String FONT_THIN_NAME = "Comfortaa_Thin.ttf";
+    public static final String FONT_REGULAR_NAME = "Comfortaa_Regular.ttf";
+    public static final String FONT_BOLD_NAME = "Comfortaa_Bold.ttf";
+
+    TypefaceSpan SPAN_THIN;
 
     public static Typeface FONT_THIN;
     public static Typeface FONT_REGULAR;
@@ -28,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
         FONT_THIN = Typeface.createFromAsset(getAssets(), FONT_THIN_NAME);
         FONT_REGULAR = Typeface.createFromAsset(getAssets(), FONT_REGULAR_NAME);
         FONT_BOLD = Typeface.createFromAsset(getAssets(), FONT_BOLD_NAME);
-    }
 
-    public void setActionBar(String title){
-        getSupportActionBar().setTitle(title);
+        SPAN_THIN = new TypefaceSpan(FONT_THIN_NAME);
     }
 }

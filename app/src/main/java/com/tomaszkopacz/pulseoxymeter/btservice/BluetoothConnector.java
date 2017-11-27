@@ -25,7 +25,7 @@ public class BluetoothConnector {
     private BluetoothSocket mBluetoothSocket;
 
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
-    private static final int CONNECT_PERIOD = 5000;
+    private static final int CONNECT_PERIOD = 10000;
 
     public static final int NONE = -100;
     public static final int DISCONNECTED = 100;
