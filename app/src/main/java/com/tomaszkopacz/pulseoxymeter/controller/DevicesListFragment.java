@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothConnector;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
 import com.tomaszkopacz.pulseoxymeter.design.DeviceItemLayout;
-import com.tomaszkopacz.pulseoxymeter.design.DevicesListFragmentLayout;
+import com.tomaszkopacz.pulseoxymeter.design.ConnectFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.ScanFragmentListener;
@@ -33,7 +32,7 @@ public class DevicesListFragment
         implements ScanFragmentListener, BluetoothListener {
 
     //view
-    private DevicesListFragmentLayout mDevicesListFragmentLayout;
+    private ConnectFragmentLayout mDevicesListFragmentLayout;
     private DeviceItemLayout mDeviceItemView;
 
     //bluetooth settings
@@ -56,7 +55,7 @@ public class DevicesListFragment
                              Bundle savedInstanceState) {
 
         //prepare view
-        mDevicesListFragmentLayout = new DevicesListFragmentLayout(inflater, container);
+        mDevicesListFragmentLayout = new ConnectFragmentLayout(inflater, container);
         mDevicesListFragmentLayout.setListener(this);
 
         mDeviceItemView = new DeviceItemLayout(inflater, container);
@@ -96,11 +95,6 @@ public class DevicesListFragment
 
         } else
             BluetoothDetector.deviceBtAdapter.disable();
-    }
-
-    @Override
-    public void optionsItemClicked() {
-        Log.i("TomaszKopacz", "Options clicked");
     }
 
     @Override
@@ -199,7 +193,7 @@ public class DevicesListFragment
             //get device
             BluetoothDevice device = pairedDevices.get(position);
 
-            //create item view
+            //create device_item view
             mDeviceItemView.setNameTextView(deviceNameTextView);
             mDeviceItemView.setInfoTextView(deviceInfoTextView);
             mDeviceItemView.getInfoTextView().setText(R.string.connecting);
@@ -222,7 +216,7 @@ public class DevicesListFragment
             //get device
             BluetoothDevice device = discoveredDevices.get(position);
 
-            //create item view
+            //create device_item view
             mDeviceItemView.setNameTextView(deviceNameTextView);
             mDeviceItemView.setInfoTextView(deviceInfoTextView);
 

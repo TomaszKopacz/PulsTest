@@ -9,6 +9,9 @@
     <string name="start_scan">"Skanuj"</string>
     <string name="no_devices_msg">"BRAK URZĄDZEŃ"</string>
 
+    <!-- diary fragment -->
+    <string name="diary_fragment_title">"Dzienniczek"</string>
+
     <!-- bt status -->
     <string name="pairing">"Parowanie..."</string>
     <string name="connecting">"Łączenie..."</string>
@@ -17,5 +20,11 @@
 
     <!-- messages -->
     <string name="bt_off_msg">"Bluetooth jest wyłączone"</string>
+
+    <!-- items -->
+    <string name="item_connect">"Połącz z urządzeniem"</string>
+    <string name="item_diary">"Dzienniczek"</string>
+    <string name="item_guide">"Instrukcja"</string>
+    <string name="item_info">"Więcej..."</string>
 
 </resources>

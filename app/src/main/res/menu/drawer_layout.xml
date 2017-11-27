@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/connect_item"
+            android:icon="@drawable/ic_connect"
+            android:title="@string/item_connect"
+            android:checked="true"/>
+
+        <item
+            android:id="@+id/diary_item"
+            android:icon="@drawable/ic_diary"
+            android:title="@string/item_diary"/>
+
+        <item
+            android:id="@+id/guide_item"
+            android:icon="@drawable/ic_guide"
+            android:title="@string/item_guide"/>
+
+        <item
+            android:id="@+id/info_item"
+            android:icon="@drawable/ic_info"
+            android:title="@string/item_info"/>
+
+    </group>
+</menu>

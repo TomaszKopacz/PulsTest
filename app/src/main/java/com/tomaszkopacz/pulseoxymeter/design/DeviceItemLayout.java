@@ -19,7 +19,7 @@ public class DeviceItemLayout implements DeviceItemView {
     private TextView infoTextView;
 
     public DeviceItemLayout(LayoutInflater inflater, ViewGroup container){
-        this.rootView = inflater.inflate(R.layout.item, container, false);
+        this.rootView = inflater.inflate(R.layout.device_item, container, false);
     }
 
     @Override
