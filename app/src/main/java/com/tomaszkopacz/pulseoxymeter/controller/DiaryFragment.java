@@ -10,13 +10,13 @@ import com.tomaszkopacz.pulseoxymeter.R;
 
 public class DiaryFragment extends Fragment {
 
-
     public DiaryFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         return inflater.inflate(R.layout.fragment_diary, container, false);
     }

@@ -13,9 +13,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.controller.DevicesListFragment;
-import com.tomaszkopacz.pulseoxymeter.controller.DiaryFragment;
+import com.tomaszkopacz.pulseoxymeter.controller.ConnectFragment;
 import com.tomaszkopacz.pulseoxymeter.controller.MainActivity;
+import com.tomaszkopacz.pulseoxymeter.listeners.MainActivityListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +26,11 @@ import butterknife.ButterKnife;
 
 public class MainActivityLayout {
 
+    //general
     private Activity activity;
+    private MainActivityListener listener;
+    private FragmentManager manager;
+    private Fragment fragment;
 
     //layout
     @BindView(R.id.drawer_layout)
@@ -41,8 +45,9 @@ public class MainActivityLayout {
     @BindView(R.id.navigationView)
     NavigationView navigationView;
 
-    private FragmentManager manager;
-    private Fragment fragment;
+    //items
+    public static final int CONNECT_ITEM = 10;
+    public static final int DIARY_ITEM = 20;
 
     //util fonts
     public static final String FONT_THIN_NAME = "Comfortaa_Thin.ttf";
@@ -65,8 +70,20 @@ public class MainActivityLayout {
         activity.setContentView(R.layout.activity_main);
         ButterKnife.bind(this, this.activity);
 
-        customizeLayout();
+        //start design
+        setToolbarContent(R.string.devices_fragment_title, R.drawable.ic_menu);
+        setFragmentContent(ConnectFragment.class);
+
+        //fonts
         createFonts();
+    }
+
+    public void setListener(MainActivityListener listener){
+
+        this.listener = listener;
+
+        toolbar.setNavigationOnClickListener(onNavigationIconClick);
+        navigationView.setNavigationItemSelectedListener(itemSelectedListener);
     }
 
 
@@ -74,10 +91,11 @@ public class MainActivityLayout {
                                             ACTIONS
     ==============================================================================================*/
 
-    private View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener onNavigationIconClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             drawerLayout.openDrawer(GravityCompat.START);
+            listener.onNavigationIconClick();
         }
     };
 
@@ -89,17 +107,17 @@ public class MainActivityLayout {
             switch (item.getItemId()){
 
                 case R.id.connect_item:
-                    prepareFragmentView(DevicesListFragment.class);
-                    toolbar.setTitle(R.string.devices_fragment_title);
                     item.setChecked(true);
+                    toolbar.setTitle(R.string.devices_fragment_title);
                     drawerLayout.closeDrawers();
+                    listener.onMenuItemSelected(CONNECT_ITEM);
                     return true;
 
                 case R.id.diary_item:
-                    prepareFragmentView(DiaryFragment.class);
-                    toolbar.setTitle(R.string.diary_fragment_title);
                     item.setChecked(true);
+                    toolbar.setTitle(R.string.diary_fragment_title);
                     drawerLayout.closeDrawers();
+                    listener.onMenuItemSelected(DIARY_ITEM);
                     return true;
 
                 case R.id.guide_item:
@@ -114,41 +132,30 @@ public class MainActivityLayout {
         }
     };
 
+
     /*==============================================================================================
-                                            PRIVATE UTIL METHODS
+                                            SET CONTENT
     ==============================================================================================*/
 
-    private void customizeLayout(){
-
-        //start fragment and title
-        prepareFragmentView(DevicesListFragment.class);
-        toolbar.setTitle(R.string.devices_fragment_title);
-
-        //toolbar and menu
-        setToolbarFeatures();
-        createDrawerContent();
-    }
-
-    private void setToolbarFeatures(){
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
-        toolbar.setNavigationOnClickListener(navigationOnClickListener);
-    }
-
-    private void createDrawerContent(){
-        navigationView.setNavigationItemSelectedListener(itemSelectedListener);
-    }
-
-    private void prepareFragmentView(Class fragmentClass){
-
-        //get fragment class
+    public void setFragmentContent(Class fragmentClass){
         try {
             fragment = (Fragment) fragmentClass.newInstance();
 
         } catch (Exception e) {}
 
-        //replace fragments
         manager.beginTransaction().replace(frameLayout.getId(), fragment).commit();
     }
+
+    private void setToolbarContent(int title, int icon){
+        toolbar.setTitle(title);
+        toolbar.setNavigationIcon(icon);
+    }
+
+
+    /*==============================================================================================
+                                            PRIVATE UTIL METHODS
+    ==============================================================================================*/
+
 
     private void createFonts(){
         FONT_THIN = Typeface.createFromAsset(activity.getAssets(), FONT_THIN_NAME);

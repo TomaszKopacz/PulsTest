@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.view.View;
 
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
-import com.tomaszkopacz.pulseoxymeter.listeners.ScanFragmentListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.ConnectFragmentListener;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface ConnectFragmentView {
      * Sets listener notifying user's actions.
      * @param listener
      */
-    void setListener(ScanFragmentListener listener);
+    void setListener(ConnectFragmentListener listener);
 
     /**
      * Makes some events when bluetooth state is changed.

@@ -12,6 +12,12 @@
     <!-- diary fragment -->
     <string name="diary_fragment_title">"Dzienniczek"</string>
 
+    <!-- communicate fragment -->
+    <string name="communicate_fragment_title">"Komunikacja"</string>
+    <string name="pulse">"Tętno:"</string>
+    <string name="saturation">"Saturacja:"</string>
+    <string name="start">"START"</string>
+
     <!-- bt status -->
     <string name="pairing">"Parowanie..."</string>
     <string name="connecting">"Łączenie..."</string>
@@ -26,5 +32,8 @@
     <string name="item_diary">"Dzienniczek"</string>
     <string name="item_guide">"Instrukcja"</string>
     <string name="item_info">"Więcej..."</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

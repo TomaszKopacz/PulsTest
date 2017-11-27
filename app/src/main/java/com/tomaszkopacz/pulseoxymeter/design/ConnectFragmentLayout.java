@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.dd.CircularProgressButton;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
-import com.tomaszkopacz.pulseoxymeter.listeners.ScanFragmentListener;
+import com.tomaszkopacz.pulseoxymeter.listeners.ConnectFragmentListener;
 import com.tomaszkopacz.pulseoxymeter.views.ConnectFragmentView;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class ConnectFragmentLayout implements ConnectFragmentView {
 
     //general
     private View rootView;
-    private ScanFragmentListener listener;
+    private ConnectFragmentListener listener;
 
     //components
     @BindView(R.id.btTxtView)
@@ -76,6 +76,7 @@ public class ConnectFragmentLayout implements ConnectFragmentView {
 
     //Constructor - inflates view from xml file and parses components.
     public ConnectFragmentLayout(LayoutInflater inflater, ViewGroup views){
+
         rootView = inflater.inflate(R.layout.fragment_connect, views, false);
         ButterKnife.bind(this, rootView);
 
@@ -83,7 +84,7 @@ public class ConnectFragmentLayout implements ConnectFragmentView {
     }
 
     @Override
-    public void setListener(final ScanFragmentListener listener) {
+    public void setListener(final ConnectFragmentListener listener) {
         this.listener = listener;
     }
 
@@ -189,6 +190,7 @@ public class ConnectFragmentLayout implements ConnectFragmentView {
     ==============================================================================================*/
 
     private void customizeLayout() {
+
         createFonts();
         scanBtn.setIndeterminateProgressMode(true);
     }
