@@ -1,10 +1,15 @@
 package com.tomaszkopacz.pulseoxymeter.controller;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothConnector;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
+import com.tomaszkopacz.pulseoxymeter.btservice.BondingService;
+import com.tomaszkopacz.pulseoxymeter.btservice.DetectionService;
 import com.tomaszkopacz.pulseoxymeter.design.DeviceItemLayout;
 import com.tomaszkopacz.pulseoxymeter.design.ConnectionFragmentLayout;
-import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.ConnectionFragmentListener;
 
@@ -29,7 +34,7 @@ import java.util.List;
 
 public class ConnectionFragment
         extends Fragment
-        implements ConnectionFragmentListener, BluetoothListener {
+        implements ConnectionFragmentListener{
 
     //activity parent
     private MainActivity mMainActivity;
@@ -39,8 +44,11 @@ public class ConnectionFragment
     private DeviceItemLayout mDeviceItemView;
 
     //bluetooth settings
-    private BluetoothDetector mBluetoothDetector;
-    private BluetoothConnector mBluetoothConnector;
+    private IntentFilter btDetectionIntentFilter;
+    private IntentFilter btBondingIntentFilter;
+    private IntentFilter btConnectionIntentFilter;
+    private Intent mDetectionIntent;
+    private Intent mBondingIntent;
 
     //devices
     private List<BluetoothDevice> pairedDevices = new ArrayList<>();
@@ -58,19 +66,22 @@ public class ConnectionFragment
                              Bundle savedInstanceState) {
 
         //prepare view
-        mDevicesListFragmentLayout = new ConnectionFragmentLayout(inflater, container);
-
-        mDevicesListFragmentLayout.setListener(this);
-
         mMainActivity = (MainActivity)getActivity();
+
+        mDevicesListFragmentLayout = new ConnectionFragmentLayout(inflater, container);
+        mDevicesListFragmentLayout.setListener(this);
 
         mDeviceItemView = new DeviceItemLayout(inflater, container);
 
         //bluetooth
         if (BluetoothDetector.isDeviceBtCompatible()) {
 
-            mBluetoothDetector = new BluetoothDetector(getContext(), this);
-            mBluetoothConnector = new BluetoothConnector(getActivity(), this);
+            setUpIntentFilters();
+            getActivity().registerReceiver(btDetectionReceiver, btDetectionIntentFilter);
+            getActivity().registerReceiver(btBondingReceiver, btBondingIntentFilter);
+
+            mDetectionIntent = new Intent(getActivity(), DetectionService.class);
+            mBondingIntent = new Intent(getActivity(), BondingService.class);
 
             if (BluetoothDetector.isBtAdapterEnabled())
                 mDevicesListFragmentLayout.notifyBtState(true);
@@ -85,13 +96,82 @@ public class ConnectionFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mBluetoothDetector.unregisterBtReceiver(getContext());
+        getActivity().unregisterReceiver(btDetectionReceiver);
+        getActivity().unregisterReceiver(btBondingReceiver);
     }
 
 
     /*==============================================================================================
-                                   BLUETOOTH EVENTS SERVICE
+                                   BLUETOOTH EVENTS
      =============================================================================================*/
+
+    private void setUpIntentFilters(){
+        btDetectionIntentFilter = new IntentFilter();
+        btDetectionIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        btDetectionIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+
+        btBondingIntentFilter = new IntentFilter();
+        btBondingIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+
+        btConnectionIntentFilter = new IntentFilter();
+        btConnectionIntentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+    }
+
+    private BroadcastReceiver btDetectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+
+            switch (action){
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+
+                    if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                            == BluetoothAdapter.STATE_ON) {
+                        mDevicesListFragmentLayout.notifyBtState(true);
+                        createDevicesLists();
+
+                    } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                            == BluetoothAdapter.STATE_OFF) {
+                        stopScan();
+                        mDevicesListFragmentLayout.notifyBtScanStateChanged(false);
+                        mDevicesListFragmentLayout.notifyBtState(false);
+                    }
+
+                    break;
+
+                case BluetoothDevice.ACTION_FOUND:
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    if (!pairedDevices.contains(device) && !discoveredDevices.contains(device))
+                        insertDiscoveredDevice(device);
+                    break;
+            }
+        }
+    };
+
+    private BroadcastReceiver btBondingReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getAction().equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)){
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                switch (device.getBondState()){
+                    case BluetoothDevice.BOND_BONDED:
+                        BluetoothDevice pairedDevice =
+                                intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                        removeDiscoveredDevice(pairedDevice);
+                        insertPairedDevice(pairedDevice);
+                        break;
+
+                    case BluetoothDevice.BOND_NONE:
+                        break;
+                }
+            }
+
+        }
+    };
 
     @Override
     public void btStateChanged(boolean b) {
@@ -102,60 +182,6 @@ public class ConnectionFragment
 
         } else
             BluetoothDetector.deviceBtAdapter.disable();
-    }
-
-    @Override
-    public void btEventAppears(Intent intent, int event) {
-        switch (event){
-
-            case BluetoothDetector.BT_ON:
-                mDevicesListFragmentLayout.notifyBtState(true);
-                createDevicesLists();
-                break;
-
-            case BluetoothDetector.BT_OFF:
-                stopScan();
-                mDevicesListFragmentLayout.notifyBtScanStateChanged(false);
-                mDevicesListFragmentLayout.notifyBtState(false);
-                break;
-
-            case BluetoothDetector.DEVICE_DISCOVERED:
-                BluetoothDevice discoveredDevice =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                if (!pairedDevices.contains(discoveredDevice)
-                        && !discoveredDevices.contains(discoveredDevice))
-                    insertDiscoveredDevice(discoveredDevice);
-                break;
-
-            case BluetoothDetector.NOT_PAIRED:
-                break;
-
-            case BluetoothDetector.PAIRING:
-                if(mDeviceItemView.getInfoTextView() != null)
-                    mDeviceItemView.getInfoTextView().setText(R.string.pairing);
-                break;
-
-            case BluetoothDetector.PAIRED:
-                BluetoothDevice pairedDevice =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                removeDiscoveredDevice(pairedDevice);
-                insertPairedDevice(pairedDevice);
-                break;
-
-            case BluetoothConnector.DISCONNECTED:
-                mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
-                break;
-
-            case BluetoothConnector.CONNECTED:
-                mDeviceItemView.getInfoTextView().setText(R.string.connected);
-
-                //start communication activity
-                Intent newActivity = new Intent(getActivity(), CommunicationActivity.class);
-                getActivity().startActivity(newActivity);
-                break;
-        }
     }
 
     @Override
@@ -210,7 +236,7 @@ public class ConnectionFragment
             mDeviceItemView.getInfoTextView().setText(R.string.connecting);
 
             //try to connect
-            mBluetoothConnector.connect(device);
+            //mBondingIntent.connect(device);
         }
     };
 
@@ -232,7 +258,8 @@ public class ConnectionFragment
             mDeviceItemView.setInfoTextView(deviceInfoTextView);
 
             //try to pair
-            BluetoothDetector.pair(device);
+            mBondingIntent.putExtra("address", device.getAddress());
+            getActivity().startService(mBondingIntent);
         }
     };
 

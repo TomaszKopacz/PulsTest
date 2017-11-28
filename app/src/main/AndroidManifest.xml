@@ -13,6 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".controller.MainActivity"
             android:label="@string/app_name"
@@ -28,7 +29,21 @@
                 <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.CommunicationActivity"></activity>
+
+        <activity android:name=".controller.CommunicationActivity">
+
+        </activity>
+
+        <service
+            android:name=".btservice.DetectionService"
+            android:exported="false">
+        </service>
+
+        <service
+            android:name=".btservice.BondingService"
+            android:exported="false">
+        </service>
+
     </application>
 
 </manifest>

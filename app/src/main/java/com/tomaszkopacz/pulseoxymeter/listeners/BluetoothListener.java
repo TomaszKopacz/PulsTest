@@ -14,5 +14,4 @@ public interface BluetoothListener {
      * @param event
      */
     void btEventAppears(Intent intent, int event);
-
 }
