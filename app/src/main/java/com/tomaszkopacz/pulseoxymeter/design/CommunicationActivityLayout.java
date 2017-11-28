@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.controller.CommunicateFragment;
+import com.tomaszkopacz.pulseoxymeter.controller.CommunicationFragment;
 import com.tomaszkopacz.pulseoxymeter.controller.CommunicationActivity;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationActivityListener;
 
@@ -49,7 +49,7 @@ public class CommunicationActivityLayout {
                 R.string.communicate_fragment_title,
                 R.drawable.ic_back);
 
-        prepareFragment(CommunicateFragment.class);
+        prepareFragment(CommunicationFragment.class);
     }
 
     public void setListener(final CommunicationActivityListener listener){

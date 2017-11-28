@@ -39,7 +39,7 @@ public class MainActivity
     public void onMenuItemSelected(int item) {
         switch (item){
             case MainActivityLayout.CONNECT_ITEM:
-                mMainActivityLayout.setFragmentContent(ConnectFragment.class);
+                mMainActivityLayout.setFragmentContent(ConnectionFragment.class);
                 break;
 
             case MainActivityLayout.DIARY_ITEM:

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.controller.ConnectFragment;
+import com.tomaszkopacz.pulseoxymeter.controller.ConnectionFragment;
 import com.tomaszkopacz.pulseoxymeter.controller.MainActivity;
 import com.tomaszkopacz.pulseoxymeter.listeners.MainActivityListener;
 
@@ -49,15 +49,6 @@ public class MainActivityLayout {
     public static final int CONNECT_ITEM = 10;
     public static final int DIARY_ITEM = 20;
 
-    //util fonts
-    public static final String FONT_THIN_NAME = "Comfortaa_Thin.ttf";
-    public static final String FONT_REGULAR_NAME = "Comfortaa_Regular.ttf";
-    public static final String FONT_BOLD_NAME = "Comfortaa_Bold.ttf";
-
-    public static Typeface FONT_THIN;
-    public static Typeface FONT_REGULAR;
-    public static Typeface FONT_BOLD;
-
 
     /*==============================================================================================
                                             INITIALIZING
@@ -72,10 +63,7 @@ public class MainActivityLayout {
 
         //start design
         setToolbarContent(R.string.devices_fragment_title, R.drawable.ic_menu);
-        setFragmentContent(ConnectFragment.class);
-
-        //fonts
-        createFonts();
+        setFragmentContent(ConnectionFragment.class);
     }
 
     public void setListener(MainActivityListener listener){
@@ -149,17 +137,5 @@ public class MainActivityLayout {
     private void setToolbarContent(int title, int icon){
         toolbar.setTitle(title);
         toolbar.setNavigationIcon(icon);
-    }
-
-
-    /*==============================================================================================
-                                            PRIVATE UTIL METHODS
-    ==============================================================================================*/
-
-
-    private void createFonts(){
-        FONT_THIN = Typeface.createFromAsset(activity.getAssets(), FONT_THIN_NAME);
-        FONT_REGULAR = Typeface.createFromAsset(activity.getAssets(), FONT_REGULAR_NAME);
-        FONT_BOLD = Typeface.createFromAsset(activity.getAssets(), FONT_BOLD_NAME);
     }
 }

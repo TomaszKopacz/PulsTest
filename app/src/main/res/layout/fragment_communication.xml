@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="@color/colorPrimaryLight">
+
+    <LinearLayout
+        android:id="@+id/pulseLinLayout"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginLeft="@dimen/largemargin"
+        android:layout_marginRight="@dimen/largemargin">
+
+        <TextView
+            android:id="@+id/pulseTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/pulse"
+            android:textSize="@dimen/largefont" />
+
+        <TextView
+            android:id="@+id/pulseValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/saturationLinLayout"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginLeft="@dimen/largemargin"
+        android:layout_marginRight="@dimen/largemargin">
+
+        <TextView
+            android:id="@+id/saturationTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/saturation"
+            android:textSize="@dimen/largefont" />
+
+        <TextView
+            android:id="@+id/saturationValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/waveRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginLeft="@dimen/largemargin"
+        android:layout_marginRight="@dimen/largemargin"
+        android:layout_weight="6">
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/waveformGraph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/startRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginLeft="@dimen/largemargin"
+        android:layout_marginRight="@dimen/largemargin"
+        android:layout_weight="2">
+
+        <com.dd.CircularProgressButton
+            android:id="@+id/startBtn"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:cpb_textIdle="@string/start"
+            android:textSize="@dimen/normalfont"
+            android:textColor="@color/textPrimary"
+            android:layout_centerInParent="true"
+            app:cpb_cornerRadius="60dp"
+            app:cpb_colorProgress="@color/colorPrimaryLight"
+            app:cpb_colorIndicatorBackground="@color/colorPrimaryLight"
+            app:cpb_colorIndicator="@color/colorAccent"
+            app:cpb_selectorIdle="@color/colorAccent"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
