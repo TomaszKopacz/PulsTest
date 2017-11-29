@@ -8,7 +8,8 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
+
+import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -20,6 +21,8 @@ import java.util.UUID;
 public class ConnectionService extends Service {
 
     private final IBinder binder = new LocalBinder();
+
+    private BluetoothCallbacks callback;
 
     private BluetoothDevice mBluetoothDevice;
     private BluetoothSocket mBluetoothSocket;
@@ -40,12 +43,15 @@ public class ConnectionService extends Service {
         }
     }
 
+    public void registerCallback(BluetoothCallbacks callback){
+        this.callback = callback;
+    }
+
     public void connect(BluetoothDevice device){
 
         closeConnection();
 
         if (device == null) {
-            Log.d("Tomasz Kopacz", "Device is null");
             return;
         }
 
@@ -60,7 +66,6 @@ public class ConnectionService extends Service {
 
     public void closeConnection(){
 
-        Log.d("Tomasz Kopacz", "Close connection");
         try {
             if (mBluetoothSocket != null && mBluetoothSocket.isConnected()){
                 mBluetoothSocket.getInputStream().close();
@@ -70,7 +75,6 @@ public class ConnectionService extends Service {
             }
 
         } catch (IOException e) {
-            Log.d("TomaszKOpacz","ERRORRRR");
         }
     }
 
@@ -78,7 +82,6 @@ public class ConnectionService extends Service {
         @Override
         public void run() {
             try {
-                Log.d("Tomasz Kopacz", "New connection");
 
                 UUID mUuid = UUID.fromString(SOCKET_UUID);
                 mBluetoothSocket = mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(mUuid);
@@ -92,8 +95,6 @@ public class ConnectionService extends Service {
     private Runnable stopConnectRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.d("Tomasz Kopacz", "stop!");
-
             if (mBluetoothSocket.isConnected())
                 return;
 
@@ -101,6 +102,7 @@ public class ConnectionService extends Service {
                 mBluetoothSocket.getInputStream().close();
                 mBluetoothSocket.getOutputStream().close();
                 mBluetoothSocket.close();
+                callback.onConnectionWillClose();
 
             } catch (IOException e) {
             }

@@ -2,13 +2,6 @@ package com.tomaszkopacz.pulseoxymeter.btservice;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
-
-import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothListener;
 
 import java.util.ArrayList;
 import java.util.List;

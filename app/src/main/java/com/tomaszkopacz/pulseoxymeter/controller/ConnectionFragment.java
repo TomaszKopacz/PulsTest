@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
+import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
 import com.tomaszkopacz.pulseoxymeter.btservice.ConnectionService;
 import com.tomaszkopacz.pulseoxymeter.design.DeviceItemLayout;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public class ConnectionFragment
         extends Fragment
-        implements ConnectionFragmentListener{
+        implements ConnectionFragmentListener, BluetoothCallbacks{
 
     //view
     private ConnectionFragmentLayout mDevicesListFragmentLayout;
@@ -67,30 +67,32 @@ public class ConnectionFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //bind bt service
         Intent intent = new Intent(getActivity(), ConnectionService.class);
         getActivity().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-        //bluetooth
+        //register bt receivers
         if (BluetoothDetector.isDeviceBtCompatible()) {
 
             setUpIntentFilters();
             getActivity().registerReceiver(btDetectionReceiver, btDetectionIntentFilter);
             getActivity().registerReceiver(btBondingReceiver, btBondingIntentFilter);
             getActivity().registerReceiver(btConnectionBroadcastReceiver, btConnectionIntentFilter);
-
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //create fragment layout
         mDevicesListFragmentLayout = new ConnectionFragmentLayout(inflater, container);
         mDevicesListFragmentLayout.setListener(this);
 
+        //prepare layout holding clicked recycler item
         mDeviceItemView = new DeviceItemLayout(inflater, container);
 
+        //set switch
         if (BluetoothDetector.isDeviceBtCompatible() && BluetoothDetector.isBtAdapterEnabled())
             mDevicesListFragmentLayout.notifyBtState(true);
 
@@ -119,9 +121,40 @@ public class ConnectionFragment
         getActivity().unregisterReceiver(btConnectionBroadcastReceiver);
     }
 
+    /*==============================================================================================
+                                       BLUETOOTH SERVICE
+     =============================================================================================*/
+
+    private ServiceConnection mServiceConnection  = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            ConnectionService.LocalBinder binder = (ConnectionService.LocalBinder) iBinder;
+            service = binder.getService();
+            registerCallback();
+
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
+
+    private void registerCallback(){
+        service.registerCallback(this);
+    }
+
+    @Override
+    public void onConnectionWillClose() {
+        if (mDeviceItemView != null &&
+                mDeviceItemView.getInfoTextView() != null)
+            mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
+    }
+
 
     /*==============================================================================================
-                                   BLUETOOTH EVENTS
+                                   BLUETOOTH RECEIVERS
      =============================================================================================*/
 
     private void setUpIntentFilters(){
@@ -191,7 +224,6 @@ public class ConnectionFragment
                         break;
                 }
             }
-
         }
     };
 
@@ -217,19 +249,10 @@ public class ConnectionFragment
         }
     };
 
-    private ServiceConnection mServiceConnection  = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            ConnectionService.LocalBinder binder = (ConnectionService.LocalBinder) iBinder;
-            service = binder.getService();
-            bound = true;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            bound = false;
-        }
-    };
+    /*==============================================================================================
+                                       REACTIONS
+     =============================================================================================*/
 
     @Override
     public void btStateChanged(boolean b) {
@@ -271,7 +294,7 @@ public class ConnectionFragment
 
 
     /*==============================================================================================
-                                           LISTS' LISTENERS
+                                           LISTENERS
      =============================================================================================*/
 
     private ListItemListener pairedDevicesListener = new ListItemListener() {
