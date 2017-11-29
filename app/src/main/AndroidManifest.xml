@@ -30,18 +30,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".controller.CommunicationActivity">
+        <activity
+            android:name=".controller.CommunicationActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 
         <service
-            android:name=".btservice.DetectionService"
+            android:name=".btservice.ConnectionService"
             android:exported="false">
-        </service>
 
-        <service
-            android:name=".btservice.BondingService"
-            android:exported="false">
         </service>
 
     </application>

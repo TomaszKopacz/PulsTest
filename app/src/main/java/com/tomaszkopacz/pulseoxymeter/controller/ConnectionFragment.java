@@ -3,11 +3,16 @@ package com.tomaszkopacz.pulseoxymeter.controller;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +23,7 @@ import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
-import com.tomaszkopacz.pulseoxymeter.btservice.BondingService;
-import com.tomaszkopacz.pulseoxymeter.btservice.DetectionService;
+import com.tomaszkopacz.pulseoxymeter.btservice.ConnectionService;
 import com.tomaszkopacz.pulseoxymeter.design.DeviceItemLayout;
 import com.tomaszkopacz.pulseoxymeter.design.ConnectionFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
@@ -36,9 +40,6 @@ public class ConnectionFragment
         extends Fragment
         implements ConnectionFragmentListener{
 
-    //activity parent
-    private MainActivity mMainActivity;
-
     //view
     private ConnectionFragmentLayout mDevicesListFragmentLayout;
     private DeviceItemLayout mDeviceItemView;
@@ -47,8 +48,8 @@ public class ConnectionFragment
     private IntentFilter btDetectionIntentFilter;
     private IntentFilter btBondingIntentFilter;
     private IntentFilter btConnectionIntentFilter;
-    private Intent mDetectionIntent;
-    private Intent mBondingIntent;
+    private ConnectionService service;
+    private boolean bound = false;
 
     //devices
     private List<BluetoothDevice> pairedDevices = new ArrayList<>();
@@ -61,17 +62,13 @@ public class ConnectionFragment
                                        LIFE CYCLE
      =============================================================================================*/
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        //prepare view
-        mMainActivity = (MainActivity)getActivity();
-
-        mDevicesListFragmentLayout = new ConnectionFragmentLayout(inflater, container);
-        mDevicesListFragmentLayout.setListener(this);
-
-        mDeviceItemView = new DeviceItemLayout(inflater, container);
+        Intent intent = new Intent(getActivity(), ConnectionService.class);
+        getActivity().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
         //bluetooth
         if (BluetoothDetector.isDeviceBtCompatible()) {
@@ -79,25 +76,47 @@ public class ConnectionFragment
             setUpIntentFilters();
             getActivity().registerReceiver(btDetectionReceiver, btDetectionIntentFilter);
             getActivity().registerReceiver(btBondingReceiver, btBondingIntentFilter);
+            getActivity().registerReceiver(btConnectionBroadcastReceiver, btConnectionIntentFilter);
 
-            mDetectionIntent = new Intent(getActivity(), DetectionService.class);
-            mBondingIntent = new Intent(getActivity(), BondingService.class);
-
-            if (BluetoothDetector.isBtAdapterEnabled())
-                mDevicesListFragmentLayout.notifyBtState(true);
-
-            //get devices
-            createDevicesLists();
         }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        mDevicesListFragmentLayout = new ConnectionFragmentLayout(inflater, container);
+        mDevicesListFragmentLayout.setListener(this);
+
+        mDeviceItemView = new DeviceItemLayout(inflater, container);
+
+        if (BluetoothDetector.isDeviceBtCompatible() && BluetoothDetector.isBtAdapterEnabled())
+            mDevicesListFragmentLayout.notifyBtState(true);
+
+        //get devices
+        createDevicesLists();
 
         return mDevicesListFragmentLayout.getView();
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        stopScan();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        if (bound){
+            getActivity().unbindService(mServiceConnection);
+            bound = false;
+        }
+
         getActivity().unregisterReceiver(btDetectionReceiver);
         getActivity().unregisterReceiver(btBondingReceiver);
+        getActivity().unregisterReceiver(btConnectionBroadcastReceiver);
     }
 
 
@@ -114,7 +133,8 @@ public class ConnectionFragment
         btBondingIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
 
         btConnectionIntentFilter = new IntentFilter();
-        btConnectionIntentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
     }
 
     private BroadcastReceiver btDetectionReceiver = new BroadcastReceiver() {
@@ -158,11 +178,13 @@ public class ConnectionFragment
 
                 switch (device.getBondState()){
                     case BluetoothDevice.BOND_BONDED:
+
                         BluetoothDevice pairedDevice =
                                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
                         removeDiscoveredDevice(pairedDevice);
                         insertPairedDevice(pairedDevice);
+
                         break;
 
                     case BluetoothDevice.BOND_NONE:
@@ -170,6 +192,42 @@ public class ConnectionFragment
                 }
             }
 
+        }
+    };
+
+    private BroadcastReceiver btConnectionBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            if (action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)){
+
+                if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+                    Intent newActivity = new Intent(getActivity(), CommunicationActivity.class);
+                    getActivity().startActivity(newActivity);
+                }
+
+            } else if (action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)){
+
+                if (mDeviceItemView != null &&
+                        mDeviceItemView.getInfoTextView() != null)
+                    mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
+            }
+        }
+    };
+
+    private ServiceConnection mServiceConnection  = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            ConnectionService.LocalBinder binder = (ConnectionService.LocalBinder) iBinder;
+            service = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
         }
     };
 
@@ -190,7 +248,6 @@ public class ConnectionFragment
 
             stopHandler.postDelayed(stopScanRunnable, SCAN_PERIOD);
             BluetoothDetector.startScanning();
-
         } else
             Toast.makeText(getContext(), R.string.bt_off_msg, Toast.LENGTH_SHORT).show();
     }
@@ -236,7 +293,7 @@ public class ConnectionFragment
             mDeviceItemView.getInfoTextView().setText(R.string.connecting);
 
             //try to connect
-            //mBondingIntent.connect(device);
+            service.connect(device);
         }
     };
 
@@ -256,10 +313,12 @@ public class ConnectionFragment
             //create device_item view
             mDeviceItemView.setNameTextView(deviceNameTextView);
             mDeviceItemView.setInfoTextView(deviceInfoTextView);
+            mDeviceItemView.getInfoTextView().setText(R.string.pairing);
 
             //try to pair
-            mBondingIntent.putExtra("address", device.getAddress());
-            getActivity().startService(mBondingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                device.createBond();
+            }
         }
     };
 
