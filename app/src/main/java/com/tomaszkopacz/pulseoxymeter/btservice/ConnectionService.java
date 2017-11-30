@@ -8,6 +8,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 
@@ -48,12 +49,10 @@ public class ConnectionService extends Service {
     }
 
     public void connect(BluetoothDevice device){
-
         closeConnection();
 
-        if (device == null) {
+        if (device == null)
             return;
-        }
 
         this.mBluetoothDevice = device;
 
@@ -82,10 +81,10 @@ public class ConnectionService extends Service {
         @Override
         public void run() {
             try {
-
                 UUID mUuid = UUID.fromString(SOCKET_UUID);
                 mBluetoothSocket = mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(mUuid);
                 mBluetoothSocket.connect();
+                callback.onConnectionOpenRequest();
 
             } catch (Exception e) {
             }
@@ -102,7 +101,7 @@ public class ConnectionService extends Service {
                 mBluetoothSocket.getInputStream().close();
                 mBluetoothSocket.getOutputStream().close();
                 mBluetoothSocket.close();
-                callback.onConnectionWillClose();
+                callback.onConnectionCloseRequest();
 
             } catch (IOException e) {
             }

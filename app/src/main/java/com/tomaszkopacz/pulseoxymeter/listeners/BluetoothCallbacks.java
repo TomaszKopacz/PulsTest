@@ -6,5 +6,6 @@ package com.tomaszkopacz.pulseoxymeter.listeners;
 
 public interface BluetoothCallbacks {
 
-    void onConnectionWillClose();
+    void onConnectionOpenRequest();
+    void onConnectionCloseRequest();
 }

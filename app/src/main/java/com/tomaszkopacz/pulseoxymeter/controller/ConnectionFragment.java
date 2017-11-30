@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,6 @@ public class ConnectionFragment
     //bluetooth settings
     private IntentFilter btDetectionIntentFilter;
     private IntentFilter btBondingIntentFilter;
-    private IntentFilter btConnectionIntentFilter;
     private ConnectionService service;
     private boolean bound = false;
 
@@ -77,7 +77,6 @@ public class ConnectionFragment
             setUpIntentFilters();
             getActivity().registerReceiver(btDetectionReceiver, btDetectionIntentFilter);
             getActivity().registerReceiver(btBondingReceiver, btBondingIntentFilter);
-            getActivity().registerReceiver(btConnectionBroadcastReceiver, btConnectionIntentFilter);
         }
     }
 
@@ -118,7 +117,6 @@ public class ConnectionFragment
 
         getActivity().unregisterReceiver(btDetectionReceiver);
         getActivity().unregisterReceiver(btBondingReceiver);
-        getActivity().unregisterReceiver(btConnectionBroadcastReceiver);
     }
 
     /*==============================================================================================
@@ -146,7 +144,13 @@ public class ConnectionFragment
     }
 
     @Override
-    public void onConnectionWillClose() {
+    public void onConnectionOpenRequest() {
+        Intent newActivity = new Intent(getActivity(), CommunicationActivity.class);
+        getActivity().startActivity(newActivity);
+    }
+
+    @Override
+    public void onConnectionCloseRequest() {
         if (mDeviceItemView != null &&
                 mDeviceItemView.getInfoTextView() != null)
             mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
@@ -164,10 +168,6 @@ public class ConnectionFragment
 
         btBondingIntentFilter = new IntentFilter();
         btBondingIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-
-        btConnectionIntentFilter = new IntentFilter();
-        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
     }
 
     private BroadcastReceiver btDetectionReceiver = new BroadcastReceiver() {
@@ -223,28 +223,6 @@ public class ConnectionFragment
                     case BluetoothDevice.BOND_NONE:
                         break;
                 }
-            }
-        }
-    };
-
-    private BroadcastReceiver btConnectionBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-            if (action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)){
-
-                if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-                    Intent newActivity = new Intent(getActivity(), CommunicationActivity.class);
-                    getActivity().startActivity(newActivity);
-                }
-
-            } else if (action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)){
-
-                if (mDeviceItemView != null &&
-                        mDeviceItemView.getInfoTextView() != null)
-                    mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
             }
         }
     };
