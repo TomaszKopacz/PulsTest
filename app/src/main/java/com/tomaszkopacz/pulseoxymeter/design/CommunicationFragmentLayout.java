@@ -85,18 +85,6 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
 
 
     /*==============================================================================================
-                                        LISTENERS
-    ==============================================================================================*/
-
-    private View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            listener.onNavigationItemClicked();
-        }
-    };
-
-
-    /*==============================================================================================
                                         PRIVATE UTIL METHODS
     ==============================================================================================*/
 

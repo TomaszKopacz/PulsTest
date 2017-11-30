@@ -1,8 +1,14 @@
 package com.tomaszkopacz.pulseoxymeter.controller;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
+import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.MainActivityListener;
 
@@ -12,6 +18,9 @@ public class MainActivity
 
     //layout
     private MainActivityLayout mMainActivityLayout;
+
+    private FragmentManager manager;
+    private Fragment fragment;
 
 
     /*==============================================================================================
@@ -23,6 +32,28 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         mMainActivityLayout = new MainActivityLayout(this);
         mMainActivityLayout.setListener(this);
+        manager = getSupportFragmentManager();
+
+        setStartContent();
+        setFragment(ConnectionFragment.class);
+
+    }
+
+    private void setStartContent(){
+        mMainActivityLayout.getToolbar().setNavigationIcon(R.drawable.ic_menu);
+        setFragment(ConnectionFragment.class);
+    }
+
+    public void setFragment(Class fragmentClass){
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+
+        } catch (Exception e) {}
+
+        manager
+                .beginTransaction()
+                .replace(mMainActivityLayout.getFragmentFrame().getId(), fragment)
+                .commit();
     }
 
 
@@ -32,19 +63,30 @@ public class MainActivity
 
     @Override
     public void onNavigationIconClick() {
-
+        mMainActivityLayout.getDrawer().openDrawer(GravityCompat.START);
     }
 
     @Override
     public void onMenuItemSelected(int item) {
+
         switch (item){
             case MainActivityLayout.CONNECT_ITEM:
-                mMainActivityLayout.setFragmentContent(ConnectionFragment.class);
+                setFragment(ConnectionFragment.class);
+                mMainActivityLayout.getDrawer().closeDrawers();
                 break;
 
             case MainActivityLayout.DIARY_ITEM:
-                mMainActivityLayout.setFragmentContent(DiaryFragment.class);
+                setFragment(DiaryFragment.class);
+                mMainActivityLayout.getDrawer().closeDrawers();
                 break;
         }
+    }
+
+    public MainActivityLayout getLayout(){
+        return mMainActivityLayout;
+    }
+
+    public MainActivityListener getDefaultListener(){
+        return this;
     }
 }

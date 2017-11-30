@@ -30,12 +30,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".controller.CommunicationActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
         <service
             android:name=".btservice.ConnectionService"
             android:exported="false">

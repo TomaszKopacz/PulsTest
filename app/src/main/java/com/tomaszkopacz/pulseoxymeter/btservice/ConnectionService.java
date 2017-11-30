@@ -31,6 +31,11 @@ public class ConnectionService extends Service {
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
     private static final int CONNECT_PERIOD = 5000;
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,11 +49,11 @@ public class ConnectionService extends Service {
         }
     }
 
-    public void registerCallback(BluetoothCallbacks callback){
+    public void registerCallback(BluetoothCallbacks callback) {
         this.callback = callback;
     }
 
-    public void connect(BluetoothDevice device){
+    public void connect(BluetoothDevice device) {
         closeConnection();
 
         if (device == null)
@@ -63,10 +68,10 @@ public class ConnectionService extends Service {
         connectThread.start();
     }
 
-    public void closeConnection(){
+    public void closeConnection() {
 
         try {
-            if (mBluetoothSocket != null && mBluetoothSocket.isConnected()){
+            if (mBluetoothSocket != null && mBluetoothSocket.isConnected()) {
                 mBluetoothSocket.getInputStream().close();
                 mBluetoothSocket.getOutputStream().close();
                 mBluetoothSocket.close();

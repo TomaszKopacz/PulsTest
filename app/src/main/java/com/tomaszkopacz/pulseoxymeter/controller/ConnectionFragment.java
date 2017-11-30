@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
+import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
 import com.tomaszkopacz.pulseoxymeter.btservice.ConnectionService;
@@ -42,7 +42,8 @@ public class ConnectionFragment
         implements ConnectionFragmentListener, BluetoothCallbacks{
 
     //view
-    private ConnectionFragmentLayout mDevicesListFragmentLayout;
+    private MainActivityLayout mMainActivityLayout;
+    private ConnectionFragmentLayout mConnectionFragmentLayout;
     private DeviceItemLayout mDeviceItemView;
 
     //bluetooth settings
@@ -84,21 +85,25 @@ public class ConnectionFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //get activity layout
+        mMainActivityLayout = ((MainActivity)getActivity()).getLayout();
+
         //create fragment layout
-        mDevicesListFragmentLayout = new ConnectionFragmentLayout(inflater, container);
-        mDevicesListFragmentLayout.setListener(this);
+        mConnectionFragmentLayout = new ConnectionFragmentLayout(inflater, container);
+        mConnectionFragmentLayout.setListener(this);
+        mMainActivityLayout.getToolbar().setTitle(R.string.devices_fragment_title);
 
         //prepare layout holding clicked recycler item
         mDeviceItemView = new DeviceItemLayout(inflater, container);
 
         //set switch
         if (BluetoothDetector.isDeviceBtCompatible() && BluetoothDetector.isBtAdapterEnabled())
-            mDevicesListFragmentLayout.notifyBtState(true);
+            mConnectionFragmentLayout.notifyBtState(true);
 
         //get devices
         createDevicesLists();
 
-        return mDevicesListFragmentLayout.getView();
+        return mConnectionFragmentLayout.getView();
     }
 
     @Override
@@ -110,6 +115,7 @@ public class ConnectionFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (bound){
             getActivity().unbindService(mServiceConnection);
             bound = false;
@@ -145,8 +151,7 @@ public class ConnectionFragment
 
     @Override
     public void onConnectionOpenRequest() {
-        Intent newActivity = new Intent(getActivity(), CommunicationActivity.class);
-        getActivity().startActivity(newActivity);
+        ((MainActivity)getActivity()).setFragment(CommunicationFragment.class);
     }
 
     @Override
@@ -181,14 +186,14 @@ public class ConnectionFragment
 
                     if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                             == BluetoothAdapter.STATE_ON) {
-                        mDevicesListFragmentLayout.notifyBtState(true);
+                        mConnectionFragmentLayout.notifyBtState(true);
                         createDevicesLists();
 
                     } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                             == BluetoothAdapter.STATE_OFF) {
                         stopScan();
-                        mDevicesListFragmentLayout.notifyBtScanStateChanged(false);
-                        mDevicesListFragmentLayout.notifyBtState(false);
+                        mConnectionFragmentLayout.notifyBtScanStateChanged(false);
+                        mConnectionFragmentLayout.notifyBtState(false);
                     }
 
                     break;
@@ -266,7 +271,7 @@ public class ConnectionFragment
         @Override
         public void run() {
             stopScan();
-            mDevicesListFragmentLayout.notifyBtScanStateChanged(false);
+            mConnectionFragmentLayout.notifyBtScanStateChanged(false);
         }
     };
 
@@ -283,7 +288,7 @@ public class ConnectionFragment
 
             //stop scanning
             BluetoothDetector.stopScanning();
-            mDevicesListFragmentLayout.notifyBtScanStateChanged(false);
+            mConnectionFragmentLayout.notifyBtScanStateChanged(false);
 
             //get device
             BluetoothDevice device = pairedDevices.get(position);
@@ -306,7 +311,7 @@ public class ConnectionFragment
 
             //stop scanning
             BluetoothDetector.stopScanning();
-            mDevicesListFragmentLayout.notifyBtScanStateChanged(false);
+            mConnectionFragmentLayout.notifyBtScanStateChanged(false);
 
             //get device
             BluetoothDevice device = discoveredDevices.get(position);
@@ -338,10 +343,10 @@ public class ConnectionFragment
         pairedDevices = BluetoothDetector.getPairedDevices();
 
         //set lists
-        mDevicesListFragmentLayout
+        mConnectionFragmentLayout
                 .createPairedDevicesList(pairedDevices, pairedDevicesListener);
 
-        mDevicesListFragmentLayout
+        mConnectionFragmentLayout
                 .createDiscoveredDevicesList(discoveredDevices, discoveredDevicesListener);
     }
 
@@ -349,20 +354,20 @@ public class ConnectionFragment
     private void insertPairedDevice(BluetoothDevice device){
         int position = 0;
         pairedDevices.add(position, device);
-        mDevicesListFragmentLayout.notifyInsertToPairedDevices(position);
+        mConnectionFragmentLayout.notifyInsertToPairedDevices(position);
     }
 
     //insert new device to discovered devices list
     private void insertDiscoveredDevice(BluetoothDevice device){
         int position = 0;
         discoveredDevices.add(position, device);
-        mDevicesListFragmentLayout.notifyInsertToDiscoveredDevices(position);
+        mConnectionFragmentLayout.notifyInsertToDiscoveredDevices(position);
     }
 
     //remove device from discovered devices list
     private void removeDiscoveredDevice(BluetoothDevice device){
         int position = discoveredDevices.indexOf(device);
         discoveredDevices.remove(position);
-        mDevicesListFragmentLayout.notifyRemoveFromDiscoveredDevices(position);
+        mConnectionFragmentLayout.notifyRemoveFromDiscoveredDevices(position);
     }
 }
