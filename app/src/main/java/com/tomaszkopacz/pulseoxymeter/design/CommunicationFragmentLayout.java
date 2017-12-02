@@ -14,6 +14,7 @@ import com.tomaszkopacz.pulseoxymeter.views.CommunicationFragmentView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by tomaszkopacz on 27.11.17.
@@ -83,14 +84,16 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
 
     }
 
+    @OnClick(R.id.startBtn)
+    public void start(){
+        listener.startReading();
+    }
 
     /*==============================================================================================
                                         PRIVATE UTIL METHODS
     ==============================================================================================*/
 
     private void customizeLayout(){
-
-        //set toolbar
 
         createFonts();
         startBtn.setIndeterminateProgressMode(true);

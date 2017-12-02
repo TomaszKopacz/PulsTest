@@ -11,8 +11,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
+import com.tomaszkopacz.pulseoxymeter.model.CMSData;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 /**
@@ -27,9 +29,15 @@ public class ConnectionService extends Service {
 
     private BluetoothDevice mBluetoothDevice;
     private BluetoothSocket mBluetoothSocket;
+    private InputStream mInputStream;
 
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
     private static final int CONNECT_PERIOD = 5000;
+
+
+    /*==============================================================================================
+                                        INITIALIZATION
+    ==============================================================================================*/
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -53,6 +61,11 @@ public class ConnectionService extends Service {
         this.callback = callback;
     }
 
+
+    /*==============================================================================================
+                                        CONNECTION
+    ==============================================================================================*/
+
     public void connect(BluetoothDevice device) {
         closeConnection();
 
@@ -66,20 +79,6 @@ public class ConnectionService extends Service {
 
         stopHandler.postDelayed(stopConnectRunnable, CONNECT_PERIOD);
         connectThread.start();
-    }
-
-    public void closeConnection() {
-
-        try {
-            if (mBluetoothSocket != null && mBluetoothSocket.isConnected()) {
-                mBluetoothSocket.getInputStream().close();
-                mBluetoothSocket.getOutputStream().close();
-                mBluetoothSocket.close();
-                mBluetoothSocket = null;
-            }
-
-        } catch (IOException e) {
-        }
     }
 
     private Runnable connectRunnable = new Runnable() {
@@ -112,4 +111,82 @@ public class ConnectionService extends Service {
             }
         }
     };
+
+    public void closeConnection() {
+
+        try {
+            if (mBluetoothSocket != null && mBluetoothSocket.isConnected()) {
+                mBluetoothSocket.getInputStream().close();
+                mBluetoothSocket.getOutputStream().close();
+                mBluetoothSocket.close();
+                mBluetoothSocket = null;
+            }
+
+        } catch (IOException e) {
+        }
+    }
+
+    /*==============================================================================================
+                                        READING DATA
+    ==============================================================================================*/
+
+    public void read(){
+        InputStream tempInputStream = null;
+        
+        try {
+            tempInputStream = mBluetoothSocket.getInputStream();
+        } catch (IOException e) {}
+
+        mInputStream = tempInputStream;
+        Thread readThread = new Thread(readRunnable);
+        readThread.start();
+    }
+
+    Runnable readRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                getBytes();
+            } catch (Exception e) {
+                Log.e("TOMASZ KOPACZ", "Can't get data");
+            }
+        }
+    };
+
+    private void getBytes() throws Exception{
+
+        byte startByte;
+        byte byte1;
+        byte byte2;
+        byte byte3;
+        byte byte4;
+        byte byte5;
+        byte byte6;
+        byte byte7;
+        byte byte8;
+
+        CMSData dataPackage = new CMSData();
+
+        while (true) {
+            startByte = waitForNextByte();
+
+            if (startByte == 1) {
+
+                byte1 = waitForNextByte();
+                byte2 = waitForNextByte();
+                dataPackage.setWaveformByte(waitForNextByte());
+                byte4 = waitForNextByte();
+                dataPackage.setPulseByte(waitForNextByte());
+                dataPackage.setSaturationByte(waitForNextByte());
+                byte7 = waitForNextByte();
+                byte8 = waitForNextByte();
+
+                callback.onDataIncome(dataPackage);
+            }
+        }
+    }
+
+    private byte waitForNextByte() throws IOException {
+        return (byte) mInputStream.read();
+    }
 }

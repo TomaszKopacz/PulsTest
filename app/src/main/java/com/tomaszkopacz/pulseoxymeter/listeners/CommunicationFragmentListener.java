@@ -6,4 +6,5 @@ package com.tomaszkopacz.pulseoxymeter.listeners;
 
 public interface CommunicationFragmentListener {
 
+    void startReading();
 }

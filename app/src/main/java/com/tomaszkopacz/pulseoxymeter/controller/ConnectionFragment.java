@@ -29,6 +29,7 @@ import com.tomaszkopacz.pulseoxymeter.design.DeviceItemLayout;
 import com.tomaszkopacz.pulseoxymeter.design.ConnectionFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.ConnectionFragmentListener;
+import com.tomaszkopacz.pulseoxymeter.model.CMSData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +160,11 @@ public class ConnectionFragment
         if (mDeviceItemView != null &&
                 mDeviceItemView.getInfoTextView() != null)
             mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
+    }
+
+    @Override
+    public void onDataIncome(CMSData data) {
+
     }
 
 
