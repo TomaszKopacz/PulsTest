@@ -8,6 +8,7 @@
     <dimen name="normalfont">16sp</dimen>
     <dimen name="littlefont">12sp</dimen>
     <dimen name="largefont">20sp</dimen>
+    <dimen name="verylargefont">40sp</dimen>
 
     <!-- navigation drawer -->
     <dimen name="nav_header_height">192dp</dimen>

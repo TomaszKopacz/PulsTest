@@ -14,10 +14,10 @@
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:weightSum="2"
         android:layout_marginTop="@dimen/margin"
-        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginBottom="0dp"
         android:layout_marginLeft="@dimen/largemargin"
         android:layout_marginRight="@dimen/largemargin">
 
@@ -32,6 +32,7 @@
 
         <TextView
             android:id="@+id/pulseValueTextView"
+            android:textSize="@dimen/verylargefont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -44,9 +45,9 @@
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:weightSum="2"
-        android:layout_marginTop="@dimen/margin"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="@dimen/margin"
         android:layout_marginLeft="@dimen/largemargin"
         android:layout_marginRight="@dimen/largemargin">
@@ -62,6 +63,7 @@
 
         <TextView
             android:id="@+id/saturationValueTextView"
+            android:textSize="@dimen/verylargefont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -76,9 +78,10 @@
         android:layout_marginTop="@dimen/margin"
         android:layout_marginLeft="@dimen/largemargin"
         android:layout_marginRight="@dimen/largemargin"
-        android:layout_weight="6">
+        android:layout_weight="7"
+        android:padding="10dp">
 
-        <com.jjoe64.graphview.GraphView
+        <com.jjoe64.graphview.helper.GraphViewXML
             android:id="@+id/waveformGraph"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

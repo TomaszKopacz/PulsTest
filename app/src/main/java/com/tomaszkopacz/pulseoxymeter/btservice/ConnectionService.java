@@ -34,6 +34,8 @@ public class ConnectionService extends Service {
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
     private static final int CONNECT_PERIOD = 5000;
 
+    private boolean readEnabled = false;
+
 
     /*==============================================================================================
                                         INITIALIZATION
@@ -132,10 +134,14 @@ public class ConnectionService extends Service {
 
     public void read(){
         InputStream tempInputStream = null;
-        
+        mInputStream = null;
+
         try {
             tempInputStream = mBluetoothSocket.getInputStream();
-        } catch (IOException e) {}
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         mInputStream = tempInputStream;
         Thread readThread = new Thread(readRunnable);
@@ -145,17 +151,15 @@ public class ConnectionService extends Service {
     Runnable readRunnable = new Runnable() {
         @Override
         public void run() {
-            try {
-                getBytes();
-            } catch (Exception e) {
-                Log.e("TOMASZ KOPACZ", "Can't get data");
-            }
+            readEnabled = true;
+            getBytes();
+
         }
     };
 
-    private void getBytes() throws Exception{
+    private void getBytes() {
 
-        byte startByte;
+        byte byte0;
         byte byte1;
         byte byte2;
         byte byte3;
@@ -167,26 +171,29 @@ public class ConnectionService extends Service {
 
         CMSData dataPackage = new CMSData();
 
-        while (true) {
-            startByte = waitForNextByte();
+        while (readEnabled) {
+            byte0 = waitForNextByte();
+            byte1 = waitForNextByte();
+            byte2 = waitForNextByte();
+            dataPackage.setWaveformByte(waitForNextByte());
+            byte4 = waitForNextByte();
+            dataPackage.setPulseByte(waitForNextByte());
+            dataPackage.setSaturationByte(waitForNextByte());
+            byte7 = waitForNextByte();
+            byte8 = waitForNextByte();
 
-            if (startByte == 1) {
-
-                byte1 = waitForNextByte();
-                byte2 = waitForNextByte();
-                dataPackage.setWaveformByte(waitForNextByte());
-                byte4 = waitForNextByte();
-                dataPackage.setPulseByte(waitForNextByte());
-                dataPackage.setSaturationByte(waitForNextByte());
-                byte7 = waitForNextByte();
-                byte8 = waitForNextByte();
-
-                callback.onDataIncome(dataPackage);
-            }
+            callback.onDataIncome(dataPackage);
         }
     }
 
-    private byte waitForNextByte() throws IOException {
-        return (byte) mInputStream.read();
+    private byte waitForNextByte() {
+        try {
+            return (byte) mInputStream.read();
+
+        } catch (IOException e) {
+
+            readEnabled = false;
+            return 0;
+        }
     }
 }

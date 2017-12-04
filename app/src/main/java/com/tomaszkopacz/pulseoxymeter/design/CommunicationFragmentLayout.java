@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.controller.MainApp;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationFragmentListener;
@@ -69,6 +70,18 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
         return rootView;
     }
 
+    public TextView getPulseTextView(){
+        return pulseValueTextView;
+    }
+
+    public TextView getSaturationTextView(){
+        return saturationValueTextView;
+    }
+
+    public GraphView getWaveformGraph(){
+        return waveformGraph;
+    }
+
 
     /*==============================================================================================
                                         COMMUNICATION
@@ -88,6 +101,7 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
     public void start(){
         listener.startReading();
     }
+
 
     /*==============================================================================================
                                         PRIVATE UTIL METHODS
