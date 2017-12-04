@@ -14,7 +14,7 @@
 
     <!-- communicate fragment -->
     <string name="communicate_fragment_title">"Komunikacja"</string>
-    <string name="pulse">"Tętno  [bpm]:"</string>
+    <string name="pulse">"Tętno   [bpm]:"</string>
     <string name="saturation">"Saturacja [%]:"</string>
     <string name="start">"START"</string>
 

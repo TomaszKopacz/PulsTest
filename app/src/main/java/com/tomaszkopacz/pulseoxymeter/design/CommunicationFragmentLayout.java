@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.controller.MainApp;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationFragmentListener;

@@ -84,7 +84,9 @@
         <com.jjoe64.graphview.helper.GraphViewXML
             android:id="@+id/waveformGraph"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:seriesData="0=0"
+            app:seriesColor="@color/colorAccent"/>
 
     </RelativeLayout>
 

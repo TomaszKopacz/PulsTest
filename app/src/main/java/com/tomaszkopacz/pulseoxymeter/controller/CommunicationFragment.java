@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -90,17 +92,17 @@ public class CommunicationFragment
         saturationTextView = mCommunicationFragmentLayout.getSaturationTextView();
 
         waveformGraph = mCommunicationFragmentLayout.getWaveformGraph();
-        waveformGraph.getViewport().setScrollable(true);
-        waveformGraph.getViewport().setXAxisBoundsManual(true);
-        waveformGraph.getViewport().setYAxisBoundsManual(false);
-        waveformGraph.getViewport().setMinX(0);
-        waveformGraph.getViewport().setMaxX(500);
-        waveformGraph.getViewport().setMinY(0);
-        waveformGraph.getViewport().setMaxY(128);
+        Viewport viewport = waveformGraph.getViewport();
+        viewport.setScalable(false);
+        viewport.setScrollable(true);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setMinX(0);
+        viewport.setMaxX(500);
+        viewport.setMinY(0);
+        viewport.setMaxY(128);
 
-        waveform = new LineGraphSeries<>();
-        waveform.setColor(R.color.colorAccent);
-        waveformGraph.addSeries(waveform);
+        waveform = (LineGraphSeries)waveformGraph.getSeries().get(0);
+        //waveformGraph.addSeries(waveform);
 
         return mCommunicationFragmentLayout.getView();
     }
@@ -172,7 +174,6 @@ public class CommunicationFragment
 
     @Override
     public void onDataIncome(final CMSData data) {
-        Log.d("TomaszKopacz", "Data income");
         pulseValue = MAX_VALUE + data.getPulseByte();
         saturationValue = MAX_VALUE + data.getSaturationByte();
         wavePoint = MAX_VALUE + data.getWaveformByte();
@@ -182,7 +183,7 @@ public class CommunicationFragment
             public void run() {
                 pulseTextView.setText(String.valueOf(pulseValue));
                 saturationTextView.setText(String.valueOf(saturationValue));
-                waveform.appendData(new DataPoint(pointer, wavePoint), true, 500);
+                waveform.appendData(new DataPoint(pointer, wavePoint), true, 10000);
                 pointer++;
             }
         });
