@@ -16,10 +16,10 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_communication.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_communication.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="PulseOxymeter.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -51,15 +51,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CommunicationFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CommunicationFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1109">
-              <caret line="104" column="10" selection-start-line="104" selection-start-column="10" selection-end-line="104" selection-end-column="10" />
+            <state relative-caret-position="126">
+              <caret line="146" column="31" selection-start-line="146" selection-start-column="31" selection-end-line="146" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConnectionService.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="82">
+              <caret line="75" column="43" selection-start-line="75" selection-start-column="43" selection-end-line="75" selection-end-column="43" />
               <folding>
-                <element signature="e#2935#2970#0" expanded="true" />
-                <element signature="e#6414#6764#0" expanded="true" />
-                <element signature="e#6763#6764#0" expanded="true" />
+                <element signature="e#1870#1871#0" expanded="true" />
+                <element signature="e#1899#1900#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2010,7 +2019,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothDetector.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/DetectionService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/DiscoveryDevicesService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothConnector.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/Callbacks.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothCallbacks.java" />
@@ -2023,14 +2031,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothReader.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/BluetoothCallbacks.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/BluetoothDataListener.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/size.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/CommunicationFragmentListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_communication.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_communication.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" />
       </list>
     </option>
   </component>
@@ -2084,6 +2093,133 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane">
+        <subPane />
+      </pane>
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pulseoxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pulseoxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pulseoxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="btservice" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidManifestsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Default">
           <PATH>
@@ -2108,9 +2244,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="ProjectPane">
-        <subPane />
-      </pane>
+      <pane id="Scratches" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -2121,17 +2255,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scratches" />
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PulseOxymeter" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -2493,14 +2616,14 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32847896" sideWeight="0.50278884" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39644012" sideWeight="0.49402392" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39644012" sideWeight="0.49402392" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32847896" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4449838" sideWeight="0.49721116" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46451613" sideWeight="0.50278884" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28366533" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28366533" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988048" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -2710,17 +2833,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="34" column="37" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -2754,13 +2866,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="89" column="20" selection-start-line="89" selection-start-column="20" selection-end-line="89" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothReader.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/BluetoothCallbacks.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -2774,6 +2879,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2784,28 +2890,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="194" column="32" selection-start-line="194" selection-start-column="32" selection-end-line="194" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="83" column="5" selection-start-line="83" selection-start-column="5" selection-end-line="83" selection-end-column="5" />
-          <folding>
-            <element signature="e#2330#2331#0" expanded="true" />
-            <element signature="e#2366#2367#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2816,32 +2905,73 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="307" column="36" selection-start-line="307" selection-start-column="36" selection-end-line="307" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_communication.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="87" column="31" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="31" />
+        <state relative-caret-position="512">
+          <caret line="88" column="47" selection-start-line="88" selection-start-column="47" selection-end-line="88" selection-end-column="47" />
+          <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="83" column="5" selection-start-line="83" selection-start-column="5" selection-end-line="83" selection-end-column="5" />
+          <folding>
+            <element signature="e#2330#2331#0" expanded="false" />
+            <element signature="e#2366#2367#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1117">
+          <caret line="89" column="20" selection-start-line="89" selection-start-column="20" selection-end-line="89" selection-end-column="20" />
+          <folding>
+            <element signature="e#2878#2879#0" expanded="false" />
+            <element signature="e#2905#2906#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3871">
+          <caret line="307" column="36" selection-start-line="307" selection-start-column="36" selection-end-line="307" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1109">
-          <caret line="104" column="10" selection-start-line="104" selection-start-column="10" selection-end-line="104" selection-end-column="10" />
+        <state relative-caret-position="126">
+          <caret line="146" column="31" selection-start-line="146" selection-start-column="31" selection-end-line="146" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="82">
+          <caret line="75" column="43" selection-start-line="75" selection-start-column="43" selection-end-line="75" selection-end-column="43" />
           <folding>
-            <element signature="e#2935#2970#0" expanded="true" />
-            <element signature="e#6414#6764#0" expanded="true" />
-            <element signature="e#6763#6764#0" expanded="true" />
+            <element signature="e#1870#1871#0" expanded="true" />
+            <element signature="e#1899#1900#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -15,6 +15,9 @@ import com.tomaszkopacz.pulseoxymeter.model.CMSData;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -27,12 +30,18 @@ public class ConnectionService extends Service {
 
     private BluetoothCallbacks callback;
 
+    //bluetooth connection and streaming
     private BluetoothDevice mBluetoothDevice;
     private BluetoothSocket mBluetoothSocket;
     private InputStream mInputStream;
+    private OutputStream mOutputStream;
 
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
-    private static final int CONNECT_PERIOD = 5000;
+    private static final int CONNECT_PERIOD = 10000;
+    private Timer holdCommunicationTimer;
+    private HoldCommunicationTask holdCommunicationTask;
+    private static final byte[] HOLD_SENDING_BYTE = new byte[]{(byte) 0xa7};
+    private static final int HOLD_TASK_DELAY = 4900;
 
     private boolean readEnabled = false;
 
@@ -63,12 +72,27 @@ public class ConnectionService extends Service {
         this.callback = callback;
     }
 
+    public void unbind(){
+        if (holdCommunicationTimer != null && holdCommunicationTask != null){
+            holdCommunicationTask.cancel();
+            holdCommunicationTimer.cancel();
+            holdCommunicationTimer.purge();
+            holdCommunicationTimer = null;
+        }
+    }
+
 
     /*==============================================================================================
                                         CONNECTION
     ==============================================================================================*/
 
+    /**
+     * Attempts to create connection with bluetooth device.
+     * Attempt last maximum 10 seconds.
+     * @param device
+     */
     public void connect(BluetoothDevice device) {
+
         closeConnection();
 
         if (device == null)
@@ -86,6 +110,7 @@ public class ConnectionService extends Service {
     private Runnable connectRunnable = new Runnable() {
         @Override
         public void run() {
+
             try {
                 UUID mUuid = UUID.fromString(SOCKET_UUID);
                 mBluetoothSocket = mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(mUuid);
@@ -93,6 +118,7 @@ public class ConnectionService extends Service {
                 callback.onConnectionOpenRequest();
 
             } catch (Exception e) {
+                callback.onConnectionCloseRequest();
             }
         }
     };
@@ -100,20 +126,26 @@ public class ConnectionService extends Service {
     private Runnable stopConnectRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mBluetoothSocket.isConnected())
+            if (mBluetoothSocket != null && mBluetoothSocket.isConnected())
                 return;
 
             try {
                 mBluetoothSocket.getInputStream().close();
                 mBluetoothSocket.getOutputStream().close();
                 mBluetoothSocket.close();
+                mBluetoothSocket = null;
                 callback.onConnectionCloseRequest();
 
+
             } catch (IOException e) {
+                Log.d("TomaszKopacz", "stop connect runnable failed");
             }
         }
     };
 
+    /**
+     * Closes bluetooth connection.
+     */
     public void closeConnection() {
 
         try {
@@ -125,6 +157,8 @@ public class ConnectionService extends Service {
             }
 
         } catch (IOException e) {
+            Log.d("TomaszKopacz", "stop connection failed");
+
         }
     }
 
@@ -132,20 +166,49 @@ public class ConnectionService extends Service {
                                         READING DATA
     ==============================================================================================*/
 
+    /**
+     * Reads data from device. Sends a special byte 0xa7 to hold sending data from device.
+     */
     public void read(){
+
         InputStream tempInputStream = null;
         mInputStream = null;
 
+        OutputStream tempOutputStream = null;
+        mOutputStream = null;
+
         try {
+
             tempInputStream = mBluetoothSocket.getInputStream();
+            tempOutputStream = mBluetoothSocket.getOutputStream();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d("TomaszKopacz", "get sockets failed");
         }
 
         mInputStream = tempInputStream;
+        mOutputStream = tempOutputStream;
+
+        holdCommunicationTimer = new Timer();
+        holdCommunicationTask = new HoldCommunicationTask();
+        holdCommunicationTimer.schedule(holdCommunicationTask, 0, HOLD_TASK_DELAY);
+
         Thread readThread = new Thread(readRunnable);
         readThread.start();
+    }
+
+    private class HoldCommunicationTask extends TimerTask {
+
+        @Override
+        public void run() {
+            try {
+                Log.d("TomaszKopacz", "Sent task");
+                mOutputStream.write(HOLD_SENDING_BYTE);
+
+            } catch (IOException e) {
+                Log.d("TomaszKopacz", "write byte failed");
+            }
+        }
     }
 
     Runnable readRunnable = new Runnable() {
@@ -153,7 +216,6 @@ public class ConnectionService extends Service {
         public void run() {
             readEnabled = true;
             getBytes();
-
         }
     };
 
@@ -188,9 +250,12 @@ public class ConnectionService extends Service {
 
     private byte waitForNextByte() {
         try {
-            return (byte) mInputStream.read();
+            byte readByte = (byte) mInputStream.read();
+
+            return readByte;
 
         } catch (IOException e) {
+            Log.d("TomaszKopacz", "read byte failed");
 
             readEnabled = false;
             return 0;

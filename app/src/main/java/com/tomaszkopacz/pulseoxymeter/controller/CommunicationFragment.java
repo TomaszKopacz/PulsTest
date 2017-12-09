@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -70,7 +69,7 @@ public class CommunicationFragment
         //bind bt service
         Intent intent = new Intent(getActivity(), ConnectionService.class);
         getActivity().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
+        bound = true;
     }
 
     @Override
@@ -88,33 +87,28 @@ public class CommunicationFragment
         mCommunicationFragmentLayout = new CommunicationFragmentLayout(inflater, container);
         mCommunicationFragmentLayout.setListener(this);
 
+        //components
         pulseTextView = mCommunicationFragmentLayout.getPulseTextView();
         saturationTextView = mCommunicationFragmentLayout.getSaturationTextView();
-
         waveformGraph = mCommunicationFragmentLayout.getWaveformGraph();
-        Viewport viewport = waveformGraph.getViewport();
-        viewport.setScalable(false);
-        viewport.setScrollable(true);
-        viewport.setXAxisBoundsManual(true);
-        viewport.setMinX(0);
-        viewport.setMaxX(500);
-        viewport.setMinY(0);
-        viewport.setMaxY(128);
+        createWaveform(waveformGraph);
 
         waveform = (LineGraphSeries)waveformGraph.getSeries().get(0);
-        //waveformGraph.addSeries(waveform);
 
         return mCommunicationFragmentLayout.getView();
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
+        Log.d("TomaszKopacz", "on destroy");
         if (bound){
             getActivity().unbindService(mServiceConnection);
+            service.unbind();
+            service = null;
             bound = false;
         }
+
+        super.onDestroy();
     }
 
 
@@ -150,7 +144,10 @@ public class CommunicationFragment
     @Override
     public void onNavigationIconClick() {
 
-        //give back default activity settings and go back connection fragment
+        //disable service timer
+        service.unbind();
+
+        //give back default activity settings and go back to connection fragment
         mMainActivityLayout.getToolbar().setNavigationIcon(R.drawable.ic_menu);
         mMainActivityLayout.getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         mMainActivityLayout.setListener(((MainActivity)getActivity()).getDefaultListener());
@@ -172,25 +169,49 @@ public class CommunicationFragment
 
     }
 
+
+    @Override
+    public void startReading(){
+        service.read();
+    }
+
     @Override
     public void onDataIncome(final CMSData data) {
+
+        //get bytes and transform to unsigned
         pulseValue = MAX_VALUE + data.getPulseByte();
         saturationValue = MAX_VALUE + data.getSaturationByte();
         wavePoint = MAX_VALUE + data.getWaveformByte();
 
+        //set values to interface
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 pulseTextView.setText(String.valueOf(pulseValue));
                 saturationTextView.setText(String.valueOf(saturationValue));
                 waveform.appendData(new DataPoint(pointer, wavePoint), true, 10000);
                 pointer++;
             }
         });
+
     }
 
-    @Override
-    public void startReading(){
-        service.read();
+
+    /*==============================================================================================
+                                        PRIVATE UTIL METHODS
+    ==============================================================================================*/
+
+    private void createWaveform(GraphView graph){
+
+        Viewport viewport = graph.getViewport();
+        viewport.setScalable(false);
+        viewport.setScrollable(true);
+        viewport.setXAxisBoundsManual(true);
+        viewport.scrollToEnd();
+        viewport.setMinX(0);
+        viewport.setMaxX(500);
+        viewport.setMinY(0);
+        viewport.setMaxY(128);
     }
 }
