@@ -7,7 +7,7 @@
     <string name="paired_devices">"Sparowane urządzenia"</string>
     <string name="discovered_devices">"Dostępne urządzenia"</string>
     <string name="start_scan">"Skanuj"</string>
-    <string name="no_devices_msg">"BRAK URZĄDZEŃ"</string>
+    <string name="wait">"Prosze poczekać na całkowite wygaśnięcie połączenia"</string>
 
     <!-- diary fragment -->
     <string name="diary_fragment_title">"Dzienniczek"</string>

@@ -1,6 +1,7 @@
 package com.tomaszkopacz.pulseoxymeter.controller;
 
 
+import android.bluetooth.BluetoothSocket;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
-import com.tomaszkopacz.pulseoxymeter.btservice.ConnectionService;
+import com.tomaszkopacz.pulseoxymeter.btservice.CommunicateService;
 import com.tomaszkopacz.pulseoxymeter.design.CommunicationFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
@@ -43,7 +44,7 @@ public class CommunicationFragment
     private GraphView waveformGraph;
 
     //bluetooth
-    private ConnectionService service;
+    private CommunicateService service;
     private boolean bound = false;
 
     //data
@@ -65,11 +66,18 @@ public class CommunicationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TomaszKopacz", "onCreate");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Log.d("TomaszKopacz", "onStart");
 
         //bind bt service
-        Intent intent = new Intent(getActivity(), ConnectionService.class);
-        getActivity().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        bound = true;
+        Intent intent = new Intent(getActivity(), CommunicateService.class);
+        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -99,15 +107,15 @@ public class CommunicationFragment
     }
 
     @Override
-    public void onDestroy() {
-        Log.d("TomaszKopacz", "on destroy");
-        if (bound){
-            getActivity().unbindService(mServiceConnection);
-            service.unbind();
-            service = null;
-            bound = false;
-        }
+    public void onStop() {
+        super.onStop();
 
+        getActivity().unbindService(connection);
+        service.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
     }
 
@@ -116,10 +124,11 @@ public class CommunicationFragment
                                        BLUETOOTH SERVICE
      =============================================================================================*/
 
-    private ServiceConnection mServiceConnection  = new ServiceConnection() {
+    private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            ConnectionService.LocalBinder binder = (ConnectionService.LocalBinder) iBinder;
+            CommunicateService.CommunicateBinder binder
+                    = (CommunicateService.CommunicateBinder) iBinder;
             service = binder.getService();
             registerCallback();
 
@@ -172,7 +181,8 @@ public class CommunicationFragment
 
     @Override
     public void startReading(){
-        service.read();
+        BluetoothSocket socket = ((MainActivity)getActivity()).getSocket();
+        service.read(socket);
     }
 
     @Override
@@ -194,7 +204,6 @@ public class CommunicationFragment
                 pointer++;
             }
         });
-
     }
 
 

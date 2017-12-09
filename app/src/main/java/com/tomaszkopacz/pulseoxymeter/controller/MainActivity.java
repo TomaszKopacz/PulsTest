@@ -1,5 +1,6 @@
 package com.tomaszkopacz.pulseoxymeter.controller;
 
+import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +22,10 @@ public class MainActivity
 
     private FragmentManager manager;
     private Fragment fragment;
+
+    //bluetooth
+    private boolean connected = false;
+    private BluetoothSocket socket;
 
 
     /*==============================================================================================
@@ -82,11 +87,32 @@ public class MainActivity
         }
     }
 
+
+    /*==============================================================================================
+                                       SETTERS AND GETTERS
+     =============================================================================================*/
+
     public MainActivityLayout getLayout(){
         return mMainActivityLayout;
     }
 
     public MainActivityListener getDefaultListener(){
         return this;
+    }
+
+    public BluetoothSocket getSocket(){
+        return socket;
+    }
+
+    public void setSocket(BluetoothSocket socket){
+        this.socket = socket;
+    }
+
+    public boolean getState(){
+        return connected;
+    }
+
+    public void setConnected(boolean b){
+        connected = b;
     }
 }

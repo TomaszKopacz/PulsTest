@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
+import com.tomaszkopacz.pulseoxymeter.btservice.ConnectService;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
-import com.tomaszkopacz.pulseoxymeter.btservice.ConnectionService;
 import com.tomaszkopacz.pulseoxymeter.design.DeviceItemLayout;
 import com.tomaszkopacz.pulseoxymeter.design.ConnectionFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
@@ -50,7 +51,8 @@ public class ConnectionFragment
     //bluetooth settings
     private IntentFilter btDetectionIntentFilter;
     private IntentFilter btBondingIntentFilter;
-    private ConnectionService service;
+    private IntentFilter btConnectionIntentFilter;
+    private ConnectService service;
     private boolean bound = false;
 
     //devices
@@ -69,17 +71,23 @@ public class ConnectionFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //bind bt service
-        Intent intent = new Intent(getActivity(), ConnectionService.class);
-        getActivity().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
         //register bt receivers
         if (BluetoothDetector.isDeviceBtCompatible()) {
 
             setUpIntentFilters();
             getActivity().registerReceiver(btDetectionReceiver, btDetectionIntentFilter);
             getActivity().registerReceiver(btBondingReceiver, btBondingIntentFilter);
+            getActivity().registerReceiver(btConnectionReceiver, btConnectionIntentFilter);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //bind bt service
+        Intent intent = new Intent(getActivity(), ConnectService.class);
+        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -111,29 +119,31 @@ public class ConnectionFragment
     public void onStop() {
         super.onStop();
         stopScan();
+
+        if (bound){
+            getActivity().unbindService(connection);
+            bound = false;
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if (bound){
-            getActivity().unbindService(mServiceConnection);
-            bound = false;
-        }
-
         getActivity().unregisterReceiver(btDetectionReceiver);
         getActivity().unregisterReceiver(btBondingReceiver);
+        getActivity().unregisterReceiver(btConnectionReceiver);
     }
 
     /*==============================================================================================
                                        BLUETOOTH SERVICE
      =============================================================================================*/
 
-    private ServiceConnection mServiceConnection  = new ServiceConnection() {
+    private ServiceConnection connection  = new ServiceConnection() {
+
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            ConnectionService.LocalBinder binder = (ConnectionService.LocalBinder) iBinder;
+            ConnectService.ConnectBinder binder = (ConnectService.ConnectBinder) iBinder;
             service = binder.getService();
             registerCallback();
 
@@ -152,14 +162,25 @@ public class ConnectionFragment
 
     @Override
     public void onConnectionOpenRequest() {
-        ((MainActivity)getActivity()).setFragment(CommunicationFragment.class);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)getActivity()).setSocket(service.getSocket());
+                ((MainActivity)getActivity()).setFragment(CommunicationFragment.class);
+            }
+        });
     }
 
     @Override
     public void onConnectionCloseRequest() {
-        if (mDeviceItemView != null &&
-                mDeviceItemView.getInfoTextView() != null)
-            mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDeviceItemView != null &&
+                        mDeviceItemView.getInfoTextView() != null)
+                    mDeviceItemView.getInfoTextView().setText(R.string.disconnected);
+            }
+        });
     }
 
     @Override
@@ -179,6 +200,10 @@ public class ConnectionFragment
 
         btBondingIntentFilter = new IntentFilter();
         btBondingIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+
+        btConnectionIntentFilter = new IntentFilter();
+        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
     }
 
     private BroadcastReceiver btDetectionReceiver = new BroadcastReceiver() {
@@ -234,6 +259,26 @@ public class ConnectionFragment
                     case BluetoothDevice.BOND_NONE:
                         break;
                 }
+            }
+        }
+    };
+
+    private BroadcastReceiver btConnectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            switch (action){
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.d("TomaszKopacz", "ACL_CONNECTED");
+                    ((MainActivity)getActivity()).setConnected(true);
+                    break;
+
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.d("TomaszKopacz", "ACL_DISCONNECTED");
+                    ((MainActivity)getActivity()).setConnected(false);
+                    break;
             }
         }
     };
@@ -296,16 +341,21 @@ public class ConnectionFragment
             BluetoothDetector.stopScanning();
             mConnectionFragmentLayout.notifyBtScanStateChanged(false);
 
-            //get device
-            BluetoothDevice device = pairedDevices.get(position);
-
-            //create device_item view
-            mDeviceItemView.setNameTextView(deviceNameTextView);
-            mDeviceItemView.setInfoTextView(deviceInfoTextView);
-            mDeviceItemView.getInfoTextView().setText(R.string.connecting);
-
             //try to connect
-            service.connect(device);
+            if (((MainActivity)getActivity()).getState() == false) {
+                //get device
+                BluetoothDevice device = pairedDevices.get(position);
+
+                //create device_item view
+                mDeviceItemView.setNameTextView(deviceNameTextView);
+                mDeviceItemView.setInfoTextView(deviceInfoTextView);
+                mDeviceItemView.getInfoTextView().setText(R.string.connecting);
+
+                service.connect(device);
+            }
+
+            else
+                Toast.makeText(getContext(), R.string.wait, Toast.LENGTH_SHORT).show();
         }
     };
 

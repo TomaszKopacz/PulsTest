@@ -36,6 +36,14 @@
             android:exported="false">
 
         </service>
+        <service
+            android:name=".btservice.ConnectService">
+
+        </service>
+        <service
+            android:name=".btservice.CommunicateService">
+
+        </service>
 
     </application>
 

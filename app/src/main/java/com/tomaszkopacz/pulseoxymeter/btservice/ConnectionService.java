@@ -202,7 +202,6 @@ public class ConnectionService extends Service {
         @Override
         public void run() {
             try {
-                Log.d("TomaszKopacz", "Sent task");
                 mOutputStream.write(HOLD_SENDING_BYTE);
 
             } catch (IOException e) {

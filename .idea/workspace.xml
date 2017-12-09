@@ -10,15 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5920cc80-556a-49f5-b43a-7114fb0f737e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/CommunicateService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="PulseOxymeter.iws" />
@@ -51,25 +55,46 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CommunicationFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
+      <file leaf-file-name="ConnectService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="146" column="31" selection-start-line="146" selection-start-column="31" selection-end-line="146" selection-end-column="31" />
-              <folding />
+            <state relative-caret-position="554">
+              <caret line="118" column="30" selection-start-line="118" selection-start-column="30" selection-end-line="118" selection-end-column="30" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1180#1181#0" expanded="true" />
+                <element signature="e#1220#1221#0" expanded="true" />
+                <element signature="e#2026#2454#0" expanded="true" />
+                <element signature="e#2453#2454#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConnectionService.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java">
+      <file leaf-file-name="ConnectionFragment.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="82">
-              <caret line="75" column="43" selection-start-line="75" selection-start-column="43" selection-end-line="75" selection-end-column="43" />
+            <state relative-caret-position="194">
+              <caret line="278" column="59" selection-start-line="278" selection-start-column="59" selection-end-line="278" selection-end-column="59" />
               <folding>
-                <element signature="e#1870#1871#0" expanded="true" />
-                <element signature="e#1899#1900#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#5605#5865#0" expanded="true" />
+                <element signature="e#5864#5865#0" expanded="true" />
+                <element signature="e#9493#10239#0" expanded="true" />
+                <element signature="e#10238#10239#0" expanded="true" />
+                <element signature="e#12646#12665#0" expanded="true" />
+                <element signature="e#12787#12800#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="142">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1989,8 +2014,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/DevicesListFragmentLayout.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/menu/main_toolbar.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/DevicesListFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/ScanFragmentListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/navigation_header.xml" />
@@ -2025,7 +2048,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationActivityLayout.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/MainActivityLayout.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/DiaryFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/Fonts.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainApp.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothReader.java" />
@@ -2033,13 +2055,16 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/BluetoothDataListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/size.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/CommunicationFragmentListener.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_communication.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/CommunicateService.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java" />
       </list>
     </option>
   </component>
@@ -2117,6 +2142,24 @@
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PulseOxymeter" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -2179,28 +2222,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="controller" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PulseOxymeter" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pulseoxymeter" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="btservice" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2659,30 +2680,6 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/drawer_layout.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="7" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/drawer_layout.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="36" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/drawer_layout.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
@@ -2859,13 +2856,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/CommunicationActivityListener.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/Fonts.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainApp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/BluetoothReader.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/listeners/BluetoothCallbacks.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -2887,14 +2877,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2927,29 +2909,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainApp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1117">
-          <caret line="89" column="20" selection-start-line="89" selection-start-column="20" selection-end-line="89" selection-end-column="20" />
+        <state relative-caret-position="342">
+          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="81" selection-end-column="5" />
           <folding>
-            <element signature="e#2878#2879#0" expanded="false" />
-            <element signature="e#2905#2906#0" expanded="false" />
+            <element signature="e#1927#1928#0" expanded="true" />
+            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/CommunicateService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3871">
-          <caret line="307" column="36" selection-start-line="307" selection-start-column="36" selection-end-line="307" selection-end-column="36" />
-          <folding />
+        <state relative-caret-position="406">
+          <caret line="60" column="17" selection-start-line="60" selection-start-column="17" selection-end-line="60" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1154#1155#0" expanded="true" />
+            <element signature="e#1183#1184#0" expanded="true" />
+            <element signature="e#1284#1285#0" expanded="true" />
+            <element signature="e#1338#1339#0" expanded="true" />
+            <element signature="e#3176#3310#0" expanded="true" />
+            <element signature="e#3309#3310#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
+        <state relative-caret-position="249">
+          <caret line="43" column="12" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -2957,21 +2955,75 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
+    <entry file="jar://$USER_HOME$/Programy/Android/Sdk/platforms/android-26/android.jar!/android/widget/TextView.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="146" column="31" selection-start-line="146" selection-start-column="31" selection-end-line="146" selection-end-column="31" />
+        <state relative-caret-position="221">
+          <caret line="1245" column="0" selection-start-line="1245" selection-start-column="0" selection-end-line="1245" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectionService.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="82">
-          <caret line="75" column="43" selection-start-line="75" selection-start-column="43" selection-end-line="75" selection-end-column="43" />
+        <state relative-caret-position="280">
+          <caret line="115" column="22" selection-start-line="115" selection-start-column="22" selection-end-line="115" selection-end-column="22" />
           <folding>
-            <element signature="e#1870#1871#0" expanded="true" />
-            <element signature="e#1899#1900#0" expanded="true" />
+            <element signature="e#3424#3425#0" expanded="true" />
+            <element signature="e#3460#3461#0" expanded="true" />
+            <element signature="e#3492#3493#0" expanded="true" />
+            <element signature="e#3524#3525#0" expanded="true" />
+            <element signature="e#3566#3567#0" expanded="true" />
+            <element signature="e#3595#3596#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2484">
+          <caret line="205" column="11" selection-start-line="205" selection-start-column="11" selection-end-line="205" selection-end-column="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4136#4137#0" expanded="true" />
+            <element signature="e#4169#4170#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/ConnectService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="554">
+          <caret line="118" column="30" selection-start-line="118" selection-start-column="30" selection-end-line="118" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1180#1181#0" expanded="true" />
+            <element signature="e#1220#1221#0" expanded="true" />
+            <element signature="e#2026#2454#0" expanded="true" />
+            <element signature="e#2453#2454#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/ConnectionFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="278" column="59" selection-start-line="278" selection-start-column="59" selection-end-line="278" selection-end-column="59" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5605#5865#0" expanded="true" />
+            <element signature="e#5864#5865#0" expanded="true" />
+            <element signature="e#9493#10239#0" expanded="true" />
+            <element signature="e#10238#10239#0" expanded="true" />
+            <element signature="e#12646#12665#0" expanded="true" />
+            <element signature="e#12787#12800#0" expanded="true" />
           </folding>
         </state>
       </provider>
