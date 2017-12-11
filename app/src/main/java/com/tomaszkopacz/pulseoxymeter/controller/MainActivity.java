@@ -1,6 +1,11 @@
 package com.tomaszkopacz.pulseoxymeter.controller;
 
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +13,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
@@ -24,8 +30,9 @@ public class MainActivity
     private Fragment fragment;
 
     //bluetooth
-    private boolean connected = false;
+    private IntentFilter btConnectionIntentFilter;
     private BluetoothSocket socket;
+    private boolean connected = false;
 
 
     /*==============================================================================================
@@ -34,14 +41,26 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("TomaszKopacz", "Activity started");
         super.onCreate(savedInstanceState);
         mMainActivityLayout = new MainActivityLayout(this);
         mMainActivityLayout.setListener(this);
         manager = getSupportFragmentManager();
 
+        setUpIntentFilter();
+        registerReceiver(btConnectionReceiver, btConnectionIntentFilter);
+
         setStartContent();
         setFragment(ConnectionFragment.class);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("TomaszKopacz", "Activity destroyed");
+        unregisterReceiver(btConnectionReceiver);
+
+        super.onDestroy();
     }
 
     private void setStartContent(){
@@ -66,6 +85,25 @@ public class MainActivity
                                        LISTENERS
      =============================================================================================*/
 
+    private BroadcastReceiver btConnectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            switch (action){
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.d("TomaszKopacz", "ACL_CONNECTED");
+                    connected = true;
+                    break;
+
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.d("TomaszKopacz", "ACL_DISCONNECTED");
+                    connected = false;
+                    break;
+            }
+        }
+    };
     @Override
     public void onNavigationIconClick() {
         mMainActivityLayout.getDrawer().openDrawer(GravityCompat.START);
@@ -114,5 +152,16 @@ public class MainActivity
 
     public void setConnected(boolean b){
         connected = b;
+    }
+
+
+    /*==============================================================================================
+                                       PRIVATE UTIL METHODS
+     =============================================================================================*/
+
+    private void setUpIntentFilter(){
+        btConnectionIntentFilter = new IntentFilter();
+        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
     }
 }

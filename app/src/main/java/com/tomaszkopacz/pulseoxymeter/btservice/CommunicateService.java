@@ -29,12 +29,14 @@ public class CommunicateService extends Service {
     private InputStream mInputStream;
     private OutputStream mOutputStream;
 
+    private Thread readThread;
+
     private Timer timer;
     private KeepCommunicatingTask keepCommunicatingTask;
     private static final int KEEP_COMMUNICATING_DELAY = 4500;
     private static final byte KEEP_COMMUNICATING_BYTE = (byte) 0xa7;
 
-    private boolean readEnabled = false;
+    private boolean communicationEnabled = false;
 
     @Nullable
     @Override
@@ -54,6 +56,12 @@ public class CommunicateService extends Service {
     }
 
     public void unbind(){
+
+        if (readThread != null)
+            readThread.interrupt();
+
+        communicationEnabled = false;
+
         if (timer != null && keepCommunicatingTask != null){
             keepCommunicatingTask.cancel();
             timer.cancel();
@@ -93,7 +101,7 @@ public class CommunicateService extends Service {
         keepCommunicatingTask = new CommunicateService.KeepCommunicatingTask();
         timer.schedule(keepCommunicatingTask, 0, KEEP_COMMUNICATING_DELAY);
 
-        Thread readThread = new Thread(readRunnable);
+        readThread = new Thread(readRunnable);
         readThread.start();
     }
 
@@ -113,7 +121,7 @@ public class CommunicateService extends Service {
     Runnable readRunnable = new Runnable() {
         @Override
         public void run() {
-            readEnabled = true;
+            communicationEnabled = true;
             getBytes();
         }
     };
@@ -132,7 +140,7 @@ public class CommunicateService extends Service {
 
         CMSData dataPackage = new CMSData();
 
-        while (readEnabled) {
+        while (communicationEnabled) {
             byte0 = waitForNextByte();
             byte1 = waitForNextByte();
             byte2 = waitForNextByte();
@@ -156,7 +164,7 @@ public class CommunicateService extends Service {
         } catch (IOException e) {
             Log.d("TomaszKopacz", "read byte failed");
 
-            readEnabled = false;
+            communicationEnabled = false;
             return 0;
         }
     }

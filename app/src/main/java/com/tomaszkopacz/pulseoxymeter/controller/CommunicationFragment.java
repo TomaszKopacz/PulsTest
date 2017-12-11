@@ -1,6 +1,7 @@
 package com.tomaszkopacz.pulseoxymeter.controller;
 
 
+import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -66,14 +68,11 @@ public class CommunicationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TomaszKopacz", "onCreate");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        Log.d("TomaszKopacz", "onStart");
 
         //bind bt service
         Intent intent = new Intent(getActivity(), CommunicateService.class);
@@ -194,16 +193,19 @@ public class CommunicationFragment
         wavePoint = MAX_VALUE + data.getWaveformByte();
 
         //set values to interface
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
 
-                pulseTextView.setText(String.valueOf(pulseValue));
-                saturationTextView.setText(String.valueOf(saturationValue));
-                waveform.appendData(new DataPoint(pointer, wavePoint), true, 10000);
-                pointer++;
-            }
-        });
+                    pulseTextView.setText(String.valueOf(pulseValue));
+                    saturationTextView.setText(String.valueOf(saturationValue));
+                    waveform.appendData(new DataPoint(pointer, wavePoint), true, 10000);
+                    pointer++;
+                }
+            });
+        }
     }
 
 

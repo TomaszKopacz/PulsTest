@@ -32,11 +32,6 @@
         </activity>
 
         <service
-            android:name=".btservice.ConnectionService"
-            android:exported="false">
-
-        </service>
-        <service
             android:name=".btservice.ConnectService">
 
         </service>

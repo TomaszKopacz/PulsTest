@@ -51,7 +51,6 @@ public class ConnectionFragment
     //bluetooth settings
     private IntentFilter btDetectionIntentFilter;
     private IntentFilter btBondingIntentFilter;
-    private IntentFilter btConnectionIntentFilter;
     private ConnectService service;
     private boolean bound = false;
 
@@ -77,7 +76,6 @@ public class ConnectionFragment
             setUpIntentFilters();
             getActivity().registerReceiver(btDetectionReceiver, btDetectionIntentFilter);
             getActivity().registerReceiver(btBondingReceiver, btBondingIntentFilter);
-            getActivity().registerReceiver(btConnectionReceiver, btConnectionIntentFilter);
         }
     }
 
@@ -132,7 +130,6 @@ public class ConnectionFragment
 
         getActivity().unregisterReceiver(btDetectionReceiver);
         getActivity().unregisterReceiver(btBondingReceiver);
-        getActivity().unregisterReceiver(btConnectionReceiver);
     }
 
     /*==============================================================================================
@@ -201,9 +198,6 @@ public class ConnectionFragment
         btBondingIntentFilter = new IntentFilter();
         btBondingIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
 
-        btConnectionIntentFilter = new IntentFilter();
-        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        btConnectionIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
     }
 
     private BroadcastReceiver btDetectionReceiver = new BroadcastReceiver() {
@@ -259,26 +253,6 @@ public class ConnectionFragment
                     case BluetoothDevice.BOND_NONE:
                         break;
                 }
-            }
-        }
-    };
-
-    private BroadcastReceiver btConnectionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-            switch (action){
-                case BluetoothDevice.ACTION_ACL_CONNECTED:
-                    Log.d("TomaszKopacz", "ACL_CONNECTED");
-                    ((MainActivity)getActivity()).setConnected(true);
-                    break;
-
-                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                    Log.d("TomaszKopacz", "ACL_DISCONNECTED");
-                    ((MainActivity)getActivity()).setConnected(false);
-                    break;
             }
         }
     };
@@ -341,21 +315,17 @@ public class ConnectionFragment
             BluetoothDetector.stopScanning();
             mConnectionFragmentLayout.notifyBtScanStateChanged(false);
 
-            //try to connect
-            if (((MainActivity)getActivity()).getState() == false) {
-                //get device
-                BluetoothDevice device = pairedDevices.get(position);
+            //get device
+            BluetoothDevice device = pairedDevices.get(position);
 
-                //create device_item view
-                mDeviceItemView.setNameTextView(deviceNameTextView);
-                mDeviceItemView.setInfoTextView(deviceInfoTextView);
-                mDeviceItemView.getInfoTextView().setText(R.string.connecting);
+            //create device_item view
+            mDeviceItemView.setNameTextView(deviceNameTextView);
+            mDeviceItemView.setInfoTextView(deviceInfoTextView);
+            mDeviceItemView.getInfoTextView().setText(R.string.connecting);
 
-                service.connect(device);
-            }
 
-            else
-                Toast.makeText(getContext(), R.string.wait, Toast.LENGTH_SHORT).show();
+            service.closeConnection(((MainActivity)getActivity()).getSocket());
+            service.connect(device);
         }
     };
 

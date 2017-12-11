@@ -30,6 +30,8 @@ public class ConnectService extends Service {
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
     private static final int CONNECT_PERIOD = 10000;
 
+    private boolean connected = false;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -58,11 +60,8 @@ public class ConnectService extends Service {
      */
     public void connect(BluetoothDevice device) {
 
-        closeConnection();
-
         if (device == null)
             return;
-
         this.device = device;
 
         Thread connectThread = new Thread(connectRunnable);
@@ -80,9 +79,12 @@ public class ConnectService extends Service {
                 UUID mUuid = UUID.fromString(SOCKET_UUID);
                 socket = device.createInsecureRfcommSocketToServiceRecord(mUuid);
                 socket.connect();
+
+                connected = true;
                 callback.onConnectionOpenRequest();
 
             } catch (Exception e) {
+                connected = false;
                 callback.onConnectionCloseRequest();
             }
         }
@@ -91,29 +93,39 @@ public class ConnectService extends Service {
     private Runnable stopConnectRunnable = new Runnable() {
         @Override
         public void run() {
-            if (socket != null && socket.isConnected())
-                return;
+            if (socket != null) {
+                if (connected)
+                    return;
+                else
+                    try {
+                        socket.close();
+                        callback.onConnectionCloseRequest();
 
-            callback.onConnectionCloseRequest();
+                    } catch (IOException e) {
+                        callback.onConnectionCloseRequest();
+                    }
+            }
+
         }
     };
 
     /**
      * Closes bluetooth connection.
      */
-    public void closeConnection() {
+    public boolean closeConnection(BluetoothSocket btSocket) {
 
         try {
-            if (socket != null && socket.isConnected()) {
-                socket.getInputStream().close();
-                socket.getOutputStream().close();
-                socket.close();
-                socket = null;
+            if (btSocket != null && btSocket.isConnected()) {
+                btSocket.getInputStream().close();
+                btSocket.getOutputStream().close();
+                btSocket.close();
+
             }
+            return true;
 
         } catch (IOException e) {
             Log.d("TomaszKopacz", "stop connection failed");
-
+            return false;
         }
     }
 
