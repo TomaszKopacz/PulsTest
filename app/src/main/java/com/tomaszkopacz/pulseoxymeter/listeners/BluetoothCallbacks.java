@@ -9,6 +9,7 @@ import com.tomaszkopacz.pulseoxymeter.model.CMSData;
 public interface BluetoothCallbacks {
 
     void onConnectionOpenRequest();
+
     void onConnectionCloseRequest();
 
     void onDataIncome(CMSData data);

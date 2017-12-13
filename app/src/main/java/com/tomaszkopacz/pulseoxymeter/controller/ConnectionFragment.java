@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,8 +105,11 @@ public class ConnectionFragment
         mDeviceItemView = new DeviceItemLayout(inflater, container);
 
         //set switch
+        Switch btSwitch = mConnectionFragmentLayout.getBtSwitch();
         if (BluetoothDetector.isDeviceBtCompatible() && BluetoothDetector.isBtAdapterEnabled())
-            mConnectionFragmentLayout.notifyBtState(true);
+            btSwitch.setChecked(true);
+        else
+            btSwitch.setChecked(false);
 
         //get devices
         createDevicesLists();
@@ -211,14 +215,21 @@ public class ConnectionFragment
 
                     if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                             == BluetoothAdapter.STATE_ON) {
-                        mConnectionFragmentLayout.notifyBtState(true);
+
+                        mConnectionFragmentLayout.getBtSwitch().setChecked(true);
                         createDevicesLists();
 
-                    } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                    } else if (intent
+                            .getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                             == BluetoothAdapter.STATE_OFF) {
+
                         stopScan();
-                        mConnectionFragmentLayout.notifyBtScanStateChanged(false);
-                        mConnectionFragmentLayout.notifyBtState(false);
+                        mConnectionFragmentLayout
+                                .getScanBtn()
+                                .setProgress(ConnectionFragmentLayout.BUTTON_LAZY);
+                        mConnectionFragmentLayout
+                                .getBtSwitch()
+                                .setChecked(false);
                     }
 
                     break;
@@ -296,7 +307,9 @@ public class ConnectionFragment
         @Override
         public void run() {
             stopScan();
-            mConnectionFragmentLayout.notifyBtScanStateChanged(false);
+            mConnectionFragmentLayout
+                    .getScanBtn()
+                    .setProgress(ConnectionFragmentLayout.BUTTON_LAZY);
         }
     };
 
@@ -313,7 +326,9 @@ public class ConnectionFragment
 
             //stop scanning
             BluetoothDetector.stopScanning();
-            mConnectionFragmentLayout.notifyBtScanStateChanged(false);
+            mConnectionFragmentLayout
+                    .getScanBtn()
+                    .setProgress(ConnectionFragmentLayout.BUTTON_LAZY);
 
             //get device
             BluetoothDevice device = pairedDevices.get(position);
@@ -337,7 +352,9 @@ public class ConnectionFragment
 
             //stop scanning
             BluetoothDetector.stopScanning();
-            mConnectionFragmentLayout.notifyBtScanStateChanged(false);
+            mConnectionFragmentLayout
+                    .getScanBtn()
+                    .setProgress(ConnectionFragmentLayout.BUTTON_LAZY);
 
             //get device
             BluetoothDevice device = discoveredDevices.get(position);

@@ -16,7 +16,6 @@
     <string name="communicate_fragment_title">"Komunikacja"</string>
     <string name="pulse">"Tętno   [bpm]:"</string>
     <string name="saturation">"Saturacja [%]:"</string>
-    <string name="start">"START"</string>
 
     <!-- bt status -->
     <string name="pairing">"Parowanie..."</string>
@@ -26,6 +25,9 @@
 
     <!-- messages -->
     <string name="bt_off_msg">"Bluetooth jest wyłączone"</string>
+    <string name="stop_reading">"Proszę zatrzymać odczyt"</string>
+    <string name="saved">"Zapisano pomyślnie"</string>
+    <string name="no_external_storage">"Brak dostępu do pamięci zewnętrznej"</string>
 
     <!-- items -->
     <string name="item_connect">"Połącz z urządzeniem"</string>

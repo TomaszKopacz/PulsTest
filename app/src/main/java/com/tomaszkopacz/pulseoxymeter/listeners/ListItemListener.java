@@ -6,7 +6,7 @@ import android.widget.TextView;
  * Created by tomaszkopacz on 09.08.17.
  */
 
-public abstract class ListItemListener {
+public interface ListItemListener {
 
     /**
      * Runs, when clicked item from a list.
@@ -14,5 +14,5 @@ public abstract class ListItemListener {
      * @param deviceNameTextView
      * @param deviceInfoTextView
      */
-    public abstract void itemClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);
+    void itemClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);
 }

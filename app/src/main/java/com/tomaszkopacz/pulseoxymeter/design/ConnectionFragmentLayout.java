@@ -15,7 +15,6 @@ import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.controller.MainApp;
 import com.tomaszkopacz.pulseoxymeter.listeners.ListItemListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.ConnectionFragmentListener;
-import com.tomaszkopacz.pulseoxymeter.views.ConnectionFragmentView;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ import butterknife.OnClick;
  * Created by tomaszkopacz on 17.11.17.
  */
 
-public class ConnectionFragmentLayout implements ConnectionFragmentView {
+public class ConnectionFragmentLayout {
 
     //general
     private View rootView;
@@ -67,8 +66,8 @@ public class ConnectionFragmentLayout implements ConnectionFragmentView {
     private DevicesAdapter discoveredDevicesAdapter;
 
     //scan button
-    private final int BUTTON_LAZY = 0;
-    private final int BUTTON_IN_PROGRESS = 10;
+    public static final int BUTTON_LAZY = 0;
+    public static final int BUTTON_IN_PROGRESS = 10;
 
 
     /*==============================================================================================
@@ -84,14 +83,21 @@ public class ConnectionFragmentLayout implements ConnectionFragmentView {
         customizeLayout();
     }
 
-    @Override
+
     public void setListener(final ConnectionFragmentListener listener) {
         this.listener = listener;
     }
 
-    @Override
     public View getView() {
         return rootView;
+    }
+
+    public Switch getBtSwitch(){
+        return btSwitch;
+    }
+
+    public CircularProgressButton getScanBtn(){
+        return scanBtn;
     }
 
 
@@ -109,7 +115,7 @@ public class ConnectionFragmentLayout implements ConnectionFragmentView {
     }
 
     @OnClick(R.id.scanBtn)
-    public void onScanBtnPressed(){
+    public void onScanBtnClick(){
         switch (scanBtn.getProgress()) {
 
             case BUTTON_LAZY:
@@ -124,32 +130,9 @@ public class ConnectionFragmentLayout implements ConnectionFragmentView {
 
 
     /*==============================================================================================
-                                        REACTIONS
-    ==============================================================================================*/
-
-
-    @Override
-    public void notifyBtState(boolean b) {
-        btSwitch.setChecked(b);
-
-        if (!b)
-            stopScan();
-    }
-
-    @Override
-    public void notifyBtScanStateChanged(boolean b) {
-        if (b)
-            scanBtn.setProgress(BUTTON_IN_PROGRESS);
-        else
-            scanBtn.setProgress(BUTTON_LAZY);
-    }
-
-
-    /*==============================================================================================
                                         LISTS
     ==============================================================================================*/
 
-    @Override
     public void createPairedDevicesList(List<BluetoothDevice> devices, ListItemListener listener) {
 
         //create settings
@@ -161,7 +144,6 @@ public class ConnectionFragmentLayout implements ConnectionFragmentView {
         pairedDevicesRecView.setLayoutManager(layout);
     }
 
-    @Override
     public void createDiscoveredDevicesList(List<BluetoothDevice> devices, ListItemListener listener) {
 
         //create settings
@@ -187,16 +169,16 @@ public class ConnectionFragmentLayout implements ConnectionFragmentView {
 
 
     /*==============================================================================================
-                                        PRIVATE METHODS
+                                        PRIVATE UTIL METHODS
     ==============================================================================================*/
 
     private void customizeLayout() {
 
-        createFonts();
+        setFonts();
         scanBtn.setIndeterminateProgressMode(true);
     }
 
-    private void createFonts(){
+    private void setFonts(){
         btTextView.setTypeface(MainApp.FONT_BOLD);
         pairedDevicesTextView.setTypeface(MainApp.FONT_BOLD);
         discoveredDevicesTextView.setTypeface(MainApp.FONT_BOLD);

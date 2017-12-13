@@ -122,7 +122,6 @@ public class CommunicateService extends Service {
             tempInputStream = socket.getInputStream();
 
         } catch (IOException e) {
-            Log.d("TomaszKopacz", "get sockets failed");
         }
 
         mInputStream = tempInputStream;
@@ -135,6 +134,7 @@ public class CommunicateService extends Service {
         @Override
         public void run() {
             communicationEnabled = true;
+            callback.onConnectionOpenRequest();
             getBytes();
         }
     };
@@ -171,14 +171,16 @@ public class CommunicateService extends Service {
     private byte waitForNextByte() {
         try {
             byte readByte = (byte) mInputStream.read();
-
             return readByte;
 
         } catch (IOException e) {
-            Log.d("TomaszKopacz", "read byte failed");
-
             communicationEnabled = false;
             return 0;
         }
+    }
+
+    public void stopReading(){
+        communicationEnabled = false;
+        callback.onConnectionCloseRequest();
     }
 }

@@ -6,10 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -17,7 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
@@ -55,6 +59,9 @@ public class CommunicationFragment
     private CommunicateService service;
 
     //incoming data
+    private long startTime = -1;
+    private long currentTime = -1;
+    private double episode = 0;
     private int pulseValue = -1;
     private int saturationValue = -1;
     private int wavePoint = 0;
@@ -62,10 +69,13 @@ public class CommunicationFragment
 
     private int pointer = 0;
 
+    private boolean isReading = false;
+
     //maximal 7-bytes value of data element: 2^7 = 128
     private static final int MAX_VALUE = 128;
 
     //data for saving file
+    private double[] timeArray = new double[3000];
     private int[] pulseArray = new int[3000];
     private int[] saturationArray = new int[3000];
     private int[] waveArray = new int[3000];
@@ -150,8 +160,7 @@ public class CommunicationFragment
             service.holdCommunication(((MainActivity)getActivity()).getSocket());
 
             //read data
-            startReading();
-
+            service.read(((MainActivity)getActivity()).getSocket());
         }
 
         @Override
@@ -187,39 +196,24 @@ public class CommunicationFragment
     }
 
     @Override
-    public void startReading(){
-        service.read(((MainActivity)getActivity()).getSocket());
+    public void stopReading(){
+        service.stopReading();
     }
 
     @Override
     public void saveData() {
 
-        if (isExternalStorageWritable()){
+        if (isReading)
+            Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
+
+        else if (isExternalStorageWritable()){
             File file = getFileExternalDirectory();
-
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                PrintWriter pw = new PrintWriter(fos);
-
-                for (int i = 0; i <= pointer; i++) {
-
-                    int pulse = pulseArray[i];
-                    int saturation = saturationArray[i];
-                    int wave = waveArray[i];
-
-                    if (pulse == 0)
-                        continue;
-
-                    pw.println(pulse + "," + saturation + "," + wave);
-                }
-
-                pw.close();
-                fos.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if (saveData(file))
+                Toast.makeText(getContext(), R.string.saved, Toast.LENGTH_SHORT).show();
         }
+
+        else
+            Toast.makeText(getContext(), R.string.no_external_storage, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -231,12 +225,21 @@ public class CommunicationFragment
     @Override
     public void onDataIncome(final CMSData data) {
 
+        if (startTime == -1)
+            startTime = System.currentTimeMillis() - 1;
+
+        currentTime = System.currentTimeMillis();
+        episode = episode + ((currentTime - startTime) * 0.001);
+        startTime = currentTime;
+
+
         //get bytes and transform to unsigned
         pulseValue = MAX_VALUE + data.getPulseByte();
         saturationValue = MAX_VALUE + data.getSaturationByte();
         wavePoint = MAX_VALUE + data.getWaveformByte();
 
         //save to array
+        timeArray[pointer] = episode;
         pulseArray[pointer] = pulseValue;
         saturationArray[pointer] = saturationValue;
         waveArray[pointer] = wavePoint;
@@ -250,7 +253,7 @@ public class CommunicationFragment
 
                     pulseTextView.setText(String.valueOf(pulseValue));
                     saturationTextView.setText(String.valueOf(saturationValue));
-                    waveform.appendData(new DataPoint(pointer, wavePoint), true, 5000);
+                    waveform.appendData(new DataPoint(episode, wavePoint), true, 5000);
                     pointer++;
                 }
             });
@@ -259,12 +262,12 @@ public class CommunicationFragment
 
     @Override
     public void onConnectionOpenRequest() {
-
+        isReading = true;
     }
 
     @Override
     public void onConnectionCloseRequest() {
-
+        isReading = false;
     }
 
 
@@ -280,11 +283,15 @@ public class CommunicationFragment
         viewport.setXAxisBoundsManual(true);
         viewport.scrollToEnd();
         viewport.setMinX(0);
-        viewport.setMaxX(500);
+        viewport.setMaxX(3);
         viewport.setMinY(0);
         viewport.setMaxY(128);
     }
 
+    /**
+     * Checks, whether external storage is available.
+     * @return
+     */
     private boolean isExternalStorageWritable(){
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state))
@@ -292,6 +299,10 @@ public class CommunicationFragment
         return false;
     }
 
+    /**
+     * Gets album path and creates new file.
+     * @return
+     */
     private File getFileExternalDirectory(){
 
         //create album if not exists
@@ -316,5 +327,39 @@ public class CommunicationFragment
         }
 
         return file;
+    }
+
+    /**
+     * Saves data to a given file.
+     * @param file
+     * @return
+     */
+    private boolean saveData(File file){
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            PrintWriter pw = new PrintWriter(fos);
+
+            for (int i = 0; i <= pointer; i++) {
+
+                double time = timeArray[i];
+                int pulse = pulseArray[i];
+                int saturation = saturationArray[i];
+                int wave = waveArray[i];
+
+                if (pulse == 0)
+                    continue;
+
+                pw.println(time + "," + pulse + "," + saturation + "," + wave);
+            }
+
+            pw.close();
+            fos.close();
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

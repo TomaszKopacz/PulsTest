@@ -8,12 +8,9 @@ import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.Series;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.controller.MainApp;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationFragmentListener;
-import com.tomaszkopacz.pulseoxymeter.views.CommunicationFragmentView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +20,7 @@ import butterknife.OnClick;
  * Created by tomaszkopacz on 27.11.17.
  */
 
-public class CommunicationFragmentLayout implements CommunicationFragmentView {
+public class CommunicationFragmentLayout {
 
     //general
     private View rootView;
@@ -45,9 +42,6 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
     @BindView(R.id.waveformGraph)
     GraphView waveformGraph;
 
-    @BindView(R.id.startBtn)
-    CircularProgressButton startBtn;
-
     @BindView(R.id.saveBtn)
     FloatingActionButton saveBtn;
 
@@ -65,12 +59,10 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
         customizeLayout();
     }
 
-    @Override
     public void setListener(CommunicationFragmentListener listener){
         this.listener = listener;
     }
 
-    @Override
     public View getView(){
         return rootView;
     }
@@ -92,19 +84,9 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
                                         COMMUNICATION
     ==============================================================================================*/
 
-    @Override
-    public void startCommunication() {
-
-    }
-
-    @Override
-    public void stopCommunication() {
-
-    }
-
-    @OnClick(R.id.startBtn)
-    public void start(){
-        listener.startReading();
+    @OnClick(R.id.waveformGraph)
+    public void graphClicked(){
+        listener.stopReading();
     }
 
     @OnClick(R.id.saveBtn)
@@ -119,15 +101,13 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
 
     private void customizeLayout(){
 
-        createFonts();
-        startBtn.setIndeterminateProgressMode(true);
+        setFonts();
     }
 
-    private void createFonts() {
+    private void setFonts() {
         pulseTextView.setTypeface(MainApp.FONT_BOLD);
         pulseValueTextView.setTypeface(MainApp.FONT_BOLD);
         saturationTextView.setTypeface(MainApp.FONT_BOLD);
         saturationValueTextView.setTypeface(MainApp.FONT_BOLD);
-        startBtn.setTypeface(MainApp.FONT_BOLD);
     }
 }
