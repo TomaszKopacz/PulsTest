@@ -1,5 +1,6 @@
 package com.tomaszkopacz.pulseoxymeter.design;
 
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,9 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
 
     @BindView(R.id.startBtn)
     CircularProgressButton startBtn;
+
+    @BindView(R.id.saveBtn)
+    FloatingActionButton saveBtn;
 
 
     /*==============================================================================================
@@ -101,6 +105,11 @@ public class CommunicationFragmentLayout implements CommunicationFragmentView {
     @OnClick(R.id.startBtn)
     public void start(){
         listener.startReading();
+    }
+
+    @OnClick(R.id.saveBtn)
+    public void save(){
+        listener.saveData();
     }
 
 

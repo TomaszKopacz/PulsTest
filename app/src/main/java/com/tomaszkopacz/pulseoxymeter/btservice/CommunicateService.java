@@ -32,7 +32,7 @@ public class CommunicateService extends Service {
     private Thread readThread;
 
     private Timer timer;
-    private KeepCommunicatingTask keepCommunicatingTask;
+    private HoldCommunicationTask keepCommunicatingTask;
     private static final int KEEP_COMMUNICATING_DELAY = 4500;
     private static final byte KEEP_COMMUNICATING_BYTE = (byte) 0xa7;
 
@@ -75,37 +75,29 @@ public class CommunicateService extends Service {
     ==============================================================================================*/
 
     /**
-     * Reads data from device. Sends a special byte 0xa7 to hold sending data from device.
+     * Holds communication with bluetooth device by sending request every 5 seconds.
+     * @param socket
      */
-    public void read(BluetoothSocket socket){
-
-        InputStream tempInputStream = null;
-        mInputStream = null;
+    public void holdCommunication(BluetoothSocket socket){
 
         OutputStream tempOutputStream = null;
         mOutputStream = null;
 
         try {
-
-            tempInputStream = socket.getInputStream();
             tempOutputStream = socket.getOutputStream();
 
         } catch (IOException e) {
-            Log.d("TomaszKopacz", "get sockets failed");
+            Log.d("TomaszKopacz", "Cannot write byte");
         }
 
-        mInputStream = tempInputStream;
         mOutputStream = tempOutputStream;
 
         timer = new Timer();
-        keepCommunicatingTask = new CommunicateService.KeepCommunicatingTask();
+        keepCommunicatingTask = new HoldCommunicationTask();
         timer.schedule(keepCommunicatingTask, 0, KEEP_COMMUNICATING_DELAY);
-
-        readThread = new Thread(readRunnable);
-        readThread.start();
     }
 
-    private class KeepCommunicatingTask extends TimerTask {
+    private class HoldCommunicationTask extends TimerTask {
 
         @Override
         public void run() {
@@ -116,6 +108,27 @@ public class CommunicateService extends Service {
                 Log.d("TomaszKopacz", "write byte failed");
             }
         }
+    }
+
+    /**
+     * Reads data from device. Sends a special byte 0xa7 to hold sending data from device.
+     */
+    public void read(BluetoothSocket socket){
+
+        InputStream tempInputStream = null;
+        mInputStream = null;
+
+        try {
+            tempInputStream = socket.getInputStream();
+
+        } catch (IOException e) {
+            Log.d("TomaszKopacz", "get sockets failed");
+        }
+
+        mInputStream = tempInputStream;
+
+        readThread = new Thread(readRunnable);
+        readThread.start();
     }
 
     Runnable readRunnable = new Runnable() {

@@ -2,12 +2,12 @@ package com.tomaszkopacz.pulseoxymeter.controller;
 
 
 import android.app.Activity;
-import android.bluetooth.BluetoothSocket;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -31,6 +30,13 @@ import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationFragmentListener;
 import com.tomaszkopacz.pulseoxymeter.listeners.MainActivityListener;
 import com.tomaszkopacz.pulseoxymeter.model.CMSData;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class CommunicationFragment
@@ -47,9 +53,8 @@ public class CommunicationFragment
 
     //bluetooth
     private CommunicateService service;
-    private boolean bound = false;
 
-    //data
+    //incoming data
     private int pulseValue = -1;
     private int saturationValue = -1;
     private int wavePoint = 0;
@@ -60,6 +65,13 @@ public class CommunicationFragment
     //maximal 7-bytes value of data element: 2^7 = 128
     private static final int MAX_VALUE = 128;
 
+    //data for saving file
+    private int[] pulseArray = new int[3000];
+    private int[] saturationArray = new int[3000];
+    private int[] waveArray = new int[3000];
+    private static final String ALBUM_NAME = "/CMS";
+
+
 
     /*==============================================================================================
                                         LIFE CYCLE
@@ -68,15 +80,7 @@ public class CommunicationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        //bind bt service
-        Intent intent = new Intent(getActivity(), CommunicateService.class);
-        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -106,6 +110,16 @@ public class CommunicationFragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        //bind bt service
+        Intent intent = new Intent(getActivity(), CommunicateService.class);
+        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -129,14 +143,19 @@ public class CommunicationFragment
             CommunicateService.CommunicateBinder binder
                     = (CommunicateService.CommunicateBinder) iBinder;
             service = binder.getService();
+
             registerCallback();
 
-            bound = true;
+            //hold bt communication
+            service.holdCommunication(((MainActivity)getActivity()).getSocket());
+
+            //read data
+            startReading();
+
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            bound = false;
         }
     };
 
@@ -147,7 +166,7 @@ public class CommunicationFragment
 
 
     /*==============================================================================================
-                                        LISTENERS
+                                        ON CLICK LISTENERS
     ==============================================================================================*/
     @Override
     public void onNavigationIconClick() {
@@ -168,21 +187,46 @@ public class CommunicationFragment
     }
 
     @Override
-    public void onConnectionOpenRequest() {
-
-    }
-
-    @Override
-    public void onConnectionCloseRequest() {
-
-    }
-
-
-    @Override
     public void startReading(){
-        BluetoothSocket socket = ((MainActivity)getActivity()).getSocket();
-        service.read(socket);
+        service.read(((MainActivity)getActivity()).getSocket());
     }
+
+    @Override
+    public void saveData() {
+
+        if (isExternalStorageWritable()){
+            File file = getFileExternalDirectory();
+
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                PrintWriter pw = new PrintWriter(fos);
+
+                for (int i = 0; i <= pointer; i++) {
+
+                    int pulse = pulseArray[i];
+                    int saturation = saturationArray[i];
+                    int wave = waveArray[i];
+
+                    if (pulse == 0)
+                        continue;
+
+                    pw.println(pulse + "," + saturation + "," + wave);
+                }
+
+                pw.close();
+                fos.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    /*==============================================================================================
+                                        EVENT LISTENERS
+    ==============================================================================================*/
 
     @Override
     public void onDataIncome(final CMSData data) {
@@ -192,7 +236,12 @@ public class CommunicationFragment
         saturationValue = MAX_VALUE + data.getSaturationByte();
         wavePoint = MAX_VALUE + data.getWaveformByte();
 
-        //set values to interface
+        //save to array
+        pulseArray[pointer] = pulseValue;
+        saturationArray[pointer] = saturationValue;
+        waveArray[pointer] = wavePoint;
+
+        //put values into interface
         Activity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
@@ -201,11 +250,21 @@ public class CommunicationFragment
 
                     pulseTextView.setText(String.valueOf(pulseValue));
                     saturationTextView.setText(String.valueOf(saturationValue));
-                    waveform.appendData(new DataPoint(pointer, wavePoint), true, 10000);
+                    waveform.appendData(new DataPoint(pointer, wavePoint), true, 5000);
                     pointer++;
                 }
             });
         }
+    }
+
+    @Override
+    public void onConnectionOpenRequest() {
+
+    }
+
+    @Override
+    public void onConnectionCloseRequest() {
+
     }
 
 
@@ -224,5 +283,38 @@ public class CommunicationFragment
         viewport.setMaxX(500);
         viewport.setMinY(0);
         viewport.setMaxY(128);
+    }
+
+    private boolean isExternalStorageWritable(){
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state))
+            return true;
+        return false;
+    }
+
+    private File getFileExternalDirectory(){
+
+        //create album if not exists
+        String albumPath = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + ALBUM_NAME;
+
+        File album = new File(albumPath);
+
+        if (!album.exists())
+            album.mkdirs();
+
+        //create file
+        SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
+        String fileName = s.format(new Date()) + ".csv";
+        File file = new File(albumPath, fileName);
+
+        try {
+            file.createNewFile();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
     }
 }

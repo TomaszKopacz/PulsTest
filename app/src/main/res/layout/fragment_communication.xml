@@ -114,6 +114,14 @@
             app:cpb_colorIndicator="@color/colorAccent"
             app:cpb_selectorIdle="@color/colorAccent"/>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/saveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_save"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/margin"/>
+
     </RelativeLayout>
 
 </LinearLayout>
