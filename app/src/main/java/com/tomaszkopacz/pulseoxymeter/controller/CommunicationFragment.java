@@ -225,24 +225,26 @@ public class CommunicationFragment
     @Override
     public void onDataIncome(final CMSData data) {
 
+        //get bytes and transform to unsigned
+        pulseValue = MAX_VALUE + data.getPulseByte();
+        saturationValue = MAX_VALUE + data.getSaturationByte();
+        wavePoint = MAX_VALUE + data.getWaveformByte();
+
         if (startTime == -1)
             startTime = System.currentTimeMillis() - 1;
 
         currentTime = System.currentTimeMillis();
         episode = episode + ((currentTime - startTime) * 0.001);
-        startTime = currentTime;
-
-
-        //get bytes and transform to unsigned
-        pulseValue = MAX_VALUE + data.getPulseByte();
-        saturationValue = MAX_VALUE + data.getSaturationByte();
-        wavePoint = MAX_VALUE + data.getWaveformByte();
 
         //save to array
         timeArray[pointer] = episode;
         pulseArray[pointer] = pulseValue;
         saturationArray[pointer] = saturationValue;
         waveArray[pointer] = wavePoint;
+
+        pointer++;
+        startTime = currentTime;
+
 
         //put values into interface
         Activity activity = getActivity();
@@ -254,7 +256,6 @@ public class CommunicationFragment
                     pulseTextView.setText(String.valueOf(pulseValue));
                     saturationTextView.setText(String.valueOf(saturationValue));
                     waveform.appendData(new DataPoint(episode, wavePoint), true, 5000);
-                    pointer++;
                 }
             });
         }
@@ -294,8 +295,9 @@ public class CommunicationFragment
      */
     private boolean isExternalStorageWritable(){
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state))
+        if (Environment.MEDIA_MOUNTED.equals(state) )
             return true;
+
         return false;
     }
 
@@ -307,7 +309,7 @@ public class CommunicationFragment
 
         //create album if not exists
         String albumPath = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + ALBUM_NAME;
+                Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + ALBUM_NAME;
 
         File album = new File(albumPath);
 
@@ -336,6 +338,10 @@ public class CommunicationFragment
      */
     private boolean saveData(File file){
 
+        DataPoint[] result = countDifferential(timeArray, waveArray);
+        waveform.resetData(result);
+
+        /*
         try {
             FileOutputStream fos = new FileOutputStream(file);
             PrintWriter pw = new PrintWriter(fos);
@@ -361,5 +367,38 @@ public class CommunicationFragment
         } catch (Exception e) {
             return false;
         }
+        */
+        return true;
+    }
+
+    private DataPoint[] countDifferential(double[] time, int[] signal){
+
+        DataPoint[] initDifferential;
+        DataPoint[] differential;
+
+        //init array has maximum available size
+        int numOfPoints = signal.length;
+        initDifferential = new DataPoint[numOfPoints - 1];
+
+        int i;
+
+        //get time and count difference
+        for (i = 0; i < numOfPoints - 1; i++){
+
+            double timePoint = time[i];
+            if (timePoint == 0)
+                break;
+
+            double signalPoint = signal[i+1] - signal[i];
+            initDifferential[i] = new DataPoint(timePoint, signalPoint);
+
+        }
+
+        //cut nullable values from first array
+        differential = new DataPoint[i];
+        for (int k = 0; k < differential.length; k++)
+            differential[k] = initDifferential[k];
+
+        return differential;
     }
 }
