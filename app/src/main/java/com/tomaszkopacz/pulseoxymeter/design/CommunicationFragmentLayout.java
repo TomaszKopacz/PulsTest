@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.controller.MainApp;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationFragmentListener;
@@ -102,6 +103,7 @@ public class CommunicationFragmentLayout {
     private void customizeLayout(){
 
         setFonts();
+        createWaveform();
     }
 
     private void setFonts() {
@@ -109,5 +111,18 @@ public class CommunicationFragmentLayout {
         pulseValueTextView.setTypeface(MainApp.FONT_BOLD);
         saturationTextView.setTypeface(MainApp.FONT_BOLD);
         saturationValueTextView.setTypeface(MainApp.FONT_BOLD);
+    }
+
+    private void createWaveform(){
+        Viewport viewport = waveformGraph.getViewport();
+        viewport.setScalable(false);
+        viewport.setScrollable(true);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setYAxisBoundsManual(true);
+        viewport.scrollToEnd();
+        viewport.setMinX(0);
+        viewport.setMaxX(3);
+        viewport.setMinY(0);
+        viewport.setMaxY(128);
     }
 }

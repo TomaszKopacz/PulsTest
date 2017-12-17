@@ -21,9 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -75,10 +73,10 @@ public class CommunicationFragment
     private static final int MAX_VALUE = 128;
 
     //data for saving file
-    private double[] timeArray = new double[3000];
-    private int[] pulseArray = new int[3000];
-    private int[] saturationArray = new int[3000];
-    private int[] waveArray = new int[3000];
+    private double[] timeArray = new double[10000];
+    private int[] pulseArray = new int[10000];
+    private int[] saturationArray = new int[10000];
+    private int[] waveArray = new int[10000];
     private static final String ALBUM_NAME = "/CMS";
 
 
@@ -112,7 +110,6 @@ public class CommunicationFragment
         pulseTextView = mCommunicationFragmentLayout.getPulseTextView();
         saturationTextView = mCommunicationFragmentLayout.getSaturationTextView();
         waveformGraph = mCommunicationFragmentLayout.getWaveformGraph();
-        createWaveform(waveformGraph);
 
         waveform = (LineGraphSeries)waveformGraph.getSeries().get(0);
 
@@ -156,10 +153,8 @@ public class CommunicationFragment
 
             registerCallback();
 
-            //hold bt communication
-            service.holdCommunication(((MainActivity)getActivity()).getSocket());
-
             //read data
+            service.holdCommunication(((MainActivity)getActivity()).getSocket());
             service.read(((MainActivity)getActivity()).getSocket());
         }
 
@@ -225,6 +220,8 @@ public class CommunicationFragment
     @Override
     public void onDataIncome(final CMSData data) {
 
+        Log.d("TomaszKopacz", "I HAVE GOT DATA!");
+
         //get bytes and transform to unsigned
         pulseValue = MAX_VALUE + data.getPulseByte();
         saturationValue = MAX_VALUE + data.getSaturationByte();
@@ -276,19 +273,6 @@ public class CommunicationFragment
                                         PRIVATE UTIL METHODS
     ==============================================================================================*/
 
-    private void createWaveform(GraphView graph){
-
-        Viewport viewport = graph.getViewport();
-        viewport.setScalable(false);
-        viewport.setScrollable(true);
-        viewport.setXAxisBoundsManual(true);
-        viewport.scrollToEnd();
-        viewport.setMinX(0);
-        viewport.setMaxX(3);
-        viewport.setMinY(0);
-        viewport.setMaxY(128);
-    }
-
     /**
      * Checks, whether external storage is available.
      * @return
@@ -339,6 +323,8 @@ public class CommunicationFragment
     private boolean saveData(File file){
 
         DataPoint[] result = countDifferential(timeArray, waveArray);
+        mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMinY(-40);
+        mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMaxY(40);
         waveform.resetData(result);
 
         /*

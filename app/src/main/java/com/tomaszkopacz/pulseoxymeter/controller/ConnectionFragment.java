@@ -2,6 +2,7 @@ package com.tomaszkopacz.pulseoxymeter.controller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomaszkopacz.pulseoxymeter.R;
+import com.tomaszkopacz.pulseoxymeter.btservice.CommunicateService;
 import com.tomaszkopacz.pulseoxymeter.btservice.ConnectService;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
@@ -166,7 +168,8 @@ public class ConnectionFragment
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ((MainActivity)getActivity()).setSocket(service.getSocket());
+                BluetoothSocket socket = service.getSocket();
+                ((MainActivity)getActivity()).setSocket(socket);
                 ((MainActivity)getActivity()).setFragment(CommunicationFragment.class);
             }
         });

@@ -28,13 +28,11 @@ public class CommunicateService extends Service {
 
     private InputStream mInputStream;
     private OutputStream mOutputStream;
-
     private Thread readThread;
 
-    private Timer timer;
-    private HoldCommunicationTask keepCommunicatingTask;
+    private static Timer timer;
+    private static HoldCommunicationTask keepCommunicatingTask;
     private static final int KEEP_COMMUNICATING_DELAY = 4500;
-    private static final byte KEEP_COMMUNICATING_BYTE = (byte) 0xa7;
 
     private boolean communicationEnabled = false;
 
@@ -60,14 +58,11 @@ public class CommunicateService extends Service {
         if (readThread != null)
             readThread.interrupt();
 
-        communicationEnabled = false;
+        keepCommunicatingTask.cancel();
+        timer.cancel();
+        timer.purge();
 
-        if (timer != null && keepCommunicatingTask != null){
-            keepCommunicatingTask.cancel();
-            timer.cancel();
-            timer.purge();
-            timer = null;
-        }
+        communicationEnabled = false;
     }
 
     /*==============================================================================================
@@ -80,33 +75,43 @@ public class CommunicateService extends Service {
      */
     public void holdCommunication(BluetoothSocket socket){
 
-        OutputStream tempOutputStream = null;
-        mOutputStream = null;
 
         try {
-            tempOutputStream = socket.getOutputStream();
+            mOutputStream = socket.getOutputStream();
+
+            timer = new Timer();
+            keepCommunicatingTask = new HoldCommunicationTask();
+            timer.schedule(keepCommunicatingTask, 0, KEEP_COMMUNICATING_DELAY);
 
         } catch (IOException e) {
-            Log.d("TomaszKopacz", "Cannot write byte");
         }
-
-        mOutputStream = tempOutputStream;
-
-        timer = new Timer();
-        keepCommunicatingTask = new HoldCommunicationTask();
-        timer.schedule(keepCommunicatingTask, 0, KEEP_COMMUNICATING_DELAY);
     }
 
     private class HoldCommunicationTask extends TimerTask {
 
         @Override
         public void run() {
-            try {
-                mOutputStream.write(KEEP_COMMUNICATING_BYTE);
+            writeCommand();
+            Log.d("TomaszKopacz", "COMMAND WRITTEN");
+        }
+    }
 
-            } catch (IOException e) {
-                Log.d("TomaszKopacz", "write byte failed");
-            }
+    private void writeCommand(){
+        writeByte((byte) 0x7D);
+        writeByte((byte) 0x81);
+        writeByte((byte) 0xAF);
+
+        for (int i = 0; i < 6; i++)
+            writeByte((byte) 0x80);
+    }
+
+    private void writeByte(byte hex){
+        byte[] buffer = new byte[1];
+        buffer[0] = hex;
+        try {
+            mOutputStream.write(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -117,6 +122,7 @@ public class CommunicateService extends Service {
 
         InputStream tempInputStream = null;
         mInputStream = null;
+
 
         try {
             tempInputStream = socket.getInputStream();
@@ -175,7 +181,7 @@ public class CommunicateService extends Service {
 
         } catch (IOException e) {
             communicationEnabled = false;
-            return 0;
+            return (byte) 128;
         }
     }
 
