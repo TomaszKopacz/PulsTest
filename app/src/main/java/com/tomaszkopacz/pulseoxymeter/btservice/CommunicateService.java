@@ -118,7 +118,7 @@ public class CommunicateService extends Service {
     /**
      * Reads data from device. Sends a special byte 0xa7 to hold sending data from device.
      */
-    public void read(BluetoothSocket socket){
+    public boolean read(BluetoothSocket socket){
 
         InputStream tempInputStream = null;
         mInputStream = null;
@@ -128,12 +128,15 @@ public class CommunicateService extends Service {
             tempInputStream = socket.getInputStream();
 
         } catch (IOException e) {
+            return false;
         }
 
         mInputStream = tempInputStream;
 
         readThread = new Thread(readRunnable);
         readThread.start();
+
+        return true;
     }
 
     Runnable readRunnable = new Runnable() {

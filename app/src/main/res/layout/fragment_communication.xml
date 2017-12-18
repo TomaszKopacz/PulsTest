@@ -101,6 +101,20 @@
         android:layout_marginRight="@dimen/largemargin"
         android:layout_weight="2">
 
+        <com.dd.CircularProgressButton
+            android:id="@+id/stopBtn"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:cpb_textIdle="@string/stop"
+            android:textSize="@dimen/littlefont"
+            android:textColor="@color/textPrimary"
+            android:layout_centerInParent="true"
+            app:cpb_cornerRadius="60dp"
+            app:cpb_colorProgress="@color/colorPrimaryLight"
+            app:cpb_colorIndicatorBackground="@color/colorPrimaryLight"
+            app:cpb_colorIndicator="@color/colorAccent"
+            app:cpb_selectorIdle="@color/colorAccent"/>
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/saveBtn"

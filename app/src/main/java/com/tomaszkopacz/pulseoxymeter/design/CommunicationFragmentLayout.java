@@ -43,8 +43,15 @@ public class CommunicationFragmentLayout {
     @BindView(R.id.waveformGraph)
     GraphView waveformGraph;
 
+    @BindView(R.id.stopBtn)
+    CircularProgressButton stopBtn;
+
     @BindView(R.id.saveBtn)
     FloatingActionButton saveBtn;
+
+    //stop button
+    public static final int BUTTON_LAZY = 0;
+    public static final int BUTTON_IN_PROGRESS = 10;
 
 
     /*==============================================================================================
@@ -80,6 +87,10 @@ public class CommunicationFragmentLayout {
         return waveformGraph;
     }
 
+    public CircularProgressButton getStopBtn(){
+        return stopBtn;
+    }
+
 
     /*==============================================================================================
                                         COMMUNICATION
@@ -87,6 +98,11 @@ public class CommunicationFragmentLayout {
 
     @OnClick(R.id.waveformGraph)
     public void graphClicked(){
+        listener.chooseGraphType();
+    }
+
+    @OnClick(R.id.stopBtn)
+    public void stop(){
         listener.stopReading();
     }
 

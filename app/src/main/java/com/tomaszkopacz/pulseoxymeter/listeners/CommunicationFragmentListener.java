@@ -9,4 +9,6 @@ public interface CommunicationFragmentListener {
     void stopReading();
 
     void saveData();
+
+    void chooseGraphType();
 }

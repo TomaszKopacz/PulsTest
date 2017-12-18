@@ -2,16 +2,16 @@ package com.tomaszkopacz.pulseoxymeter.controller;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -21,7 +21,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -60,14 +62,18 @@ public class CommunicationFragment
     private long startTime = -1;
     private long currentTime = -1;
     private double episode = 0;
+
     private int pulseValue = -1;
     private int saturationValue = -1;
     private int wavePoint = 0;
-    private LineGraphSeries<DataPoint> waveform;
 
+    private LineGraphSeries<DataPoint> waveform;
     private int pointer = 0;
 
+    //status
     private boolean isReading = false;
+    private int graphType = GRAPH_NORMAL;
+
 
     //maximal 7-bytes value of data element: 2^7 = 128
     private static final int MAX_VALUE = 128;
@@ -77,7 +83,12 @@ public class CommunicationFragment
     private int[] pulseArray = new int[10000];
     private int[] saturationArray = new int[10000];
     private int[] waveArray = new int[10000];
+
+    private static final int GRAPH_NORMAL = 0;
+    private static final int GRAPH_DIFFERENTIAL = 1;
     private static final String ALBUM_NAME = "/CMS";
+
+    private static final String TAG = "TomaszKopacz";
 
 
 
@@ -155,11 +166,14 @@ public class CommunicationFragment
 
             //read data
             service.holdCommunication(((MainActivity)getActivity()).getSocket());
-            service.read(((MainActivity)getActivity()).getSocket());
+            if (service.read(((MainActivity)getActivity()).getSocket()))
+                isReading = true;
+
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            isReading = false;
         }
     };
 
@@ -192,7 +206,15 @@ public class CommunicationFragment
 
     @Override
     public void stopReading(){
-        service.stopReading();
+        if (isReading) {
+            service.stopReading();
+            isReading = false;
+            CircularProgressButton stopBtn = mCommunicationFragmentLayout.getStopBtn();
+            stopBtn.setText(R.string.end);
+            stopBtn.setTextColor(getResources().getColor(R.color.colorAccent));
+            stopBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+            stopBtn.setClickable(false);
+        }
     }
 
     @Override
@@ -203,7 +225,7 @@ public class CommunicationFragment
 
         else if (isExternalStorageWritable()){
             File file = getFileExternalDirectory();
-            if (saveData(file))
+            if (saveFile(file))
                 Toast.makeText(getContext(), R.string.saved, Toast.LENGTH_SHORT).show();
         }
 
@@ -211,7 +233,58 @@ public class CommunicationFragment
             Toast.makeText(getContext(), R.string.no_external_storage, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void chooseGraphType() {
 
+        if (isReading){
+            Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] types = new String[]{"Krzywa pletyzmograficzna", "Pochodna"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder
+                .setTitle(R.string.dialog_title)
+                .setPositiveButton(R.string.ok, acceptItemListener)
+                .setNeutralButton(R.string.cancel, cancelDialogListener)
+                .setSingleChoiceItems(types, -1, chooseItemListener);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    DialogInterface.OnClickListener acceptItemListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            setGraph();
+        }
+    };
+
+    DialogInterface.OnClickListener cancelDialogListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            dialogInterface.dismiss();
+        }
+    };
+
+    DialogInterface.OnClickListener chooseItemListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            switch (i){
+                case 0:
+                    graphType = GRAPH_NORMAL;
+                    break;
+
+                case 1:
+                    graphType = GRAPH_DIFFERENTIAL;
+                    break;
+            }
+        }
+    };
 
     /*==============================================================================================
                                         EVENT LISTENERS
@@ -227,6 +300,7 @@ public class CommunicationFragment
         saturationValue = MAX_VALUE + data.getSaturationByte();
         wavePoint = MAX_VALUE + data.getWaveformByte();
 
+        //count time episodes
         if (startTime == -1)
             startTime = System.currentTimeMillis() - 1;
 
@@ -241,7 +315,6 @@ public class CommunicationFragment
 
         pointer++;
         startTime = currentTime;
-
 
         //put values into interface
         Activity activity = getActivity();
@@ -273,6 +346,65 @@ public class CommunicationFragment
                                         PRIVATE UTIL METHODS
     ==============================================================================================*/
 
+    private void setGraph(){
+
+        switch (graphType){
+            case GRAPH_NORMAL:
+                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMinY(0);
+                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMaxY(128);
+                waveform.resetData(countCurve(GRAPH_NORMAL, timeArray, waveArray));
+                break;
+
+            case GRAPH_DIFFERENTIAL:
+                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMinY(-40);
+                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMaxY(40);
+                waveform.resetData(countCurve(GRAPH_DIFFERENTIAL, timeArray, waveArray));
+                break;
+        }
+    }
+
+    private DataPoint[] countCurve(int type, double[] time, int[] signal){
+
+        //not all of primarily initialized 10000 elements of signal has value, need to cut them
+        int lastNonZeroIndex = -1;
+        int numOfPoints = signal.length;
+        for (int i = 0; i < numOfPoints; i++){
+            if (time[i] == 0)
+                break;
+            lastNonZeroIndex = i;
+        }
+
+        int size = lastNonZeroIndex + 1;
+
+        switch (type){
+            case GRAPH_NORMAL:
+                DataPoint[] curve = new DataPoint[size];
+                for (int i = 0; i < size; i++)
+                    curve[i] = new DataPoint(time[i], signal[i]);
+                return curve;
+
+            case GRAPH_DIFFERENTIAL:
+                return countDifferential(size, time, signal);
+        }
+
+        return null;
+    }
+
+    private DataPoint[] countDifferential(int size, double[] time, int[] signal){
+
+        DataPoint[] differential = new DataPoint[size-1];
+
+        //get time and count difference
+        for (int i = 0; i < size - 1; i++){
+
+            double timePoint = time[i];
+            double signalPoint = signal[i+1] - signal[i];
+            differential[i] = new DataPoint(timePoint, signalPoint);
+        }
+
+        return differential;
+    }
+
     /**
      * Checks, whether external storage is available.
      * @return
@@ -293,7 +425,7 @@ public class CommunicationFragment
 
         //create album if not exists
         String albumPath = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + ALBUM_NAME;
+                Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + ALBUM_NAME;
 
         File album = new File(albumPath);
 
@@ -320,14 +452,8 @@ public class CommunicationFragment
      * @param file
      * @return
      */
-    private boolean saveData(File file){
+    private boolean saveFile(File file){
 
-        DataPoint[] result = countDifferential(timeArray, waveArray);
-        mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMinY(-40);
-        mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMaxY(40);
-        waveform.resetData(result);
-
-        /*
         try {
             FileOutputStream fos = new FileOutputStream(file);
             PrintWriter pw = new PrintWriter(fos);
@@ -353,38 +479,5 @@ public class CommunicationFragment
         } catch (Exception e) {
             return false;
         }
-        */
-        return true;
-    }
-
-    private DataPoint[] countDifferential(double[] time, int[] signal){
-
-        DataPoint[] initDifferential;
-        DataPoint[] differential;
-
-        //init array has maximum available size
-        int numOfPoints = signal.length;
-        initDifferential = new DataPoint[numOfPoints - 1];
-
-        int i;
-
-        //get time and count difference
-        for (i = 0; i < numOfPoints - 1; i++){
-
-            double timePoint = time[i];
-            if (timePoint == 0)
-                break;
-
-            double signalPoint = signal[i+1] - signal[i];
-            initDifferential[i] = new DataPoint(timePoint, signalPoint);
-
-        }
-
-        //cut nullable values from first array
-        differential = new DataPoint[i];
-        for (int k = 0; k < differential.length; k++)
-            differential[k] = initDifferential[k];
-
-        return differential;
     }
 }

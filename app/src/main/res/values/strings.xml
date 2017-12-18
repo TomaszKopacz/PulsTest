@@ -16,6 +16,15 @@
     <string name="communicate_fragment_title">"Komunikacja"</string>
     <string name="pulse">"Tętno   [bpm]:"</string>
     <string name="saturation">"Saturacja [%]:"</string>
+    <string name="stop">"ZATRZYMAJ"</string>
+    <string name="end">"KONIEC"</string>
+
+    <!-- dialog -->
+    <string name="dialog_title">"Typ wykresu"</string>
+    <string name="ok">"OK"</string>
+    <string name="cancel">"ANULUJ"</string>
+    <string name="normal_graph">"Krzywa pletyzmograficzna"</string>
+    <string name="differential">"Pochodna"</string>
 
     <!-- bt status -->
     <string name="pairing">"Parowanie..."</string>
@@ -29,7 +38,7 @@
     <string name="saved">"Zapisano pomyślnie"</string>
     <string name="no_external_storage">"Brak dostępu do pamięci zewnętrznej"</string>
 
-    <!-- items -->
+    <!-- navigation items -->
     <string name="item_connect">"Połącz z urządzeniem"</string>
     <string name="item_diary">"Dzienniczek"</string>
     <string name="item_guide">"Instrukcja"</string>
