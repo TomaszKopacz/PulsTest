@@ -14,12 +14,13 @@
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="0.5"
-        android:weightSum="2"
+        android:layout_weight="1"
+        android:weightSum="6"
+        android:padding="5dp"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginBottom="0dp"
-        android:layout_marginLeft="@dimen/largemargin"
-        android:layout_marginRight="@dimen/largemargin">
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin">
 
         <TextView
             android:id="@+id/pulseTxtView"
@@ -28,13 +29,36 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/pulse"
-            android:textSize="@dimen/largefont" />
+            android:textSize="@dimen/normalfont" />
 
         <TextView
             android:id="@+id/pulseValueTextView"
-            android:textSize="@dimen/verylargefont"
+            android:textSize="@dimen/largefont"
+            android:text="00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <com.jjoe64.graphview.helper.GraphViewXML
+                android:id="@+id/pulseTrendGraph"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:seriesType="bar"
+                app:seriesData="0=0" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/pulseAverageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:gravity="center"
+            android:textSize="@dimen/normalfont"
             android:layout_weight="1"/>
 
     </LinearLayout>
@@ -45,12 +69,13 @@
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="0.5"
-        android:weightSum="2"
+        android:padding="5dp"
+        android:layout_weight="1"
+        android:weightSum="6"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="@dimen/margin"
-        android:layout_marginLeft="@dimen/largemargin"
-        android:layout_marginRight="@dimen/largemargin">
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin">
 
         <TextView
             android:id="@+id/saturationTxtView"
@@ -59,15 +84,37 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/saturation"
-            android:textSize="@dimen/largefont" />
+            android:textSize="@dimen/normalfont" />
 
         <TextView
             android:id="@+id/saturationValueTextView"
-            android:textSize="@dimen/verylargefont"
+            android:textSize="@dimen/largefont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="00"
             android:layout_weight="1"/>
 
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <com.jjoe64.graphview.helper.GraphViewXML
+                android:id="@+id/saturationTrendGraph"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:seriesType="bar"
+                app:seriesData="0=0" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/saturationAverageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:gravity="center"
+            android:textSize="@dimen/normalfont"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -99,7 +146,7 @@
         android:layout_marginTop="@dimen/margin"
         android:layout_marginLeft="@dimen/largemargin"
         android:layout_marginRight="@dimen/largemargin"
-        android:layout_weight="2">
+        android:layout_weight="1">
 
         <com.dd.CircularProgressButton
             android:id="@+id/stopBtn"

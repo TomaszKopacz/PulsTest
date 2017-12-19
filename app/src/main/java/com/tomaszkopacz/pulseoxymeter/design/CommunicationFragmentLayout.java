@@ -34,11 +34,23 @@ public class CommunicationFragmentLayout {
     @BindView(R.id.pulseValueTextView)
     TextView pulseValueTextView;
 
+    @BindView(R.id.pulseTrendGraph)
+    GraphView pulseTrendGraph;
+
+    @BindView(R.id.pulseAverageTextView)
+    TextView pulseAverageTextView;
+
     @BindView(R.id.saturationTxtView)
     TextView saturationTextView;
 
     @BindView(R.id.saturationValueTextView)
     TextView saturationValueTextView;
+
+    @BindView(R.id.saturationTrendGraph)
+    GraphView saturationTrendGraph;
+
+    @BindView(R.id.saturationAverageTextView)
+    TextView saturationAverageTextView;
 
     @BindView(R.id.waveformGraph)
     GraphView waveformGraph;
@@ -48,10 +60,6 @@ public class CommunicationFragmentLayout {
 
     @BindView(R.id.saveBtn)
     FloatingActionButton saveBtn;
-
-    //stop button
-    public static final int BUTTON_LAZY = 0;
-    public static final int BUTTON_IN_PROGRESS = 10;
 
 
     /*==============================================================================================
@@ -79,8 +87,24 @@ public class CommunicationFragmentLayout {
         return pulseValueTextView;
     }
 
+    public GraphView getPulseTrendGraph(){
+        return pulseTrendGraph;
+    }
+
+    public TextView getPulseAverageTextView(){
+        return pulseAverageTextView;
+    }
+
     public TextView getSaturationTextView(){
         return saturationValueTextView;
+    }
+
+    public GraphView getSaturationTrendGraph(){
+        return saturationTrendGraph;
+    }
+
+    public TextView getSaturationAverageTextView(){
+        return saturationAverageTextView;
     }
 
     public GraphView getWaveformGraph(){
@@ -119,6 +143,8 @@ public class CommunicationFragmentLayout {
     private void customizeLayout(){
 
         setFonts();
+        createPulseTrendWaveform();
+        createSaturationTrendWaveform();
         createWaveform();
     }
 
@@ -127,6 +153,30 @@ public class CommunicationFragmentLayout {
         pulseValueTextView.setTypeface(MainApp.FONT_BOLD);
         saturationTextView.setTypeface(MainApp.FONT_BOLD);
         saturationValueTextView.setTypeface(MainApp.FONT_BOLD);
+    }
+
+    private void createPulseTrendWaveform(){
+        pulseTrendGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        pulseTrendGraph.getGridLabelRenderer().setNumVerticalLabels(3);
+        Viewport viewport = pulseTrendGraph.getViewport();
+        viewport.setScalable(true);
+        viewport.setYAxisBoundsManual(true);
+        viewport.setMinY(0);
+        viewport.setMaxY(120);
+        viewport.setMinX(0);
+        viewport.setMaxX(60);
+    }
+
+    private void createSaturationTrendWaveform(){
+        saturationTrendGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        saturationTrendGraph.getGridLabelRenderer().setNumVerticalLabels(3);
+        Viewport viewport = saturationTrendGraph.getViewport();
+        viewport.setScalable(true);
+        viewport.setYAxisBoundsManual(true);
+        viewport.setMinY(80);
+        viewport.setMaxY(100);
+        viewport.setMinX(0);
+        viewport.setMaxX(60);
     }
 
     private void createWaveform(){

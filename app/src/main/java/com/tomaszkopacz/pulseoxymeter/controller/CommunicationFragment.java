@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -49,6 +50,12 @@ public class CommunicationFragment
     private MainActivityLayout mMainActivityLayout;
     private CommunicationFragmentLayout mCommunicationFragmentLayout;
 
+    private GraphView pulseTrendGraph;
+    private TextView pulseAverageTextView;
+
+    private GraphView saturationTrendGraph;
+    private TextView saturationAverageTextView;
+
     private TextView pulseTextView;
     private TextView saturationTextView;
     private GraphView waveformGraph;
@@ -65,22 +72,31 @@ public class CommunicationFragment
     private int saturationValue = -1;
     private int wavePoint = 0;
 
+    private BarGraphSeries<DataPoint> pulseSeries;
+    private BarGraphSeries<DataPoint> saturationSeries;
     private LineGraphSeries<DataPoint> waveform;
+    private int trendPointer = 1;
+    private int avgPointer = 0;
     private int pointer = 0;
 
     //status
     private boolean isReading = false;
     private int graphType = GRAPH_NORMAL;
 
-
     //maximal 7-bytes value of data element: 2^7 = 128
     private static final int MAX_VALUE = 128;
+    private static final int AVERAGE_VALUES_SIZE = 30;
+    private static int MAX_WAVEFORM_SIZE = 100000;
 
-    //data for saving file
-    private double[] timeArray = new double[10000];
-    private int[] pulseArray = new int[10000];
-    private int[] saturationArray = new int[10000];
-    private int[] waveArray = new int[10000];
+    //data: trend graphs
+    private int[] pulseValuesOf30Sec = new int[AVERAGE_VALUES_SIZE];
+    private int[] saturationValuesOf30Sec = new int[AVERAGE_VALUES_SIZE];
+
+    //data: waveform
+    private double[] timeArray = new double[MAX_WAVEFORM_SIZE];
+    private int[] pulseArray = new int[MAX_WAVEFORM_SIZE];
+    private int[] saturationArray = new int[MAX_WAVEFORM_SIZE];
+    private int[] waveArray = new int[MAX_WAVEFORM_SIZE];
 
     private static final int GRAPH_NORMAL = 0;
     private static final int GRAPH_DIFFERENTIAL = 1;
@@ -107,6 +123,14 @@ public class CommunicationFragment
         mCommunicationFragmentLayout.setListener(this);
 
         //components
+        pulseTrendGraph = mCommunicationFragmentLayout.getPulseTrendGraph();
+        pulseAverageTextView = mCommunicationFragmentLayout.getPulseAverageTextView();
+        pulseSeries = (BarGraphSeries)pulseTrendGraph.getSeries().get(0);
+
+        saturationTrendGraph = mCommunicationFragmentLayout.getSaturationTrendGraph();
+        saturationAverageTextView = mCommunicationFragmentLayout.getSaturationAverageTextView();
+        saturationSeries = (BarGraphSeries)saturationTrendGraph.getSeries().get(0);
+
         pulseTextView = mCommunicationFragmentLayout.getPulseTextView();
         saturationTextView = mCommunicationFragmentLayout.getSaturationTextView();
         waveformGraph = mCommunicationFragmentLayout.getWaveformGraph();
@@ -277,8 +301,6 @@ public class CommunicationFragment
     @Override
     public void onDataIncome(final CMSData data) {
 
-        Log.d("TomaszKopacz", "I HAVE GOT DATA!");
-
         //get bytes and transform to unsigned
         pulseValue = MAX_VALUE + data.getPulseByte();
         saturationValue = MAX_VALUE + data.getSaturationByte();
@@ -297,7 +319,6 @@ public class CommunicationFragment
         saturationArray[pointer] = saturationValue;
         waveArray[pointer] = wavePoint;
 
-        pointer++;
         startTime = currentTime;
 
         //put values into interface
@@ -309,10 +330,36 @@ public class CommunicationFragment
 
                     pulseTextView.setText(String.valueOf(pulseValue));
                     saturationTextView.setText(String.valueOf(saturationValue));
-                    waveform.appendData(new DataPoint(episode, wavePoint), true, 5000);
+                    waveform.appendData(new DataPoint(episode, wavePoint), true, MAX_WAVEFORM_SIZE);
+
+                    if (pointer % 60 == 0){
+                        DataPoint pulsePoint = new DataPoint(trendPointer, pulseValue);
+                        DataPoint satPoint = new DataPoint(trendPointer, saturationValue);
+
+                        pulseSeries.appendData(pulsePoint, true, MAX_WAVEFORM_SIZE/60);
+                        saturationSeries.appendData(satPoint, true, MAX_WAVEFORM_SIZE/60);
+
+                        pulseValuesOf30Sec[avgPointer] = pulseValue;
+                        saturationValuesOf30Sec[avgPointer] = saturationValue;
+
+                        if (avgPointer == 29) {
+                            int pulseAvg = countAverage(pulseValuesOf30Sec);
+                            int satAvg = countAverage(saturationValuesOf30Sec);
+                            pulseAverageTextView.setText("" + pulseAvg);
+                            saturationAverageTextView.setText("" + satAvg);
+                            avgPointer = 0;
+
+                        } else {
+                            avgPointer++;
+                        }
+
+                        trendPointer++;
+                    }
                 }
             });
         }
+
+        pointer++;
     }
 
     @Override
@@ -345,6 +392,15 @@ public class CommunicationFragment
                 waveform.resetData(countCurve(GRAPH_DIFFERENTIAL, timeArray, waveArray));
                 break;
         }
+    }
+
+    private int countAverage(int[] values){
+        int avg = 0;
+        for (int i = 0; i < values.length; i++)
+            avg += values[i];
+        avg = avg/values.length;
+
+        return avg;
     }
 
     private DataPoint[] countCurve(int type, double[] time, int[] signal){
