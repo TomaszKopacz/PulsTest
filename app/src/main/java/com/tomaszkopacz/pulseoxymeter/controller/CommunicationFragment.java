@@ -349,9 +349,8 @@ public class CommunicationFragment
 
                     //differential
                     if (pointer > 0) {
-                        double time = (timeArray[pointer-1] + timeArray[pointer])/2;
-                        double diff = waveArray[pointer] - waveArray[pointer - 1];
-                        DataPoint diffPoint = new DataPoint(time, diff);
+                        double diff = waveArray[pointer-1] - waveArray[pointer-2];
+                        DataPoint diffPoint = new DataPoint(timeArray[pointer-1], diff);
                         diffSeries.appendData(diffPoint, true, MAX_WAVEFORM_SIZE);
                     }
 
