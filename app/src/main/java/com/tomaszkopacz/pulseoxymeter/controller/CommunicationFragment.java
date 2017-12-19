@@ -349,10 +349,13 @@ public class CommunicationFragment
 
                     //differential
                     if (pointer > 0) {
-                        double diff = waveArray[pointer-1] - waveArray[pointer-2];
+                        double diff = waveArray[pointer] - waveArray[pointer-1];
                         DataPoint diffPoint = new DataPoint(timeArray[pointer-1], diff);
                         diffSeries.appendData(diffPoint, true, MAX_WAVEFORM_SIZE);
                     }
+
+                    //rr
+
 
                     //trends
                     if (pointer % 60 == 0){
