@@ -125,7 +125,7 @@
         android:layout_marginTop="@dimen/margin"
         android:layout_marginLeft="@dimen/largemargin"
         android:layout_marginRight="@dimen/largemargin"
-        android:layout_weight="7"
+        android:layout_weight="5"
         android:padding="10dp">
 
         <com.jjoe64.graphview.helper.GraphViewXML
@@ -135,6 +135,25 @@
             app:seriesData="0=0"
             app:seriesColor="@color/colorAccent"/>
 
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rrRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginLeft="@dimen/largemargin"
+        android:layout_marginRight="@dimen/largemargin"
+        android:layout_weight="2"
+        android:padding="10dp">
+
+        <com.jjoe64.graphview.helper.GraphViewXML
+            android:id="@+id/rrGraph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:seriesData="0=0"/>
 
     </RelativeLayout>
 

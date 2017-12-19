@@ -55,6 +55,9 @@ public class CommunicationFragmentLayout {
     @BindView(R.id.waveformGraph)
     GraphView waveformGraph;
 
+    @BindView(R.id.rrGraph)
+    GraphView rrGraph;
+
     @BindView(R.id.stopBtn)
     CircularProgressButton stopBtn;
 
@@ -146,6 +149,7 @@ public class CommunicationFragmentLayout {
         createPulseTrendWaveform();
         createSaturationTrendWaveform();
         createWaveform();
+        createRRWaveform();
     }
 
     private void setFonts() {
@@ -153,6 +157,7 @@ public class CommunicationFragmentLayout {
         pulseValueTextView.setTypeface(MainApp.FONT_BOLD);
         saturationTextView.setTypeface(MainApp.FONT_BOLD);
         saturationValueTextView.setTypeface(MainApp.FONT_BOLD);
+        stopBtn.setTypeface(MainApp.FONT_BOLD);
     }
 
     private void createPulseTrendWaveform(){
@@ -180,6 +185,7 @@ public class CommunicationFragmentLayout {
     }
 
     private void createWaveform(){
+        waveformGraph.setTitle("PPG");
         Viewport viewport = waveformGraph.getViewport();
         viewport.setScalable(false);
         viewport.setScrollable(true);
@@ -190,5 +196,17 @@ public class CommunicationFragmentLayout {
         viewport.setMaxX(3);
         viewport.setMinY(0);
         viewport.setMaxY(128);
+    }
+
+    private void createRRWaveform(){
+        rrGraph.setTitle("RR");
+        rrGraph.getGridLabelRenderer().setNumVerticalLabels(3);
+        Viewport viewport = rrGraph.getViewport();
+        viewport.setYAxisBoundsManual(true);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setMinY(0);
+        viewport.setMaxY(2);
+        viewport.setMinX(0);
+        viewport.setMaxX(80);
     }
 }
