@@ -33,6 +33,7 @@ public class MainActivity
     private IntentFilter btConnectionIntentFilter;
     private BluetoothSocket socket;
     private boolean connected = false;
+    private BluetoothDevice connectedDevice;
 
 
     /*==============================================================================================
@@ -41,7 +42,6 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("TomaszKopacz", "Activity started");
         super.onCreate(savedInstanceState);
         mMainActivityLayout = new MainActivityLayout(this);
         mMainActivityLayout.setListener(this);
@@ -57,7 +57,6 @@ public class MainActivity
 
     @Override
     protected void onDestroy() {
-        Log.d("TomaszKopacz", "Activity destroyed");
         unregisterReceiver(btConnectionReceiver);
 
         super.onDestroy();
@@ -95,11 +94,13 @@ public class MainActivity
                 case BluetoothDevice.ACTION_ACL_CONNECTED:
                     Log.d("TomaszKopacz", "ACL_CONNECTED");
                     connected = true;
+                    connectedDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     break;
 
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     Log.d("TomaszKopacz", "ACL_DISCONNECTED");
                     connected = false;
+                    connectedDevice = null;
                     break;
             }
         }
@@ -146,12 +147,12 @@ public class MainActivity
         this.socket = socket;
     }
 
-    public boolean getState(){
+    public boolean isConnected(){
         return connected;
     }
 
-    public void setConnected(boolean b){
-        connected = b;
+    public BluetoothDevice getConnectedDevice(){
+        return connectedDevice;
     }
 
 

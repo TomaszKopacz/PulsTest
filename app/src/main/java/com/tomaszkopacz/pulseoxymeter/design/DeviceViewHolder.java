@@ -16,7 +16,9 @@ import butterknife.ButterKnife;
  * RecyclerViewListener itemClicked() method is called when item is touched.
  */
 
-public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class DeviceViewHolder
+        extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnLongClickListener{
 
     @BindView(R.id.devnameTxtView)
     TextView deviceNameTxtView;
@@ -32,10 +34,17 @@ public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.On
 
         this.listener = listener;
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         listener.itemClicked(getAdapterPosition(), deviceNameTxtView, deviceInfoTxtView);
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        listener.itemLongClicked(getAdapterPosition(), deviceNameTxtView, deviceInfoTxtView);
+        return true;
     }
 }

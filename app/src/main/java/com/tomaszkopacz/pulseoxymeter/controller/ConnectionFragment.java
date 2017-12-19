@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -336,14 +338,58 @@ public class ConnectionFragment
             //get device
             BluetoothDevice device = pairedDevices.get(position);
 
-            //create device_item view
-            mDeviceItemView.setNameTextView(deviceNameTextView);
-            mDeviceItemView.setInfoTextView(deviceInfoTextView);
-            mDeviceItemView.getInfoTextView().setText(R.string.connecting);
+            MainActivity activity = (MainActivity)getActivity();
+            if (activity.isConnected()){
 
+                BluetoothDevice connectedDevice = activity.getConnectedDevice();
+                if (connectedDevice != null && connectedDevice.equals(device))
+                    activity.setFragment(CommunicationFragment.class);
 
-            service.closeConnection(((MainActivity)getActivity()).getSocket());
-            service.connect(device);
+                else
+                    Toast.makeText(getContext(),
+                            R.string.turn_off_btdevice,
+                            Toast.LENGTH_SHORT).show();
+
+            } else {
+                //create device_item view
+                mDeviceItemView.setNameTextView(deviceNameTextView);
+                mDeviceItemView.setInfoTextView(deviceInfoTextView);
+                mDeviceItemView.getInfoTextView().setText(R.string.connecting);
+
+                service.closeConnection(((MainActivity)getActivity()).getSocket());
+                service.connect(device);
+            }
+        }
+
+        @Override
+        public void itemLongClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder
+                    .setMessage(R.string.close_connection_question)
+                    .setPositiveButton(R.string.ok, okDialogListener)
+                    .setNegativeButton(R.string.cancel, cancelDialogListener);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    };
+
+    DialogInterface.OnClickListener okDialogListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            MainActivity activity = (MainActivity)getActivity();
+            if (activity.isConnected()){
+                service.closeConnection(activity.getSocket());
+            }
+        }
+    };
+
+    DialogInterface.OnClickListener cancelDialogListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            dialogInterface.dismiss();
         }
     };
 
@@ -371,6 +417,11 @@ public class ConnectionFragment
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 device.createBond();
             }
+        }
+
+        @Override
+        public void itemLongClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView) {
+
         }
     };
 

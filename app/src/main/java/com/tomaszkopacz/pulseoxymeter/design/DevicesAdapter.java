@@ -44,6 +44,8 @@ public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
 
         holder.deviceNameTxtView.setTypeface(MainApp.FONT_REGULAR);
         holder.deviceInfoTxtView.setTypeface(MainApp.FONT_THIN);
+
+        holder.itemView.setLongClickable(true);
     }
 
     @Override

@@ -53,18 +53,6 @@ public class CommunicateService extends Service {
         this.callback = callback;
     }
 
-    public void unbind(){
-
-        if (readThread != null)
-            readThread.interrupt();
-
-        keepCommunicatingTask.cancel();
-        timer.cancel();
-        timer.purge();
-
-        communicationEnabled = false;
-    }
-
     /*==============================================================================================
                                         COMMUNICATION
     ==============================================================================================*/
@@ -87,12 +75,23 @@ public class CommunicateService extends Service {
         }
     }
 
+    public void stopHoldingCommunication(){
+
+        if (readThread != null)
+            readThread.interrupt();
+
+        keepCommunicatingTask.cancel();
+        timer.cancel();
+        timer.purge();
+
+        stopReading();
+    }
+
     private class HoldCommunicationTask extends TimerTask {
 
         @Override
         public void run() {
             writeCommand();
-            Log.d("TomaszKopacz", "COMMAND WRITTEN");
         }
     }
 
@@ -120,7 +119,7 @@ public class CommunicateService extends Service {
      */
     public boolean read(BluetoothSocket socket){
 
-        InputStream tempInputStream = null;
+        InputStream tempInputStream;
         mInputStream = null;
 
 

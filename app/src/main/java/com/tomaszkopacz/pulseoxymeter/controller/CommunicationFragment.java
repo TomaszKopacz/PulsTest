@@ -11,7 +11,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -88,19 +86,10 @@ public class CommunicationFragment
     private static final int GRAPH_DIFFERENTIAL = 1;
     private static final String ALBUM_NAME = "/CMS";
 
-    private static final String TAG = "TomaszKopacz";
-
-
 
     /*==============================================================================================
                                         LIFE CYCLE
     ==============================================================================================*/
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,7 +123,6 @@ public class CommunicationFragment
         //bind bt service
         Intent intent = new Intent(getActivity(), CommunicateService.class);
         getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -142,13 +130,9 @@ public class CommunicationFragment
         super.onStop();
 
         getActivity().unbindService(connection);
-        service.unbind();
+        service.stopHoldingCommunication();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 
 
     /*==============================================================================================
@@ -190,7 +174,7 @@ public class CommunicationFragment
     public void onNavigationIconClick() {
 
         //disable service timer
-        service.unbind();
+        service.stopHoldingCommunication();
 
         //give back default activity settings and go back to connection fragment
         mMainActivityLayout.getToolbar().setNavigationIcon(R.drawable.ic_menu);
@@ -241,14 +225,14 @@ public class CommunicationFragment
             return;
         }
 
-        String[] types = new String[]{"Krzywa pletyzmograficzna", "Pochodna"};
+        String[] types = new String[]{"Krzywa PPG", "Pochodna"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
                 .setTitle(R.string.dialog_title)
                 .setPositiveButton(R.string.ok, acceptItemListener)
                 .setNeutralButton(R.string.cancel, cancelDialogListener)
-                .setSingleChoiceItems(types, -1, chooseItemListener);
+                .setSingleChoiceItems(types, graphType, chooseItemListener);
 
         AlertDialog dialog = builder.create();
         dialog.show();

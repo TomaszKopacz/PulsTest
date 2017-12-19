@@ -15,4 +15,6 @@ public interface ListItemListener {
      * @param deviceInfoTextView
      */
     void itemClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);
+
+    void itemLongClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);
 }
