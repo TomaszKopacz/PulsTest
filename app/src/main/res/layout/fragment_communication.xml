@@ -16,11 +16,7 @@
         android:orientation="horizontal"
         android:layout_weight="1"
         android:weightSum="6"
-        android:padding="5dp"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/pulseTxtView"
@@ -71,11 +67,7 @@
         android:orientation="horizontal"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="6"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="@dimen/margin"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin">
+        android:weightSum="6">
 
         <TextView
             android:id="@+id/saturationTxtView"
@@ -121,11 +113,7 @@
         android:id="@+id/waveRelLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/margin"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginLeft="@dimen/largemargin"
-        android:layout_marginRight="@dimen/largemargin"
-        android:layout_weight="5"
+        android:layout_weight="3"
         android:padding="10dp">
 
         <com.jjoe64.graphview.helper.GraphViewXML
@@ -139,13 +127,24 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/diffRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:padding="10dp">
+
+        <com.jjoe64.graphview.helper.GraphViewXML
+            android:id="@+id/diffGraph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:seriesData="0=0"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/rrRelLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/margin"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginLeft="@dimen/largemargin"
-        android:layout_marginRight="@dimen/largemargin"
         android:layout_weight="2"
         android:padding="10dp">
 
@@ -153,6 +152,7 @@
             android:id="@+id/rrGraph"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:seriesType="bar"
             app:seriesData="0=0"/>
 
     </RelativeLayout>

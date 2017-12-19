@@ -55,6 +55,9 @@ public class CommunicationFragmentLayout {
     @BindView(R.id.waveformGraph)
     GraphView waveformGraph;
 
+    @BindView(R.id.diffGraph)
+    GraphView diffGraph;
+
     @BindView(R.id.rrGraph)
     GraphView rrGraph;
 
@@ -114,6 +117,14 @@ public class CommunicationFragmentLayout {
         return waveformGraph;
     }
 
+    public GraphView getDiffGraph(){
+        return diffGraph;
+    }
+
+    public GraphView getRrGraph(){
+        return rrGraph;
+    }
+
     public CircularProgressButton getStopBtn(){
         return stopBtn;
     }
@@ -149,6 +160,7 @@ public class CommunicationFragmentLayout {
         createPulseTrendWaveform();
         createSaturationTrendWaveform();
         createWaveform();
+        createDiffWaveform();
         createRRWaveform();
     }
 
@@ -186,6 +198,7 @@ public class CommunicationFragmentLayout {
 
     private void createWaveform(){
         waveformGraph.setTitle("PPG");
+        waveformGraph.getGridLabelRenderer().setNumHorizontalLabels(6);
         Viewport viewport = waveformGraph.getViewport();
         viewport.setScalable(false);
         viewport.setScrollable(true);
@@ -193,9 +206,24 @@ public class CommunicationFragmentLayout {
         viewport.setYAxisBoundsManual(true);
         viewport.scrollToEnd();
         viewport.setMinX(0);
-        viewport.setMaxX(3);
+        viewport.setMaxX(5);
         viewport.setMinY(0);
         viewport.setMaxY(128);
+    }
+
+    private void createDiffWaveform(){
+        diffGraph.setTitle("Pochodna");
+        diffGraph.getGridLabelRenderer().setNumVerticalLabels(3);
+        diffGraph.getGridLabelRenderer().setNumHorizontalLabels(6);
+        Viewport viewport = diffGraph.getViewport();
+        viewport.setYAxisBoundsManual(true);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setScrollable(true);
+        viewport.setScalable(false);
+        viewport.setMinY(-30);
+        viewport.setMaxY(30);
+        viewport.setMinX(0);
+        viewport.setMaxX(5);
     }
 
     private void createRRWaveform(){

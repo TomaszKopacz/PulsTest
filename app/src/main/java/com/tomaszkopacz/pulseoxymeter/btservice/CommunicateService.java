@@ -161,7 +161,7 @@ public class CommunicateService extends Service {
 
         CMSData dataPackage = new CMSData();
 
-        while (communicationEnabled) {
+        while (true) {
             byte0 = waitForNextByte();
             byte1 = waitForNextByte();
             byte2 = waitForNextByte();
@@ -172,7 +172,9 @@ public class CommunicateService extends Service {
             byte7 = waitForNextByte();
             byte8 = waitForNextByte();
 
-            callback.onDataIncome(dataPackage);
+            if (communicationEnabled)
+                callback.onDataIncome(dataPackage);
+            else break;
         }
     }
 
