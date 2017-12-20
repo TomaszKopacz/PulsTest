@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 public class CommunicationFragment
@@ -87,7 +88,6 @@ public class CommunicationFragment
 
     //status
     private boolean isReading = false;
-    private int graphType = GRAPH_NORMAL;
 
     //maximal 7-bytes value of data element: 2^7 = 128
     private static final int MAX_VALUE = 128;
@@ -104,8 +104,9 @@ public class CommunicationFragment
     private int[] saturationArray = new int[MAX_WAVEFORM_SIZE];
     private int[] waveArray = new int[MAX_WAVEFORM_SIZE];
 
-    private static final int GRAPH_NORMAL = 0;
-    private static final int GRAPH_DIFFERENTIAL = 1;
+    //data: differential
+    private int[] differential = new int[MAX_WAVEFORM_SIZE];
+
     private static final String ALBUM_NAME = "/CMS";
 
 
@@ -224,7 +225,14 @@ public class CommunicationFragment
     }
 
     @Override
+    public void showHRVInfo() {
+
+    }
+
+    @Override
     public void stopReading(){
+
+        //close service reading
         if (isReading) {
             service.stopReading();
             isReading = false;
@@ -234,6 +242,16 @@ public class CommunicationFragment
             stopBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
             stopBtn.setClickable(false);
         }
+
+        //set RR graph
+        double[] RRs = MyMath.countRR(timeArray, differential);
+
+        for (int i = 0; i < RRs.length; i++){
+            DataPoint point = new DataPoint(i, RRs[i]);
+            rrSeries.appendData(point, true, 6000);
+        }
+
+
     }
 
     @Override
@@ -252,58 +270,6 @@ public class CommunicationFragment
             Toast.makeText(getContext(), R.string.no_external_storage, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void chooseGraphType() {
-
-        if (isReading){
-            Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String[] types = new String[]{"Krzywa PPG", "Pochodna"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder
-                .setTitle(R.string.dialog_title)
-                .setPositiveButton(R.string.ok, acceptItemListener)
-                .setNeutralButton(R.string.cancel, cancelDialogListener)
-                .setSingleChoiceItems(types, graphType, chooseItemListener);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    DialogInterface.OnClickListener acceptItemListener
-            = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            setGraph();
-        }
-    };
-
-    DialogInterface.OnClickListener cancelDialogListener
-            = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            dialogInterface.dismiss();
-        }
-    };
-
-    DialogInterface.OnClickListener chooseItemListener
-            = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            switch (i){
-                case 0:
-                    graphType = GRAPH_NORMAL;
-                    break;
-
-                case 1:
-                    graphType = GRAPH_DIFFERENTIAL;
-                    break;
-            }
-        }
-    };
 
     /*==============================================================================================
                                         EVENT LISTENERS
@@ -349,13 +315,11 @@ public class CommunicationFragment
 
                     //differential
                     if (pointer > 0) {
-                        double diff = waveArray[pointer] - waveArray[pointer-1];
+                        int diff = waveArray[pointer] - waveArray[pointer-1];
+                        differential[pointer-1] = diff;
                         DataPoint diffPoint = new DataPoint(timeArray[pointer-1], diff);
                         diffSeries.appendData(diffPoint, true, MAX_WAVEFORM_SIZE);
                     }
-
-                    //rr
-
 
                     //trends
                     if (pointer % 60 == 0){
@@ -369,8 +333,8 @@ public class CommunicationFragment
                         saturationValuesOf30Sec[avgPointer] = saturationValue;
 
                         if (avgPointer == 29) {
-                            int pulseAvg = MyMath.countAverage(pulseValuesOf30Sec);
-                            int satAvg = MyMath.countAverage(saturationValuesOf30Sec);
+                            double pulseAvg = MyMath.countAverage(pulseValuesOf30Sec);
+                            double satAvg = MyMath.countAverage(saturationValuesOf30Sec);
 
                             pulseAverageTextView.setText(String.valueOf(pulseAvg));
                             saturationAverageTextView.setText(String.valueOf(satAvg));
@@ -401,50 +365,6 @@ public class CommunicationFragment
     /*==============================================================================================
                                         PRIVATE UTIL METHODS
     ==============================================================================================*/
-
-    private void setGraph(){
-
-        switch (graphType){
-            case GRAPH_NORMAL:
-                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMinY(0);
-                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMaxY(128);
-                waveformSeries.resetData(countCurve(GRAPH_NORMAL, timeArray, waveArray));
-                break;
-
-            case GRAPH_DIFFERENTIAL:
-                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMinY(-40);
-                mCommunicationFragmentLayout.getWaveformGraph().getViewport().setMaxY(40);
-                waveformSeries.resetData(countCurve(GRAPH_DIFFERENTIAL, timeArray, waveArray));
-                break;
-        }
-    }
-
-    private DataPoint[] countCurve(int type, double[] time, int[] signal){
-
-        //not all of primarily initialized 10000 elements of signal has value, need to cut them
-        int lastNonZeroIndex = -1;
-        int numOfPoints = signal.length;
-        for (int i = 0; i < numOfPoints; i++){
-            if (time[i] == 0)
-                break;
-            lastNonZeroIndex = i;
-        }
-
-        int size = lastNonZeroIndex + 1;
-
-        switch (type){
-            case GRAPH_NORMAL:
-                DataPoint[] curve = new DataPoint[size];
-                for (int i = 0; i < size; i++)
-                    curve[i] = new DataPoint(time[i], signal[i]);
-                return curve;
-
-            case GRAPH_DIFFERENTIAL:
-                return MyMath.countDifferential(size, time, signal);
-        }
-
-        return null;
-    }
 
     /**
      * Checks, whether external storage is available.

@@ -134,9 +134,9 @@ public class CommunicationFragmentLayout {
                                         COMMUNICATION
     ==============================================================================================*/
 
-    @OnClick(R.id.waveformGraph)
-    public void graphClicked(){
-        listener.chooseGraphType();
+    @OnClick(R.id.rrGraph)
+    public void showHRVInfo(){
+        listener.showHRVInfo();
     }
 
     @OnClick(R.id.stopBtn)
@@ -232,9 +232,10 @@ public class CommunicationFragmentLayout {
         Viewport viewport = rrGraph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setXAxisBoundsManual(true);
+        viewport.setScrollable(true);
         viewport.setMinY(0);
-        viewport.setMaxY(2);
+        viewport.setMaxY(1.2);
         viewport.setMinX(0);
-        viewport.setMaxX(80);
+        viewport.setMaxX(10);
     }
 }

@@ -6,9 +6,9 @@ package com.tomaszkopacz.pulseoxymeter.listeners;
 
 public interface CommunicationFragmentListener {
 
+    void showHRVInfo();
+
     void stopReading();
 
     void saveData();
-
-    void chooseGraphType();
 }
