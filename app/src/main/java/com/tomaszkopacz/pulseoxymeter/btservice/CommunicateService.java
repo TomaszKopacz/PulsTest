@@ -149,15 +149,15 @@ public class CommunicateService extends Service {
 
     private void getBytes() {
 
-        byte byte0;
-        byte byte1;
-        byte byte2;
-        byte byte3;
-        byte byte4;
-        byte byte5;
-        byte byte6;
-        byte byte7;
-        byte byte8;
+        int byte0;
+        int byte1;
+        int byte2;
+        int byte3;
+        int byte4;
+        int byte5;
+        int byte6;
+        int byte7;
+        int byte8;
 
         CMSData dataPackage = new CMSData();
 
@@ -165,10 +165,21 @@ public class CommunicateService extends Service {
             byte0 = waitForNextByte();
             byte1 = waitForNextByte();
             byte2 = waitForNextByte();
-            dataPackage.setWaveformByte(waitForNextByte());
+
+            byte3 = waitForNextByte();
+            byte3 = (byte3 >= 128) ? (byte3 - 128) : (128 + byte3);
+            dataPackage.setWaveformByte(byte3);
+
             byte4 = waitForNextByte();
-            dataPackage.setPulseByte(waitForNextByte());
-            dataPackage.setSaturationByte(waitForNextByte());
+
+            byte5 = waitForNextByte();
+            byte5 = (byte5 > 128) ? (byte5 - 128) : (128 + byte5);
+            dataPackage.setPulseByte(byte5);
+
+            byte6 = waitForNextByte();
+            byte6 = (byte6 > 128) ? (byte6 - 128) : (128 + byte6);
+            dataPackage.setSaturationByte(byte6);
+
             byte7 = waitForNextByte();
             byte8 = waitForNextByte();
 
@@ -178,9 +189,9 @@ public class CommunicateService extends Service {
         }
     }
 
-    private byte waitForNextByte() {
+    private int waitForNextByte() {
         try {
-            byte readByte = (byte) mInputStream.read();
+            int readByte = mInputStream.read();
             return readByte;
 
         } catch (IOException e) {

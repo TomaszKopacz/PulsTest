@@ -2,6 +2,9 @@ package com.tomaszkopacz.pulseoxymeter.utils;
 
 import android.util.Log;
 
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.Series;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +26,7 @@ public class MyMath {
         return avg;
     }
 
-    public static double countAverage(List<Integer> values){
-        double avg = 0;
-        for (int i = 0; i < values.size(); i++)
-            avg += values.get(i);
-        avg = avg/values.size();
-
-        return avg;
-    }
-
-    public static double countStandardDeviation(double[] values){
+    public static double countVariance(double[] values){
         double avg = countAverage(values);
         double factor;
         double sum = 0;
@@ -45,10 +39,41 @@ public class MyMath {
         return sum/values.length;
     }
 
-    public static double[] countRR(double[] time, double[] values){
+    public static double countStandardDeviation(double[] values){
+        double var = countVariance(values);
+        return Math.sqrt(var);
+    }
 
-        double avgValue = countAverage(values);
-        double standardDeviation = countStandardDeviation(values);
+    public static double countRMSSD(double[] values){
+
+        double sum = 0;
+
+        for (int i = 1; i < values.length; i++){
+            double difference = values[i] - values[i-1];
+            double square = Math.pow(difference,2);
+
+            sum += square;
+        }
+
+        return Math.sqrt(sum/values.length);
+    }
+
+    public static double countPNN50(double[] values){
+        int numOfDifferences = values.length - 1;
+        int numOfHigherThan50ms = 0;
+
+        for (int i = 1; i < values.length; i++){
+            double difference = Math.abs(values[i] - values[i-1]);
+            if (difference > 0.05)
+                numOfHigherThan50ms++;
+        }
+
+        return ((double) numOfHigherThan50ms/numOfDifferences) * 100;
+    }
+
+    public static double[] countRR(double[] time, double[] diff){
+
+        double deviation = countStandardDeviation(diff);
 
         double rrStart = -1;
         double rrEnd = -1;
@@ -56,29 +81,38 @@ public class MyMath {
         List<Double> RRs = new ArrayList<>();
         List<Double> peaks = new ArrayList<>();
 
-        for (int i = 0; i < values.length; i++){
+        for (int i = 0; i < diff.length; i++){
 
             double maxValue = -128;
-            while (values[i] > avgValue + 3*standardDeviation){
-
+            while (diff[i] > 10*deviation){
                 peakFound = true;
-                if (values[i] > maxValue) {
-                    maxValue = values[i];
+
+                if (diff[i] > maxValue) {
+                    maxValue = diff[i];
                     rrEnd = time[i];
                 }
 
                 i++;
-                if (i == values.length-1)
+                if (i == diff.length-1)
                     break;
             }
 
             if (peakFound && rrStart != -1) {
                 double rr = rrEnd - rrStart;
-                if (rr > MIN_RR) {
-                    RRs.add(rrEnd - rrStart);
-                    peaks.add(maxValue);
+
+                if (rr > MIN_RR){
+                    if (peaks.size() == 0){
+                        RRs.add(rrEnd - rrStart);
+                        peaks.add(maxValue);
+                        rrStart = rrEnd;
+
+
+                    } else if (peaks.size() > 0 && maxValue > 0.3 * peaks.get(peaks.size() - 1)){
+                        RRs.add(rrEnd - rrStart);
+                        peaks.add(maxValue);
+                        rrStart = rrEnd;
+                    }
                 }
-                rrStart = rrEnd;
             }
 
             if (rrStart == -1)

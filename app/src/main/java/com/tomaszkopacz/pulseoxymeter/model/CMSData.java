@@ -8,37 +8,37 @@ import java.io.Serializable;
 
 public class CMSData implements Serializable{
 
-    private byte startByte;
-    private byte byte1;
-    private byte byte2;
-    private byte waveformByte;
-    private byte byte4;
-    private byte pulseByte;
-    private byte saturationByte;
-    private byte byte7;
-    private byte byte8;
+    private int startByte;
+    private int byte1;
+    private int byte2;
+    private int waveformByte;
+    private int byte4;
+    private int pulseByte;
+    private int saturationByte;
+    private int byte7;
+    private int byte8;
 
-    public byte getWaveformByte() {
+    public int getWaveformByte() {
         return waveformByte;
     }
 
-    public void setWaveformByte(byte waveformByte) {
+    public void setWaveformByte(int waveformByte) {
         this.waveformByte = waveformByte;
     }
 
-    public byte getPulseByte() {
+    public int getPulseByte() {
         return pulseByte;
     }
 
-    public void setPulseByte(byte pulseByte) {
+    public void setPulseByte(int pulseByte) {
         this.pulseByte = pulseByte;
     }
 
-    public byte getSaturationByte() {
+    public int getSaturationByte() {
         return saturationByte;
     }
 
-    public void setSaturationByte(byte saturationByte) {
+    public void setSaturationByte(int saturationByte) {
         this.saturationByte = saturationByte;
     }
 }

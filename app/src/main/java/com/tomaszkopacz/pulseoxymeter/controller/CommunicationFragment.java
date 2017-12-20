@@ -11,20 +11,24 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.CommunicateService;
 import com.tomaszkopacz.pulseoxymeter.design.CommunicationFragmentLayout;
@@ -41,7 +45,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 public class CommunicationFragment
@@ -90,7 +93,6 @@ public class CommunicationFragment
     private boolean isReading = false;
 
     //maximal 7-bytes value of data element: 2^7 = 128
-    private static final int MAX_VALUE = 128;
     private static final int AVERAGE_VALUES_SIZE = 30;
     private static int MAX_WAVEFORM_SIZE = 100000;
 
@@ -109,7 +111,10 @@ public class CommunicationFragment
 
     //data: HRV
     private double[] RRs;
-    private double rrStandardDeviation;
+    private double mnnValue;
+    private double sdnnValue;
+    private double rrmssdValue;
+    private double pnn50Value;
 
     private static final String ALBUM_NAME = "/CMS";
 
@@ -230,24 +235,79 @@ public class CommunicationFragment
 
     @Override
     public void showHRVInfo() {
-        if (!isReading){
-            rrStandardDeviation = MyMath.countStandardDeviation(RRs);
 
-            String hd = "HD: " + MyMath.round(rrStandardDeviation, 3);
-            String rmssd = "RMSSD: " + "100";
+        if (!isReading){
+
+
+            mnnValue = MyMath.round(MyMath.countAverage(RRs), 3);
+            sdnnValue = MyMath.round(MyMath.countStandardDeviation(RRs), 3);
+            rrmssdValue = MyMath.round(MyMath.countRMSSD(RRs), 3);
+            pnn50Value = MyMath.round(MyMath.countPNN50(RRs), 3);
+
+            String mnn = "MNN: " + mnnValue;
+            String sdnn = "SDNN: " + sdnnValue;
+            String rmssd = "RMSSD: " + rrmssdValue;
+            String pnn50 = "PNN50: " + pnn50Value;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder
-                    .setTitle(R.string.hrv_title)
-                    .setMessage(hd + "\n\n" + rmssd);
 
-            AlertDialog hrvDialog = builder.create();
-            hrvDialog.show();
+            LinearLayout layout = new LinearLayout(getContext());
+            LinearLayout.LayoutParams params
+                    = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            TextView parameters = new TextView(getContext());
+            GraphView poincareGraph = new GraphView(getContext());
+            poincareGraph.setTitle("Wykres Poincare");
+            poincareGraph.setPadding(20,20,20,20);
+            Viewport viewport = poincareGraph.getViewport();
+            viewport.setScalable(false);
+            viewport.setScrollable(true);
+            viewport.setXAxisBoundsManual(true);
+            viewport.setYAxisBoundsManual(true);
+            viewport.scrollToEnd();
+            viewport.setMinX(0);
+            viewport.setMaxX(1.5);
+            viewport.setMinY(0);
+            viewport.setMaxY(1.5);
+
+            DataPoint[] points = new DataPoint[RRs.length - 1];
+
+            for (int i = 1; i < RRs.length; i++){
+                double x = RRs[i];
+                double y = RRs[i-1];
+
+                points[i-1] = new DataPoint(x,y);
+            }
+
+            PointsGraphSeries series = new PointsGraphSeries(points);
+            series.setSize(5);
+            poincareGraph.addSeries(series);
+
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            parameters.setText(mnn + "\n\n" + sdnn + "\n\n" + rmssd + "\n\n" + pnn50);
+            params.setMargins(50,50,50,50);
+            layout.addView(parameters, params);
+            layout.addView(poincareGraph, params);
+
+            builder
+                    .setTitle("Parametry")
+                    .setView(layout)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+            builder.create().show();
 
 
         } else {
             Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -300,9 +360,9 @@ public class CommunicationFragment
         pointer++;
 
         //get bytes and transform to unsigned
-        pulseValue = MAX_VALUE + data.getPulseByte();
-        saturationValue = MAX_VALUE + data.getSaturationByte();
-        wavePoint = MAX_VALUE + data.getWaveformByte();
+        pulseValue = data.getPulseByte();
+        saturationValue = data.getSaturationByte();
+        wavePoint = data.getWaveformByte();
 
         //count time episodes
         if (startTime == -1)
@@ -352,8 +412,8 @@ public class CommunicationFragment
                         saturationValuesOf30Sec[avgPointer] = saturationValue;
 
                         if (avgPointer == 29) {
-                            double pulseAvg = MyMath.countAverage(pulseValuesOf30Sec);
-                            double satAvg = MyMath.countAverage(saturationValuesOf30Sec);
+                            int pulseAvg = (int) MyMath.countAverage(pulseValuesOf30Sec);
+                            int satAvg = (int) MyMath.countAverage(saturationValuesOf30Sec);
 
                             pulseAverageTextView.setText(String.valueOf(pulseAvg));
                             saturationAverageTextView.setText(String.valueOf(satAvg));
