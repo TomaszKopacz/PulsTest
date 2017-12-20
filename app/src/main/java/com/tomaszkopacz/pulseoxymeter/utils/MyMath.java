@@ -14,7 +14,7 @@ public class MyMath {
     private static final String TAG = "TomaszKopacz";
     private static final double MIN_RR = 0.2;
 
-    public static double countAverage(int[] values){
+    public static double countAverage(double[] values){
         double avg = 0;
         for (int i = 0; i < values.length; i++)
             avg += values[i];
@@ -32,7 +32,7 @@ public class MyMath {
         return avg;
     }
 
-    public static double countStandardDeviation(int[] values){
+    public static double countStandardDeviation(double[] values){
         double avg = countAverage(values);
         double factor;
         double sum = 0;
@@ -45,7 +45,7 @@ public class MyMath {
         return sum/values.length;
     }
 
-    public static double[] countRR(double[] time, int[] values){
+    public static double[] countRR(double[] time, double[] values){
 
         double avgValue = countAverage(values);
         double standardDeviation = countStandardDeviation(values);
@@ -54,11 +54,11 @@ public class MyMath {
         double rrEnd = -1;
         boolean peakFound = false;
         List<Double> RRs = new ArrayList<>();
-        List<Integer> peaks = new ArrayList<>();
+        List<Double> peaks = new ArrayList<>();
 
         for (int i = 0; i < values.length; i++){
 
-            int maxValue = -128;
+            double maxValue = -128;
             while (values[i] > avgValue + 3*standardDeviation){
 
                 peakFound = true;
@@ -92,5 +92,14 @@ public class MyMath {
             result[i] = RRs.get(i);
 
         return result;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

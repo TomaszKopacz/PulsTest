@@ -95,8 +95,8 @@ public class CommunicationFragment
     private static int MAX_WAVEFORM_SIZE = 100000;
 
     //data: trend graphs
-    private int[] pulseValuesOf30Sec = new int[AVERAGE_VALUES_SIZE];
-    private int[] saturationValuesOf30Sec = new int[AVERAGE_VALUES_SIZE];
+    private double[] pulseValuesOf30Sec = new double[AVERAGE_VALUES_SIZE];
+    private double[] saturationValuesOf30Sec = new double[AVERAGE_VALUES_SIZE];
 
     //data: waveformSeries
     private double[] timeArray = new double[MAX_WAVEFORM_SIZE];
@@ -105,7 +105,11 @@ public class CommunicationFragment
     private int[] waveArray = new int[MAX_WAVEFORM_SIZE];
 
     //data: differential
-    private int[] differential = new int[MAX_WAVEFORM_SIZE];
+    private double[] differential = new double[MAX_WAVEFORM_SIZE];
+
+    //data: HRV
+    private double[] RRs;
+    private double rrStandardDeviation;
 
     private static final String ALBUM_NAME = "/CMS";
 
@@ -226,7 +230,24 @@ public class CommunicationFragment
 
     @Override
     public void showHRVInfo() {
+        if (!isReading){
+            rrStandardDeviation = MyMath.countStandardDeviation(RRs);
 
+            String hd = "HD: " + MyMath.round(rrStandardDeviation, 3);
+            String rmssd = "RMSSD: " + "100";
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder
+                    .setTitle(R.string.hrv_title)
+                    .setMessage(hd + "\n\n" + rmssd);
+
+            AlertDialog hrvDialog = builder.create();
+            hrvDialog.show();
+
+
+        } else {
+            Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -244,14 +265,12 @@ public class CommunicationFragment
         }
 
         //set RR graph
-        double[] RRs = MyMath.countRR(timeArray, differential);
+        RRs = MyMath.countRR(timeArray, differential);
 
         for (int i = 0; i < RRs.length; i++){
             DataPoint point = new DataPoint(i, RRs[i]);
             rrSeries.appendData(point, true, 6000);
         }
-
-
     }
 
     @Override

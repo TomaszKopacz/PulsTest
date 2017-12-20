@@ -20,13 +20,13 @@
     <string name="saturation">"SaO2 [%]:       "</string>
     <string name="stop">"ZATRZYMAJ"</string>
     <string name="end">"KONIEC"</string>
+    <string name="hrv_title">"Parametry skurczu serca HRV"</string>
+    <string name="sd">"SD: "</string>
+    <string name="rmssd">"RMSSD: "</string>
 
-    <!-- dialog -->
-    <string name="dialog_title">"Typ wykresu"</string>
+    <!-- dialogs -->
     <string name="ok">"OK"</string>
     <string name="cancel">"ANULUJ"</string>
-    <string name="normal_graph">"Krzywa pletyzmograficzna"</string>
-    <string name="differential">"Pochodna"</string>
 
     <!-- bt status -->
     <string name="pairing">"Parowanie..."</string>
