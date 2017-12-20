@@ -259,6 +259,8 @@ public class CommunicationFragment
             TextView parameters = new TextView(getContext());
             GraphView poincareGraph = new GraphView(getContext());
             poincareGraph.setTitle("Wykres Poincare");
+            poincareGraph.getGridLabelRenderer().setHorizontalAxisTitle("Aktualna wartość RR [s]");
+            poincareGraph.getGridLabelRenderer().setVerticalAxisTitle("Poprzednia wartość RR [s]");
             poincareGraph.setPadding(20,20,20,20);
             Viewport viewport = poincareGraph.getViewport();
             viewport.setScalable(false);

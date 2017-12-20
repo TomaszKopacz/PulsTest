@@ -11,19 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5920cc80-556a-49f5-b43a-7114fb0f737e" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/DiaryFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/HRVFragment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_diary.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_hrv.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/CommunicateService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/btservice/CommunicateService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/model/CMSData.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/model/CMSData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/MyMath.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/MyMath.java" />
     </list>
     <ignored path="PulseOxymeter.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -58,33 +46,23 @@
       <file leaf-file-name="CommunicationFragmentLayout.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="201" column="0" selection-start-line="201" selection-start-column="0" selection-end-line="210" selection-end-column="30" />
+            <state relative-caret-position="223">
+              <caret line="199" column="21" selection-start-line="199" selection-start-column="8" selection-end-line="199" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommunicationFragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CommunicationFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="269" column="32" selection-start-line="269" selection-start-column="32" selection-end-line="269" selection-end-column="32" />
+            <state relative-caret-position="187">
+              <caret line="262" column="95" selection-start-line="262" selection-start-column="95" selection-end-line="262" selection-end-column="95" />
               <folding>
-                <element signature="e#11054#11065#0" expanded="true" />
-                <element signature="e#11067#11329#0" expanded="true" />
-                <element signature="e#11328#11329#0" expanded="true" />
+                <element signature="e#11256#11267#0" expanded="true" />
+                <element signature="e#11269#11531#0" expanded="true" />
+                <element signature="e#11530#11531#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MyMath.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/MyMath.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="76" column="27" selection-start-line="76" selection-start-column="27" selection-end-line="76" selection-end-column="27" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -2053,8 +2031,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/hrv_dialog.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/HRVDialog.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/MyMath.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java" />
       </list>
     </option>
   </component>
@@ -2997,31 +2975,31 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/MyMath.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/design/CommunicationFragmentLayout.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="201" column="0" selection-start-line="201" selection-start-column="0" selection-end-line="210" selection-end-column="30" />
+        <state relative-caret-position="223">
+          <caret line="199" column="21" selection-start-line="199" selection-start-column="8" selection-end-line="199" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/controller/CommunicationFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="269" column="32" selection-start-line="269" selection-start-column="32" selection-end-line="269" selection-end-column="32" />
+        <state relative-caret-position="187">
+          <caret line="262" column="95" selection-start-line="262" selection-start-column="95" selection-end-line="262" selection-end-column="95" />
           <folding>
-            <element signature="e#11054#11065#0" expanded="true" />
-            <element signature="e#11067#11329#0" expanded="true" />
-            <element signature="e#11328#11329#0" expanded="true" />
+            <element signature="e#11256#11267#0" expanded="true" />
+            <element signature="e#11269#11531#0" expanded="true" />
+            <element signature="e#11530#11531#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tomaszkopacz/pulseoxymeter/utils/MyMath.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="76" column="27" selection-start-line="76" selection-start-column="27" selection-end-line="76" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
