@@ -30,10 +30,8 @@ public class MainActivityLayout {
 
     //general
     private Activity activity;
-    private MainActivityListener listener;
 
     //layout
-
     @BindView(R.id.mainToolbar)
     Toolbar toolbar;
 
@@ -48,7 +46,6 @@ public class MainActivityLayout {
 
     //items
     public static final int CONNECT_ITEM = 10;
-    public static final int DIARY_ITEM = 20;
 
 
     /*==============================================================================================
@@ -64,8 +61,6 @@ public class MainActivityLayout {
     }
 
     public void setListener(final MainActivityListener listener){
-
-        this.listener = listener;
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,11 +79,6 @@ public class MainActivityLayout {
                     case R.id.connect_item:
                         item.setChecked(true);
                         listener.onMenuItemSelected(CONNECT_ITEM);
-                        return true;
-
-                    case R.id.diary_item:
-                        item.setChecked(true);
-                        listener.onMenuItemSelected(DIARY_ITEM);
                         return true;
 
                     case R.id.guide_item:

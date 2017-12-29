@@ -10,11 +10,6 @@
             android:checked="true"/>
 
         <item
-            android:id="@+id/diary_item"
-            android:icon="@drawable/ic_diary"
-            android:title="@string/item_diary"/>
-
-        <item
             android:id="@+id/guide_item"
             android:icon="@drawable/ic_guide"
             android:title="@string/item_guide"/>

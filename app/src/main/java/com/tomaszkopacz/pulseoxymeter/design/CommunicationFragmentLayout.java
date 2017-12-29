@@ -4,6 +4,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
@@ -65,7 +67,7 @@ public class CommunicationFragmentLayout {
     CircularProgressButton stopBtn;
 
     @BindView(R.id.saveBtn)
-    FloatingActionButton saveBtn;
+    ImageButton saveBtn;
 
 
     /*==============================================================================================
@@ -134,14 +136,14 @@ public class CommunicationFragmentLayout {
                                         COMMUNICATION
     ==============================================================================================*/
 
-    @OnClick(R.id.rrGraph)
-    public void showHRVInfo(){
-        listener.showHRVInfo();
-    }
-
     @OnClick(R.id.stopBtn)
     public void stop(){
         listener.stopReading();
+    }
+
+    @OnClick(R.id.rrGraph)
+    public void showHRVInfo(){
+        listener.showHRVInfo();
     }
 
     @OnClick(R.id.saveBtn)

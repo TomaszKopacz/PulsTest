@@ -116,11 +116,6 @@ public class MainActivity
                 setFragment(ConnectionFragment.class);
                 mMainActivityLayout.getDrawer().closeDrawers();
                 break;
-
-            case MainActivityLayout.DIARY_ITEM:
-                setFragment(HRVFragment.class);
-                mMainActivityLayout.getDrawer().closeDrawers();
-                break;
         }
     }
 

@@ -1,8 +1,6 @@
 package com.tomaszkopacz.pulseoxymeter.design;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,7 +43,7 @@ public class HRVDialogLayout extends LinearLayout{
 
     public HRVDialogLayout(Context context) {
         super(context);
-        inflate(context, R.layout.fragment_hrv, this);
+        inflate(context, R.layout.dialog_hrv, this);
         ButterKnife.bind(this);
 
         customizeLayout();
