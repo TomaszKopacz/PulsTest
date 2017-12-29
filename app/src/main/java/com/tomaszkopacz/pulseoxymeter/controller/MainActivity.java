@@ -116,6 +116,16 @@ public class MainActivity
                 setFragment(ConnectionFragment.class);
                 mMainActivityLayout.getDrawer().closeDrawers();
                 break;
+
+            case MainActivityLayout.GUIDE_ITEM:
+                setFragment(GuideFragment.class);
+                mMainActivityLayout.getDrawer().closeDrawers();
+                break;
+
+            case MainActivityLayout.INFO_ITEM:
+                setFragment(InfoFragment.class);
+                mMainActivityLayout.getDrawer().closeDrawers();
+                break;
         }
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 public class MyMath {
 
     private static final String TAG = "TomaszKopacz";
-    private static final double MIN_RR = 0.2;
+    private static final double MIN_RR = 0.27;
 
     public static double countAverage(double[] values){
         double avg = 0;

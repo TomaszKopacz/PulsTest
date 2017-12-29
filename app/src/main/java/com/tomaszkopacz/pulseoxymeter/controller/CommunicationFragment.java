@@ -11,23 +11,19 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
@@ -98,12 +94,12 @@ public class CommunicationFragment
     private boolean isReading = false;
 
     //maximal 7-bytes value of data element: 2^7 = 128
-    private static final int AVERAGE_VALUES_SIZE = 30;
+    private static final int AVERAGE_VALUES_SIZE = 15;
     private static int MAX_WAVEFORM_SIZE = 1300000; //about 6h
 
     //data: trend graphs
-    private double[] pulseValuesOf30Sec = new double[AVERAGE_VALUES_SIZE];
-    private double[] saturationValuesOf30Sec = new double[AVERAGE_VALUES_SIZE];
+    private double[] pulseValuesOf15Sec = new double[AVERAGE_VALUES_SIZE];
+    private double[] saturationValuesOf15Sec = new double[AVERAGE_VALUES_SIZE];
 
     //data: waveformSeries
     private double[] timeArray = new double[MAX_WAVEFORM_SIZE];
@@ -173,8 +169,8 @@ public class CommunicationFragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         //bind bt service
         Intent intent = new Intent(getActivity(), CommunicateService.class);
@@ -182,13 +178,12 @@ public class CommunicationFragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
 
         getActivity().unbindService(connection);
         service.stopHoldingCommunication();
     }
-
 
 
     /*==============================================================================================
@@ -300,11 +295,9 @@ public class CommunicationFragment
     public void onDataIncome(final CMSData data) {
 
         pointer++;
-
         if (pointer == MAX_WAVEFORM_SIZE)
             stopReading();
 
-        //get bytes and transform to unsigned
         pulseValue = data.getPulseByte();
         saturationValue = data.getSaturationByte();
         wavePoint = data.getWaveformByte();
@@ -353,12 +346,12 @@ public class CommunicationFragment
                         pulseSeries.appendData(pulsePoint, true, MAX_WAVEFORM_SIZE/60);
                         saturationSeries.appendData(satPoint, true, MAX_WAVEFORM_SIZE/60);
 
-                        pulseValuesOf30Sec[avgPointer] = pulseValue;
-                        saturationValuesOf30Sec[avgPointer] = saturationValue;
+                        pulseValuesOf15Sec[avgPointer] = pulseValue;
+                        saturationValuesOf15Sec[avgPointer] = saturationValue;
 
-                        if (avgPointer == 29) {
-                            int pulseAvg = (int) MyMath.countAverage(pulseValuesOf30Sec);
-                            int satAvg = (int) MyMath.countAverage(saturationValuesOf30Sec);
+                        if (avgPointer == 14) {
+                            int pulseAvg = (int) MyMath.countAverage(pulseValuesOf15Sec);
+                            int satAvg = (int) MyMath.countAverage(saturationValuesOf15Sec);
 
                             pulseAverageTextView.setText(String.valueOf(pulseAvg));
                             saturationAverageTextView.setText(String.valueOf(satAvg));

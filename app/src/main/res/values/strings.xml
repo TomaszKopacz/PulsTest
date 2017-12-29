@@ -11,8 +11,13 @@
     <!-- connection dialog -->
     <string name="close_connection_question">"Czy chcesz zmaknąć połączenie?"</string>
 
-    <!-- diary fragment -->
-    <string name="diary_fragment_title">"Dzienniczek"</string>
+    <!-- guide fragment -->
+    <string name="guide_fragment_title">"Poradnik"</string>
+    <string name="guide_text">"To jest treść poradnika"</string>
+
+    <!-- info fragment -->
+    <string name="info_fragment_title">"Informacje"</string>
+    <string name="info_text">"To jest treść informacji"</string>
 
     <!-- communicate fragment -->
     <string name="communicate_fragment_title">"Komunikacja"</string>
@@ -44,5 +49,8 @@
     <string name="item_diary">"Dzienniczek"</string>
     <string name="item_guide">"Instrukcja"</string>
     <string name="item_info">"Więcej..."</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

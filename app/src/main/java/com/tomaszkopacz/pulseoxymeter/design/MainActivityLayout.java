@@ -46,6 +46,8 @@ public class MainActivityLayout {
 
     //items
     public static final int CONNECT_ITEM = 10;
+    public static final int GUIDE_ITEM = 20;
+    public static final int INFO_ITEM = 30;
 
 
     /*==============================================================================================
@@ -82,9 +84,13 @@ public class MainActivityLayout {
                         return true;
 
                     case R.id.guide_item:
+                        item.setChecked(true);
+                        listener.onMenuItemSelected(GUIDE_ITEM);
                         return true;
 
                     case R.id.info_item:
+                        item.setChecked(true);
+                        listener.onMenuItemSelected(INFO_ITEM);
                         return true;
 
                     default:
