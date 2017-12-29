@@ -21,8 +21,6 @@
     <string name="stop">"ZATRZYMAJ"</string>
     <string name="end">"KONIEC"</string>
     <string name="hrv_title">"Parametry skurczu serca HRV"</string>
-    <string name="sd">"SD: "</string>
-    <string name="rmssd">"RMSSD: "</string>
 
     <!-- dialogs -->
     <string name="ok">"OK"</string>

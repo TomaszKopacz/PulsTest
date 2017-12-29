@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.CommunicateService;
 import com.tomaszkopacz.pulseoxymeter.design.CommunicationFragmentLayout;
+import com.tomaszkopacz.pulseoxymeter.design.HRVDialogLayout;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 import com.tomaszkopacz.pulseoxymeter.listeners.CommunicationFragmentListener;
@@ -68,6 +70,9 @@ public class CommunicationFragment
     private GraphView diffGraph;
     private GraphView rrGraph;
 
+    private AlertDialog mHrvDialog;
+    private HRVDialogLayout mHrvDialogLayout;
+
     //bluetooth
     private CommunicateService service;
 
@@ -94,7 +99,7 @@ public class CommunicationFragment
 
     //maximal 7-bytes value of data element: 2^7 = 128
     private static final int AVERAGE_VALUES_SIZE = 30;
-    private static int MAX_WAVEFORM_SIZE = 100000;
+    private static int MAX_WAVEFORM_SIZE = 1300000; //about 6h
 
     //data: trend graphs
     private double[] pulseValuesOf30Sec = new double[AVERAGE_VALUES_SIZE];
@@ -114,7 +119,10 @@ public class CommunicationFragment
     private double mnnValue;
     private double sdnnValue;
     private double rrmssdValue;
+    private int nn50Value;
     private double pnn50Value;
+    private double sdsdValue;
+    private DataPoint[] poincarePoints;
 
     private static final String ALBUM_NAME = "/CMS";
 
@@ -157,6 +165,9 @@ public class CommunicationFragment
 
         rrGraph = mCommunicationFragmentLayout.getRrGraph();
         rrSeries = (BarGraphSeries)rrGraph.getSeries().get(0);
+
+        //dialog layout
+        mHrvDialogLayout = new HRVDialogLayout(getContext());
 
         return mCommunicationFragmentLayout.getView();
     }
@@ -234,105 +245,34 @@ public class CommunicationFragment
     }
 
     @Override
-    public void showHRVInfo() {
-
-        if (!isReading){
-
-
-            mnnValue = MyMath.round(MyMath.countAverage(RRs), 3);
-            sdnnValue = MyMath.round(MyMath.countStandardDeviation(RRs), 3);
-            rrmssdValue = MyMath.round(MyMath.countRMSSD(RRs), 3);
-            pnn50Value = MyMath.round(MyMath.countPNN50(RRs), 3);
-
-            String mnn = "MNN: " + mnnValue;
-            String sdnn = "SDNN: " + sdnnValue;
-            String rmssd = "RMSSD: " + rrmssdValue;
-            String pnn50 = "PNN50: " + pnn50Value;
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            LinearLayout layout = new LinearLayout(getContext());
-            LinearLayout.LayoutParams params
-                    = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            TextView parameters = new TextView(getContext());
-            GraphView poincareGraph = new GraphView(getContext());
-            poincareGraph.setTitle("Wykres Poincare");
-            poincareGraph.getGridLabelRenderer().setHorizontalAxisTitle("Aktualna wartość RR [s]");
-            poincareGraph.getGridLabelRenderer().setVerticalAxisTitle("Poprzednia wartość RR [s]");
-            poincareGraph.setPadding(20,20,20,20);
-            Viewport viewport = poincareGraph.getViewport();
-            viewport.setScalable(false);
-            viewport.setScrollable(true);
-            viewport.setXAxisBoundsManual(true);
-            viewport.setYAxisBoundsManual(true);
-            viewport.scrollToEnd();
-            viewport.setMinX(0);
-            viewport.setMaxX(1.5);
-            viewport.setMinY(0);
-            viewport.setMaxY(1.5);
-
-            DataPoint[] points = new DataPoint[RRs.length - 1];
-
-            for (int i = 1; i < RRs.length; i++){
-                double x = RRs[i];
-                double y = RRs[i-1];
-
-                points[i-1] = new DataPoint(x,y);
-            }
-
-            PointsGraphSeries series = new PointsGraphSeries(points);
-            series.setSize(5);
-            poincareGraph.addSeries(series);
-
-            layout.setOrientation(LinearLayout.VERTICAL);
-
-            parameters.setText(mnn + "\n\n" + sdnn + "\n\n" + rmssd + "\n\n" + pnn50);
-            params.setMargins(50,50,50,50);
-            layout.addView(parameters, params);
-            layout.addView(poincareGraph, params);
-
-            builder
-                    .setTitle("Parametry")
-                    .setView(layout)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-
-            builder.create().show();
-
-
-        } else {
-            Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
     public void stopReading(){
 
         //close service reading
         if (isReading) {
             service.stopReading();
             isReading = false;
-            CircularProgressButton stopBtn = mCommunicationFragmentLayout.getStopBtn();
-            stopBtn.setText(R.string.end);
-            stopBtn.setTextColor(getResources().getColor(R.color.colorAccent));
-            stopBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-            stopBtn.setClickable(false);
-        }
 
-        //set RR graph
-        RRs = MyMath.countRR(timeArray, differential);
+            disableStopButton();
 
-        for (int i = 0; i < RRs.length; i++){
-            DataPoint point = new DataPoint(i, RRs[i]);
-            rrSeries.appendData(point, true, 6000);
+            RRs = MyMath.countRR(timeArray, differential);
+            setRRGraph();
+
+            createDialog();
         }
+    }
+
+    @Override
+    public void showHRVInfo() {
+
+        if (!isReading){
+
+            countValues();
+            putValuesToDialog();
+            mHrvDialog.show();
+
+        } else
+            Toast.makeText(getContext(), R.string.stop_reading, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -360,6 +300,9 @@ public class CommunicationFragment
     public void onDataIncome(final CMSData data) {
 
         pointer++;
+
+        if (pointer == MAX_WAVEFORM_SIZE)
+            stopReading();
 
         //get bytes and transform to unsigned
         pulseValue = data.getPulseByte();
@@ -446,6 +389,66 @@ public class CommunicationFragment
     /*==============================================================================================
                                         PRIVATE UTIL METHODS
     ==============================================================================================*/
+
+    private void disableStopButton(){
+        CircularProgressButton stopBtn = mCommunicationFragmentLayout.getStopBtn();
+        stopBtn.setText(R.string.end);
+        stopBtn.setTextColor(getResources().getColor(R.color.colorAccent));
+        stopBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+        stopBtn.setClickable(false);
+    }
+
+    private void setRRGraph(){
+        for (int i = 0; i < RRs.length; i++){
+            DataPoint point = new DataPoint(i, RRs[i]);
+            rrSeries.appendData(point, true, 6000);
+        }
+    }
+
+    private void createDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder
+                .setTitle(R.string.hrv_title)
+                .setView(mHrvDialogLayout)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        mHrvDialog = builder.create();
+    }
+
+    private void countValues(){
+        mnnValue = MyMath.round(MyMath.countAverage(RRs), 3);
+        sdnnValue = MyMath.round(MyMath.countStandardDeviation(RRs), 3);
+        rrmssdValue = MyMath.round(MyMath.countRMSSD(RRs), 3);
+        nn50Value = MyMath.countNN50(RRs);
+        pnn50Value = MyMath.round(MyMath.countPNN50(RRs), 1);
+        sdsdValue = MyMath.round(MyMath.countSDSD(RRs), 3);
+        poincarePoints = MyMath.countPoincarePoints(RRs);
+    }
+
+    private void putValuesToDialog(){
+        String mnn = "MNN: " + mnnValue + "s";
+        String sdnn = "SDNN: " + sdnnValue + "s";
+        String rmssd = "RMSSD: " + rrmssdValue + "s";
+        String nn50 = "NN50: " + nn50Value;
+        String pnn50 = "PNN50: " + pnn50Value + "%";
+        String sdsd = "SDSD: " + sdsdValue + "s";
+
+        mHrvDialogLayout.getMnn().setText(mnn);
+        mHrvDialogLayout.getSdnn().setText(sdnn);
+        mHrvDialogLayout.getRmssd().setText(rmssd);
+        mHrvDialogLayout.getNn50().setText(nn50);
+        mHrvDialogLayout.getPnn50().setText(pnn50);
+        mHrvDialogLayout.getSdsd().setText(sdsd);
+
+        PointsGraphSeries series = new PointsGraphSeries(poincarePoints);
+        series.setSize(5);
+        mHrvDialogLayout.getPoincareGraph().addSeries(series);
+    }
 
     /**
      * Checks, whether external storage is available.

@@ -58,8 +58,8 @@ public class MyMath {
         return Math.sqrt(sum/values.length);
     }
 
-    public static double countPNN50(double[] values){
-        int numOfDifferences = values.length - 1;
+    public static int countNN50(double[] values){
+
         int numOfHigherThan50ms = 0;
 
         for (int i = 1; i < values.length; i++){
@@ -68,7 +68,39 @@ public class MyMath {
                 numOfHigherThan50ms++;
         }
 
+        return numOfHigherThan50ms;
+    }
+
+    public static double countPNN50(double[] values){
+
+        int numOfDifferences = values.length - 1;
+        int numOfHigherThan50ms = countNN50(values);
+
         return ((double) numOfHigherThan50ms/numOfDifferences) * 100;
+    }
+
+    public static double countSDSD(double[] values){
+
+        double[] diffs = new double[values.length-1];
+
+        for (int i = 0; i < diffs.length; i++)
+            diffs[i] = values[i+1] - values[i];
+
+        return countStandardDeviation(diffs);
+    }
+
+    public static DataPoint[] countPoincarePoints(double[] values){
+
+        DataPoint[] points = new DataPoint[values.length - 1];
+
+        for (int i = 1; i < values.length; i++){
+            double x = values[i];
+            double y = values[i-1];
+
+            points[i-1] = new DataPoint(x,y);
+        }
+
+        return points;
     }
 
     public static double[] countRR(double[] time, double[] diff){

@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.btservice.CommunicateService;
 import com.tomaszkopacz.pulseoxymeter.btservice.ConnectService;
+import com.tomaszkopacz.pulseoxymeter.design.HRVDialogLayout;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.BluetoothCallbacks;
 import com.tomaszkopacz.pulseoxymeter.btservice.BluetoothDetector;
@@ -291,10 +292,12 @@ public class ConnectionFragment
 
     @Override
     public void startScan() {
+
         if (BluetoothDetector.isBtAdapterEnabled()) {
 
             stopHandler.postDelayed(stopScanRunnable, SCAN_PERIOD);
             BluetoothDetector.startScanning();
+
         } else
             Toast.makeText(getContext(), R.string.bt_off_msg, Toast.LENGTH_SHORT).show();
     }
