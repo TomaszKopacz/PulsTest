@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/pulseValueTextView"
-            android:textSize="@dimen/largefont"
+            android:textSize="@dimen/verylargefont"
             android:text="00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
+            android:textColor="@color/colorAccent"
             android:gravity="center"
             android:textSize="@dimen/normalfont"
             android:layout_weight="1"/>
@@ -80,7 +81,7 @@
 
         <TextView
             android:id="@+id/saturationValueTextView"
-            android:textSize="@dimen/largefont"
+            android:textSize="@dimen/verylargefont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00"
@@ -106,6 +107,7 @@
             android:text="00"
             android:gravity="center"
             android:textSize="@dimen/normalfont"
+            android:textColor="@color/colorAccent"
             android:layout_weight="1"/>
     </LinearLayout>
 
@@ -179,12 +181,14 @@
             app:cpb_selectorIdle="@color/colorAccent"/>
 
 
-        <android.support.design.widget.FloatingActionButton
+        <ImageButton
             android:id="@+id/saveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:src="@drawable/ic_save"
             android:layout_alignParentRight="true"
+            android:padding="10dp"
             android:layout_margin="@dimen/margin"/>
 
     </RelativeLayout>
