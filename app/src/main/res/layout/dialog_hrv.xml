@@ -8,42 +8,36 @@
         android:id="@+id/mnn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text1"
         android:layout_margin="@dimen/margin"/>
 
     <TextView
         android:id="@+id/sdnn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text2"
         android:layout_margin="@dimen/margin"/>
 
     <TextView
         android:id="@+id/rmssd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text2"
         android:layout_margin="@dimen/margin"/>
 
     <TextView
         android:id="@+id/nn50"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text2"
         android:layout_margin="@dimen/margin"/>
 
     <TextView
         android:id="@+id/pnn50"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text2"
         android:layout_margin="@dimen/margin"/>
 
     <TextView
         android:id="@+id/sdsd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="text2"
         android:layout_margin="@dimen/margin"/>
 
     <com.jjoe64.graphview.helper.GraphViewXML

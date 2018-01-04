@@ -332,7 +332,7 @@ public class CommunicationFragment
 
                     //differential
                     if (pointer > 0) {
-                        int diff = waveArray[pointer] - waveArray[pointer-1];
+                        double diff = (waveArray[pointer] - waveArray[pointer-1]);
                         differential[pointer-1] = diff;
                         DataPoint diffPoint = new DataPoint(timeArray[pointer-1], diff);
                         diffSeries.appendData(diffPoint, true, MAX_WAVEFORM_SIZE);

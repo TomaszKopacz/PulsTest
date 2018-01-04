@@ -13,11 +13,67 @@
 
     <!-- guide fragment -->
     <string name="guide_fragment_title">"Poradnik"</string>
-    <string name="guide_text">"To jest treść poradnika"</string>
+    <string name="guide_text">
+        "       ROZPOCZĘCIE
+
+        Po uruchomieniu aplikacji ukazuje się ekran, na którym znajduje się suwak, za pomocą którego należy włączyć Bluetooth oraz listy urządzeń dostępnych i sparowanych.
+        Jeżeli urządzenie, z którym chcemy się połączyć, nie jest widoczne na liście urządzeń sparowanych, należy się z nim sparować. W tym celu proszę kliknąć w przycisk SKANUJ i poczekać na wyszukanie urządzenia. Zeskanowane urządzenie zostanie umieszczone na liście urządzeń dostępnych.
+        Nastepnym krokiem jest kliknięcie na zeskanowane urządzenie, w celu utworzenia pary. Pojawi się ekran wraz z polem tekstowym z prośbą o wpisanie kodu parowania. Jeżeli podany przez użytkownika kod jest poprawny urządzenie sparuje się, a pozycja urządzenia zostanie przeniesiona z listy urządzeń dostępnych do listy urządzeń sparowanych.
+
+        POŁĄCZENIE
+
+        Aby połączyć się z urzadzeniem, należy włączyć na nim transmisję bluetooth a nastepnie niezwłocznie (w ciągu około 20 sekund) kliknąć odpowiednią pozycję na liście sparowanych urządzeń. Wówczas zostanie nawiązana próba komunikacji, a stan połączenia zostanie ukazany poniżej nazwy urządzenia na liście.
+        UWAGA: nawiązanie połączenia możliwe tylko wtedy, gdy nie występuje żadne inne połączenie Bluetooth! Jeżeli telefon jest połączony z innym urządzeniem, które jest widoczne la liście sparowanych, należy wybrać tę pozycję i wcisnąć ją przez dłuższy czas. Wyświetli się wówczas pytanie, czy zakończyć połączenie. Należy wcisnąć OK.
+        Jeżeli pomimo braku innych połączeń aplikacja nie jest w stanie skomunikować się z urządzeniem, należy wyłączyć i włączyć Bluetooth za pomocą suwaka w aplikacji a także wyłączyć i włączyć transmisję w urządzeniu.
+        Jeżeli uda się nawiązać połączenie, otworzy się nowe okno wizualizujące odebrane z urządzenia dane.
+
+        ODBIÓR DANYCH
+
+        Od razu po otworzeniu nowego okna na ekranie telefonu przedstawiane są wyniki otrzymane z urządzenia.
+        U góry, na wysokości etykiety TĘTNO, znajdują się kolejno wartość chwilowa częstości pulsu, wykres trendu z ostatniej minuty pomiaru i wartość średnia częstości pulsu z ostatnich 15 sekund.
+        U góry, na wysokości etykiety SaO2, znajdują się kolejno wartość chwilowa saturacji, wykres trendu z ostatniej minuty pomiaru i wartość średnia saturacji z ostatnich 15 sekund.
+        Poniżej etykiet znajduje się wykres krzywej PPG oraz jej zmienność w czasie (pochodna).
+        Jeszcze niżej przedstawiony jest wykres słupkowy wartości odstępów czasu pomiędzy kolejnymi uderzeniami fali tętna, który otrzymamy po zakończeniu pomiaru. Klikając w wykres otrzymamy okno, w którym ukażą się wartości parametrów zmienności rytmu serca i wykres Poincare.
+        Aby zatrzymać odbiór danych należy kliknąć w przycisk ZATRZYMAJ u dołu ekranu. Wznowienie pomiaru nie jest możliwe.
+        Aby przejść do poprzedniego ekranu należy wcisnąć strzałkę znajdującą się w lewym górnym rogu.
+
+        ZAPIS DANYCH DO PLIKU
+
+        Po zakończeniu pomiaru możliwa jest akcja zapisu otrzymanych wartości tętna, saturacji, sygnału PPG i czasu ich odbioru do pliku w formacie .csv.
+        W tym celu należy kliknąć w przycisk z ikonką dyskietki. Plik zostanie umieszczony w folderze CMS katalogu Dokumenty pamięci zewnętrznej.
+
+        INNE
+
+        Klikając ikonkę opcji (lewy górny róg ekranu startowego) uzyskamu listę, na której znajdują się pozycje Instrukcja oraz Więcej...
+        Opcja Instrukacja jest odnośnikiem do tego poradnika.
+        Opcja Więcej... jest odnośnikiem do ekranu, w którym zostały umieszczone informacje o autorach oraz aplikacji.
+        "</string>
 
     <!-- info fragment -->
     <string name="info_fragment_title">"Informacje"</string>
-    <string name="info_text">"To jest treść informacji"</string>
+    <string name="info_text">"
+        NAZWA APLIKACJI:
+        Pulsoksymetr
+
+        CEL:
+        Aplikacja do wizualizacji i analizy sygnału z pulsoksymetru.
+
+        PRZEZACZENIE:
+        Aplikacja stanowi pracę dyplomową inżynierską na kierunku Inżynieria Biomedyczna wydziału Mechatroniki Politechniki Warszawskiej.
+
+        AUTORZY:
+
+        Dyplomant:
+        Tomasz Kopacz
+
+        Promotor:
+        prof. nzw. dr hab. inż. Gerard Cybulski
+
+        Opiekun:
+        mgr inż. Marek Żyliński
+
+        DATA WYKONANIA:
+        09.2017 - 01.2018"</string>
 
     <!-- communicate fragment -->
     <string name="communicate_fragment_title">"Komunikacja"</string>

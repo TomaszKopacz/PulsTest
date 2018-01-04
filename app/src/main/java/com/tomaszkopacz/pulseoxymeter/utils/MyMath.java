@@ -14,7 +14,6 @@ import java.util.List;
 
 public class MyMath {
 
-    private static final String TAG = "TomaszKopacz";
     private static final double MIN_RR = 0.27;
 
     public static double countAverage(double[] values){
@@ -84,7 +83,7 @@ public class MyMath {
         double[] diffs = new double[values.length-1];
 
         for (int i = 0; i < diffs.length; i++)
-            diffs[i] = values[i+1] - values[i];
+            diffs[i] = Math.abs(values[i+1] - values[i]);
 
         return countStandardDeviation(diffs);
     }
