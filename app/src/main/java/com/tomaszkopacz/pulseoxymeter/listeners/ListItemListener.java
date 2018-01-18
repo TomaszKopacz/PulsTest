@@ -4,16 +4,11 @@ import android.widget.TextView;
 
 /**
  * Created by tomaszkopacz on 09.08.17.
+ * Listener for list item.
  */
 
 public interface ListItemListener {
 
-    /**
-     * Runs, when clicked item from a list.
-     * @param position
-     * @param deviceNameTextView
-     * @param deviceInfoTextView
-     */
     void itemClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);
 
     void itemLongClicked(int position, TextView deviceNameTextView, TextView deviceInfoTextView);

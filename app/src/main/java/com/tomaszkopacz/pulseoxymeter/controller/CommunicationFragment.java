@@ -44,7 +44,9 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Controller - data acquisition, visualisation and analysis.
+ */
 public class CommunicationFragment
         extends Fragment
         implements CommunicationFragmentListener, MainActivityListener, BluetoothCallbacks {
@@ -120,6 +122,7 @@ public class CommunicationFragment
     private double sdsdValue;
     private DataPoint[] poincarePoints;
 
+    //csv files catalog name
     private static final String ALBUM_NAME = "/CMS";
 
 
@@ -223,6 +226,8 @@ public class CommunicationFragment
     ==============================================================================================*/
     @Override
     public void onNavigationIconClick() {
+
+        //BACK ARROW IN TOOLBAR
 
         //disable service timer
         service.stopHoldingCommunication();
@@ -496,6 +501,8 @@ public class CommunicationFragment
             FileOutputStream fos = new FileOutputStream(file);
             PrintWriter pw = new PrintWriter(fos);
 
+            double diff = 0;
+
             for (int i = 0; i <= pointer; i++) {
 
                 double time = timeArray[i];
@@ -503,7 +510,10 @@ public class CommunicationFragment
                 int saturation = saturationArray[i];
                 int wave = waveArray[i];
 
-                pw.println(time + "," + pulse + "," + saturation + "," + wave);
+                if (i < differential.length)
+                    diff = differential[i];
+
+                pw.println(time + "," + pulse + "," + saturation + "," + wave + "," + diff);
             }
 
             pw.close();

@@ -12,6 +12,9 @@ import com.tomaszkopacz.pulseoxymeter.design.GuideFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.design.InfoFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 
+/**
+ * Controller - information about app.
+ */
 public class InfoFragment extends Fragment {
 
     //view

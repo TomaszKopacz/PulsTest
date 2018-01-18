@@ -12,6 +12,9 @@ import com.tomaszkopacz.pulseoxymeter.design.ConnectionFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.design.GuideFragmentLayout;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 
+/**
+ * Controller - guide.
+ */
 public class GuideFragment extends Fragment {
 
     //view

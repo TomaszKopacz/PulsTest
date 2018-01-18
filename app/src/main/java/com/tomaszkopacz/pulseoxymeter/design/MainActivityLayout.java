@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by tomaszkopacz on 27.11.17.
+ * View - layout for MainActivity. Stores DrawerLayout for navigation between fragments.
  */
 
 public class MainActivityLayout {

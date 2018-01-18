@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * Created by tomaszkopacz on 17.11.17.
+ * Class provides service of bluetooth module of device.
  */
 
 public class BluetoothDetector {
@@ -31,7 +32,7 @@ public class BluetoothDetector {
     }
 
     /**
-     * Checks whether bluetooth is on on device.
+     * Checks whether bluetooth is turned on on device.
      * @return boolean
      */
     public static boolean isBtAdapterEnabled(){

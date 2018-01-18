@@ -25,6 +25,7 @@ import butterknife.OnClick;
 
 /**
  * Created by tomaszkopacz on 17.11.17.
+ * View - layout for ConnectionFragment.
  */
 
 public class ConnectionFragmentLayout {

@@ -17,6 +17,7 @@ import java.util.UUID;
 
 /**
  * Created by tomaszkopacz on 09.12.17.
+ * Service for connectin to a device.
  */
 
 public class ConnectService extends Service {
@@ -28,6 +29,8 @@ public class ConnectService extends Service {
     private BluetoothSocket socket;
 
     private static final String SOCKET_UUID = "00001101-0000-1000-8000-00805f9b34fb";
+
+    //10 sec
     private static final int CONNECT_PERIOD = 10000;
 
     private boolean connected = false;
@@ -45,6 +48,10 @@ public class ConnectService extends Service {
         }
     }
 
+    /**
+     * Registers listener for bluetooth connection events.
+     * @param callback
+     */
     public void registerCallback(BluetoothCallbacks callback) {
         this.callback = callback;
     }
@@ -55,7 +62,7 @@ public class ConnectService extends Service {
 
     /**
      * Attempts to create connection with bluetooth device.
-     * Attempt last maximum 10 seconds.
+     * Attempt lasts maximum 10 seconds.
      * @param device
      */
     public void connect(BluetoothDevice device) {
@@ -124,11 +131,14 @@ public class ConnectService extends Service {
             return true;
 
         } catch (IOException e) {
-            Log.d("TomaszKopacz", "stop connection failed");
             return false;
         }
     }
 
+    /**
+     * Returns socket.
+     * @return
+     */
     public BluetoothSocket getSocket(){
         return socket;
     }

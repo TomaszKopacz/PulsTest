@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * Created by tomaszkopacz on 31.07.17.
- *
  * Adapter. Gets list of bluetooth devices and puts their data into layout.
  */
 

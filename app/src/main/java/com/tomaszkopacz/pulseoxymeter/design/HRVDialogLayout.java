@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by tomaszkopacz on 29.12.17.
+ * Layout for dialog where HRV parameters are shown.
  */
 
 public class HRVDialogLayout extends LinearLayout{
@@ -93,9 +94,9 @@ public class HRVDialogLayout extends LinearLayout{
         viewport.setXAxisBoundsManual(true);
         viewport.setYAxisBoundsManual(true);
         viewport.scrollToEnd();
-        viewport.setMinX(0);
+        viewport.setMinX(0.3);
         viewport.setMaxX(1.5);
-        viewport.setMinY(0);
+        viewport.setMinY(0.3);
         viewport.setMaxY(1.5);
     }
 }

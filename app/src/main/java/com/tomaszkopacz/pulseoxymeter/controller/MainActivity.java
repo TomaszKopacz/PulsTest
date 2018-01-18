@@ -17,6 +17,9 @@ import com.tomaszkopacz.pulseoxymeter.R;
 import com.tomaszkopacz.pulseoxymeter.design.MainActivityLayout;
 import com.tomaszkopacz.pulseoxymeter.listeners.MainActivityListener;
 
+/**
+ * Controller - activity, stores information about connection.
+ */
 public class MainActivity
         extends AppCompatActivity
         implements MainActivityListener{

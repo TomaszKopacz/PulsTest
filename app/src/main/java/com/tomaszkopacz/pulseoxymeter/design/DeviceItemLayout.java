@@ -9,6 +9,7 @@ import com.tomaszkopacz.pulseoxymeter.R;
 
 /**
  * Created by tomaszkopacz on 19.11.17.
+ * Layout storing one item of devices list.
  */
 
 public class DeviceItemLayout {

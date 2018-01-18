@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by tomaszkopacz on 29.12.17.
+ * View - layout for GuideFragment.
  */
 
 public class GuideFragmentLayout {

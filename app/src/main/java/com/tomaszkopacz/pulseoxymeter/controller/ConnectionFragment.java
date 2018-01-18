@@ -43,6 +43,7 @@ import java.util.List;
 
 /**
  * Created by tomaszkopacz on 17.11.17.
+ * Controller - scanning devices, pairing, connecting.
  */
 
 public class ConnectionFragment

@@ -11,8 +11,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by tomaszkopacz on 31.07.17.
- *
- * View holder for bluetooth device data like name or class.
+ * View holder for bluetooth device data like name or address.
  * RecyclerViewListener itemClicked() method is called when item is touched.
  */
 

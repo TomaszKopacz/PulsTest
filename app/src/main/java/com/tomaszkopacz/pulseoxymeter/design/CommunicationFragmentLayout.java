@@ -21,6 +21,7 @@ import butterknife.OnClick;
 
 /**
  * Created by tomaszkopacz on 27.11.17.
+ * View - layout for CommunicationFragment.
  */
 
 public class CommunicationFragmentLayout {

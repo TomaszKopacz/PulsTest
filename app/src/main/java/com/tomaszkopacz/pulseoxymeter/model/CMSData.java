@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by tomaszkopacz on 28.11.17.
+ * Model - class holding package of bytes from CMS50EW.
  */
 
 public class CMSData implements Serializable{

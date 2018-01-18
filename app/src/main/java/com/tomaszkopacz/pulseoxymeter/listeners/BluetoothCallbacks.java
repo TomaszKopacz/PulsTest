@@ -4,6 +4,7 @@ import com.tomaszkopacz.pulseoxymeter.model.CMSData;
 
 /**
  * Created by tomaszkopacz on 29.11.17.
+ * Bluetooth events listening.
  */
 
 public interface BluetoothCallbacks {

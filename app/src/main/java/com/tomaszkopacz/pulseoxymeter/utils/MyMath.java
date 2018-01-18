@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by tomaszkopacz on 19.12.17.
+ * Counting statistical and HRV parameters.
  */
 
 public class MyMath {

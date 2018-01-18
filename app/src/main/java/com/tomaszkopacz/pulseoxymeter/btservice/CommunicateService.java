@@ -19,6 +19,7 @@ import java.util.TimerTask;
 
 /**
  * Created by tomaszkopacz on 09.12.17.
+ * Service to communicate by bluetooth transmission.
  */
 
 public class CommunicateService extends Service {
@@ -49,6 +50,10 @@ public class CommunicateService extends Service {
         }
     }
 
+    /**
+     * Registers listener of bluetooth events.
+     * @param callback
+     */
     public void registerCallback(BluetoothCallbacks callback) {
         this.callback = callback;
     }
@@ -75,6 +80,9 @@ public class CommunicateService extends Service {
         }
     }
 
+    /**
+     * Stops holding bluetooth communication and transmission.
+     */
     public void stopHoldingCommunication(){
 
         if (readThread != null)
@@ -95,6 +103,9 @@ public class CommunicateService extends Service {
         }
     }
 
+    /**
+     * Sends command to not to stop communication.
+     */
     private void writeCommand(){
         writeByte((byte) 0x7D);
         writeByte((byte) 0x81);
@@ -104,6 +115,10 @@ public class CommunicateService extends Service {
             writeByte((byte) 0x80);
     }
 
+    /**
+     * Sends one byte of data.
+     * @param hex
+     */
     private void writeByte(byte hex){
         byte[] buffer = new byte[1];
         buffer[0] = hex;
@@ -115,7 +130,7 @@ public class CommunicateService extends Service {
     }
 
     /**
-     * Reads data from device. Sends a special byte 0xa7 to hold sending data from device.
+     * Reads data from device.
      */
     public boolean read(BluetoothSocket socket){
 
@@ -200,6 +215,9 @@ public class CommunicateService extends Service {
         }
     }
 
+    /**
+     * Stops reading data.
+     */
     public void stopReading(){
         communicationEnabled = false;
         callback.onConnectionCloseRequest();
